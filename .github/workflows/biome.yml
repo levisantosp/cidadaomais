@@ -1,0 +1,94 @@
+name: Biome Format and Check
+on:
+  push:
+    branches: ["**"]
+    paths-ignore:
+      - '**.md'
+      - '.gitignore'
+      - 'README*'
+      - 'LICENSE'
+      - 'crowdin.yml'
+      - '.github/**'
+  pull_request:
+    branches: ["**"]
+    paths-ignore:
+      - '**.md'
+      - '.gitignore'
+      - 'README*'
+      - 'LICENSE'
+      - 'crowdin.yml'
+      - '.github/**'
+
+jobs:
+  format-and-review:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    outputs:
+      final_sha: ${{ steps.capture-final-sha.outputs.sha }}
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref || github.ref }}
+          persist-credentials: true
+          
+      - name: Setup Biome
+        uses: biomejs/setup-biome@v2
+        with:
+          version: latest
+          
+      - name: Attempt to implement Biome fixes
+        run: |
+          biome check --write --no-errors-on-unmatched .
+
+      - name: Get co-author noreply email
+        if: github.event_name == 'push'
+        run: |
+          ID=$(curl -s \
+            -H "Authorization: Bearer ${{ github.token }}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/users/levisantosp | jq -r .id)
+          echo "COAUTHOR_EMAIL=${ID}+levisantosp@users.noreply.github.com" >> $GITHUB_ENV
+          
+      - name: Commit changes
+        if: github.event_name == 'push'
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: |
+            fix(lint): implement automatic biome fixes
+
+            Co-authored-by: levisantosp <${{ env.COAUTHOR_EMAIL }}>
+          commit_user_name: github-actions[bot]
+          commit_user_email: 41898282+github-actions[bot]@users.noreply.github.com
+          commit_author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+
+      - name: Capture final commit SHA
+        id: capture-final-sha
+        if: github.event_name == 'push'
+        run: |
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          
+      - name: Run Biome via Reviewdog (PR Only)
+        if: github.event_name == 'pull_request'
+        uses: mongolyy/reviewdog-action-biome@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+          filter_mode: diff_context
+          fail_level: error
+          workdir: .
+
+  # deploy:
+  #   if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+  #   needs: format-and-review
+  #   uses: ./.github/workflows/deploy.yml
+  #   with:
+  #     base_sha: ${{ github.event.before }}
+  #     deploy_sha: ${{ needs.format-and-review.outputs.final_sha }}
+  #     source_event_name: ${{ github.event_name }}
+  #     source_ref: ${{ github.ref }}
+  #   secrets: inherit
