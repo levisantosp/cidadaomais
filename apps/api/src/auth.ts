@@ -26,5 +26,6 @@ export const auth = betterAuth({
 			maxAge: 5 * 60
 		}
 	},
-	plugins: [openAPI()]
+	plugins: [openAPI()],
+	trustedOrigins: ['http://localhost:3000']
 })
