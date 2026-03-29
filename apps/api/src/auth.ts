@@ -27,5 +27,14 @@ export const auth = betterAuth({
     }
   },
   plugins: [openAPI()],
-  trustedOrigins: ['http://localhost:3000']
+  trustedOrigins: ['http://localhost:3000'],
+  user: {
+    additionalFields: {
+      role: {
+        type: ['Administrator', 'User'],
+        defaultValue: 'User',
+        input: false
+      }
+    }
+  }
 })
