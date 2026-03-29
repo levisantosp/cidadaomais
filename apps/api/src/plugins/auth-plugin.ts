@@ -1,4 +1,32 @@
+import type { Role } from 'db'
+import { Elysia } from 'elysia'
 import { auth } from '@/auth'
+import {
+  ForbiddenException,
+  UnauthorizedException
+} from '@/utils/HttpException'
+
+export const authPlugin = new Elysia().mount(auth.handler).macro({
+  authorize: (allowed: Role[]) => ({
+    async resolve(ctx) {
+      const session = await auth.api.getSession({
+        headers: ctx.request.headers
+      })
+      if (!session) {
+        throw new UnauthorizedException()
+      }
+
+      if (!allowed.includes(session.user.role)) {
+        throw new ForbiddenException()
+      }
+
+      return {
+        user: session.user,
+        session: session.session
+      }
+    }
+  })
+})
 
 let _schema: ReturnType<typeof auth.api.generateOpenAPISchema>
 const getSchema = async () => (_schema ??= auth.api.generateOpenAPISchema())
