@@ -1,3 +1,4 @@
+import { relations } from 'drizzle-orm'
 import { bigint, index, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
 import { snowflake } from '../utils/snowflake'
 import { user } from './user'
@@ -25,3 +26,10 @@ export const account = pgTable(
   },
   table => [index('account_userId_idx').on(table.userId)]
 )
+
+export const accountRelations = relations(account, ({ one }) => ({
+  user: one(user, {
+    fields: [account.userId],
+    references: [user.id]
+  })
+}))
