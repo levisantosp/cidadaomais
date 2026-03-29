@@ -6,7 +6,7 @@ export const createEntity = new Elysia()
   .use(authPlugin)
   .post('/entities', async (ctx) => {}, {
     authorize: ['Administrator'],
-    params: z.object({
-      id: z.coerce.bigint()
+    body: z.object({
+      name: z.string().min(2)
     })
   })
