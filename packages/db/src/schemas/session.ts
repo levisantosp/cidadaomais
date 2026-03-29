@@ -19,7 +19,7 @@ export const session = pgTable(
       .notNull()
       .references(() => user.id, { onDelete: 'cascade' })
   },
-  table => [index('session_userId_idx').on(table.userId)]
+  (table) => [index('session_userId_idx').on(table.userId)]
 )
 
 export const sessionRelations = relations(session, ({ one }) => ({

@@ -8,7 +8,7 @@ import { OpenAPI } from '@/plugins/auth-plugin'
 import { HttpException } from '@/utils/HttpException'
 
 const app = new Elysia()
-  .onError(ctx => {
+  .onError((ctx) => {
     if (ctx.code === 'VALIDATION') {
       return ctx.status('Unprocessable Content', ctx.error)
     }

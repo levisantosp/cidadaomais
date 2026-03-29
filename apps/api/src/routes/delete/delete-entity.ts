@@ -1,6 +1,6 @@
 import { Elysia } from 'elysia'
+import { z } from 'zod'
 import { authPlugin } from '@/plugins/auth-plugin'
-import {z} from 'zod'
 
 export const deleteEntity = new Elysia()
   .use(authPlugin)
