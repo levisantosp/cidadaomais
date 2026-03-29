@@ -1,1 +1,1 @@
-export const uuid = () => Bun.randomUUIDv7()
+export const uuidv7 = () => Bun.randomUUIDv7()
