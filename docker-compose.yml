@@ -1,0 +1,30 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: postgres-cidadaomais
+    restart: always
+    network_mode: host
+    shm_size: 2gb
+    
+    environment:
+      - PGDATA=/var/lib/postgresql/18/data
+    env_file:
+      - .env
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/18/data
+      - ./postgres/backup:/var/lib/postgresql/18/backup
+
+    command: >
+      postgres
+      -p 5433
+      -c shared_buffers=1536MB
+      -c work_mem=4MB
+      -c effective_cache_size=5GB
+      -c random_page_cost=1.1
+
+    healthcheck:
+      test: ['CMD-SHELL', 'PGPASSWORD=$${POSTGRES_PASSWORD} pg_isready -h localhost -U $${POSTGRES_USER}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
