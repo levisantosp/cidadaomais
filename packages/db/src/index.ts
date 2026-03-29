@@ -8,3 +8,5 @@ export const db = drizzle(env.DATABASE_URL, {
 })
 
 export { schema }
+
+export type Role = typeof schema.user.$inferSelect.role
