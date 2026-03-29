@@ -1,8 +1,10 @@
 import { relations } from 'drizzle-orm'
-import { bigint, boolean, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
+import { bigint, boolean, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
 import { snowflake } from '../utils/snowflake'
 import { account } from './account'
 import { session } from './session'
+
+export const roleEnum = pgEnum('Role', ['Administrator', 'User'])
 
 export const user = pgTable('user', {
   id: bigint('id', { mode: 'bigint' }).primaryKey().$defaultFn(snowflake),
@@ -10,6 +12,7 @@ export const user = pgTable('user', {
   email: text('email').notNull().unique(),
   emailVerified: boolean('email_verified').default(false).notNull(),
   image: text('image'),
+  role: roleEnum('role').default('User'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at')
     .defaultNow()
