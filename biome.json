@@ -28,6 +28,10 @@
       "style": {
         "noNonNullAssertion": "off",
         "useTemplate": "off"
+      },
+      "nursery": {
+        "noDrizzleDeleteWithoutWhere": "error",
+        "noDrizzleUpdateWithoutWhere": "error"
       }
     }
   },
@@ -36,7 +40,7 @@
       "quoteStyle": "single",
       "semicolons": "asNeeded",
       "trailingCommas": "none",
-      "arrowParentheses": "asNeeded"
+      "arrowParentheses": "always"
     }
   },
   "assist": {
