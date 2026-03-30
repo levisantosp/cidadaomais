@@ -1,4 +1,5 @@
-import { db } from 'db'
+import { db, schema } from 'db'
+import { eq } from 'drizzle-orm'
 import { Elysia } from 'elysia'
 import { z } from 'zod'
 import { authPlugin } from '@/plugins/auth-plugin'
@@ -6,18 +7,17 @@ import { NotFoundException } from '@/utils/HttpException'
 
 export const getEntitiy = new Elysia().use(authPlugin).get(
   '/entities/:id',
-  async ({ params }) => {
-    const entity = await db.query.entity.findFirst({
-      where: (entity, { eq }) => eq(entity.id, params.id)
-    })
-
+  async (ctx) => {
+    const [entity] = await db
+      .select()
+      .from(schema.entity)
+      .where(eq(schema.entity.id, ctx.params.id))
+      .limit(1)
     if (!entity) {
-      throw new NotFoundException('Entity not found')
+      throw new NotFoundException()
     }
 
-    return {
-      entity
-    }
+    return entity
   },
   {
     authorize: ['Administrator'],
