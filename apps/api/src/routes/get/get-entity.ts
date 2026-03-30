@@ -5,7 +5,7 @@ import { z } from 'zod'
 import { authPlugin } from '@/plugins/auth-plugin'
 import { NotFoundException } from '@/utils/HttpException'
 
-export const getEntitiy = new Elysia().use(authPlugin).get(
+export const getEntity = new Elysia().use(authPlugin).get(
   '/entities/:id',
   async (ctx) => {
     const [entity] = await db
