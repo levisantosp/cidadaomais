@@ -2,16 +2,11 @@
   "editor.defaultFormatter": "biomejs.biome",
   "editor.insertSpaces": true,
   "editor.tabSize": 2,
-  "terminal.integrated.suggest.quickSuggestions": {
-    "commands": "on",
-    "arguments": "on",
-    "unknown": "on"
-  },
   "js/ts.preferences.quoteStyle": "single",
   "js/ts.experimental.useTsgo": true,
   "js/ts.preferences.importModuleSpecifier": "non-relative",
   "js/ts.preferences.importModuleSpecifierEnding": "minimal",
-  "html.completion.attributeDefaultValue": "singlequotes",
+  "html.completion.attributeDefaultValue": "doublequotes",
   "js/ts.format.insertSpaceAfterSemicolonInForStatements": true,
   "js/ts.format.semicolons": "remove"
 }
