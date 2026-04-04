@@ -10,5 +10,11 @@ export default defineNuxtConfig({
   },
 
   css: ['./app/assets/main.css'],
-  modules: ['@nuxt/fonts']
+  modules: ['@nuxt/fonts'],
+  components: [
+    {
+      path: './app/components',
+      ignore: ['./app/components/ui/**/index.ts']
+    }
+  ]
 })
