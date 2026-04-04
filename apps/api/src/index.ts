@@ -6,7 +6,7 @@ import { z } from 'zod'
 import { auth } from '@/auth'
 import { OpenAPI } from '@/plugins/auth-plugin'
 import { deleteEntity } from '@/routes/delete/delete-entity'
-import { getEntitiy } from '@/routes/get/get-entity'
+import { getEntity } from '@/routes/get/get-entity'
 import { createEntity } from '@/routes/post/create-entity'
 import { editEntity } from '@/routes/put/edit-entity'
 import { HttpException } from '@/utils/HttpException'
@@ -58,7 +58,7 @@ const app = new Elysia()
   )
   .mount(auth.handler)
   .use(deleteEntity)
-  .use(getEntitiy)
+  .use(getEntity)
   .use(createEntity)
   .use(editEntity)
   .listen(3333)
@@ -66,3 +66,7 @@ const app = new Elysia()
 logger.info(
   `HTTP server running at http://${app.server?.hostname}:${app.server?.port}`
 )
+
+;(BigInt.prototype as any).toJSON = function () {
+  return this.toString()
+}
