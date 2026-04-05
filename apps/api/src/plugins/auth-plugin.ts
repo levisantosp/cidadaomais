@@ -1,10 +1,10 @@
-import type { Role } from 'db'
-import { Elysia } from 'elysia'
-import { auth } from '@/auth'
+import type { Role } from "db"
+import { Elysia } from "elysia"
+import { auth } from "@/auth"
 import {
   ForbiddenException,
   UnauthorizedException
-} from '@/utils/HttpException'
+} from "@/utils/HttpException"
 
 export const authPlugin = new Elysia().mount(auth.handler).macro({
   authorize: (allowed: Role[]) => ({
@@ -32,7 +32,7 @@ let _schema: ReturnType<typeof auth.api.generateOpenAPISchema>
 const getSchema = async () => (_schema ??= auth.api.generateOpenAPISchema())
 
 export const OpenAPI = {
-  getPaths: (prefix = '/auth/api') =>
+  getPaths: (prefix = "/auth/api") =>
     getSchema().then(({ paths }) => {
       const reference: typeof paths = Object.create(null)
 
@@ -43,7 +43,7 @@ export const OpenAPI = {
         for (const method of Object.keys(paths[path])) {
           const operation = (reference[key] as any)[method]
 
-          operation.tags = ['Better Auth']
+          operation.tags = ["Better Auth"]
         }
       }
 

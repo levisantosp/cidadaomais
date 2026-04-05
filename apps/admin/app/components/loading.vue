@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const delays = ['0s', '-1.1s', '-0.9s']
+const delays = ["0s", "-1.1s", "-0.9s"]
 
 const props = withDefaults(
   defineProps<{

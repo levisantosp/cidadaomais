@@ -6,10 +6,10 @@ import {
   OctagonXIcon,
   TriangleAlertIcon,
   XIcon
-} from 'lucide-vue-next'
-import type { ToasterProps } from 'vue-sonner'
-import { Toaster } from 'vue-sonner'
-import { cn } from '@/lib/utils'
+} from "lucide-vue-next"
+import type { ToasterProps } from "vue-sonner"
+import { Toaster } from "vue-sonner"
+import { cn } from "@/lib/utils"
 
 const props = defineProps<ToasterProps>()
 </script>

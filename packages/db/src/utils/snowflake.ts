@@ -1,4 +1,4 @@
-import { env } from '../env'
+import { env } from "../env"
 
 const EPOCH = 1767225600000n
 const MAX_TIMESTAMP = (1n << 41n) - 1n
@@ -32,7 +32,7 @@ export const snowflake = () => {
 
     while (timestamp < lastTimestamp) {
       if (Date.now() - start > MAX_WAIT_MS) {
-        throw new Error('Timed out waiting for clock recovery after rollback.')
+        throw new Error("Timed out waiting for clock recovery after rollback.")
       }
       timestamp = BigInt(Date.now()) - EPOCH
     }
@@ -47,7 +47,7 @@ export const snowflake = () => {
       do {
         if (Date.now() - start > MAX_WAIT_MS) {
           throw new Error(
-            'Timed out waiting for the next millisecond. Per-node capacity exceeded.'
+            "Timed out waiting for the next millisecond. Per-node capacity exceeded."
           )
         }
         timestamp = BigInt(Date.now()) - EPOCH
@@ -60,7 +60,7 @@ export const snowflake = () => {
   }
 
   if (timestamp > MAX_TIMESTAMP) {
-    throw new Error('Timestamp overflow. Snowflake lifetime exceeded.')
+    throw new Error("Timestamp overflow. Snowflake lifetime exceeded.")
   }
 
   lastTimestamp = timestamp

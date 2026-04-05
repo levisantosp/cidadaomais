@@ -1,13 +1,13 @@
-import { betterAuth } from 'better-auth'
-import { drizzleAdapter } from 'better-auth/adapters/drizzle'
-import { openAPI } from 'better-auth/plugins'
-import { db } from 'db'
+import { betterAuth } from "better-auth"
+import { drizzleAdapter } from "better-auth/adapters/drizzle"
+import { openAPI } from "better-auth/plugins"
+import { db } from "db"
 
 export const auth = betterAuth({
-  basePath: '/auth',
-  baseURL: 'http://localhost:3333',
+  basePath: "/auth",
+  baseURL: "http://localhost:3333",
   database: drizzleAdapter(db, {
-    provider: 'pg',
+    provider: "pg",
     transaction: true
   }),
   advanced: {
@@ -27,12 +27,12 @@ export const auth = betterAuth({
     }
   },
   plugins: [openAPI()],
-  trustedOrigins: ['http://localhost:3000'],
+  trustedOrigins: ["http://localhost:3000"],
   user: {
     additionalFields: {
       role: {
-        type: ['Administrator', 'User'],
-        defaultValue: 'User',
+        type: ["Administrator", "User"],
+        defaultValue: "User",
         input: false
       }
     }

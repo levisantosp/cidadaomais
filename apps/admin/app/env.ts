@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from "zod"
 
 const schema = z.object({
   VITE_API_URL: z.url()

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Sidebar, SidebarHeader } from '~/components/ui/sidebar'
+import { Sidebar, SidebarHeader } from "~/components/ui/sidebar"
 </script>
 
 <template>

@@ -1,20 +1,20 @@
-import { cors } from '@elysiajs/cors'
-import { openapi } from '@elysiajs/openapi'
-import { Elysia } from 'elysia'
-import { logger } from 'logger'
-import { z } from 'zod'
-import { auth } from '@/auth'
-import { OpenAPI } from '@/plugins/auth-plugin'
-import { deleteEntity } from '@/routes/delete/delete-entity'
-import { getEntity } from '@/routes/get/get-entity'
-import { createEntity } from '@/routes/post/create-entity'
-import { editEntity } from '@/routes/put/edit-entity'
-import { HttpException } from '@/utils/HttpException'
+import { cors } from "@elysiajs/cors"
+import { openapi } from "@elysiajs/openapi"
+import { Elysia } from "elysia"
+import { logger } from "logger"
+import { z } from "zod"
+import { auth } from "@/auth"
+import { OpenAPI } from "@/plugins/auth-plugin"
+import { deleteEntity } from "@/routes/delete/delete-entity"
+import { getEntity } from "@/routes/get/get-entity"
+import { createEntity } from "@/routes/post/create-entity"
+import { editEntity } from "@/routes/put/edit-entity"
+import { HttpException } from "@/utils/HttpException"
 
 const app = new Elysia()
   .onError((ctx) => {
-    if (ctx.code === 'VALIDATION') {
-      return ctx.status('Unprocessable Content', ctx.error)
+    if (ctx.code === "VALIDATION") {
+      return ctx.status("Unprocessable Content", ctx.error)
     }
 
     if (ctx.error instanceof HttpException) {
@@ -29,20 +29,20 @@ const app = new Elysia()
       logger.error(ctx.error.stack ?? ctx.error)
     }
 
-    return ctx.status('Internal Server Error', {
-      status: 'Internal Server Error',
+    return ctx.status("Internal Server Error", {
+      status: "Internal Server Error",
       code: ctx.code,
-      error: 'Internal Server Error'
+      error: "Internal Server Error"
     })
   })
-  .get('/', () => ({ message: 'Hello, Elysia!' }))
+  .get("/", () => ({ message: "Hello, Elysia!" }))
   .use(
     openapi({
       documentation: {
         components: await OpenAPI.components,
         paths: await OpenAPI.getPaths()
       },
-      path: '/docs',
+      path: "/docs",
       mapJsonSchema: {
         zod: z.toJSONSchema
       }
@@ -50,10 +50,10 @@ const app = new Elysia()
   )
   .use(
     cors({
-      origin: 'http://localhost:3000',
-      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+      origin: "http://localhost:3000",
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
       credentials: true,
-      allowedHeaders: ['Content-Type', 'Authorization']
+      allowedHeaders: ["Content-Type", "Authorization"]
     })
   )
   .mount(auth.handler)
