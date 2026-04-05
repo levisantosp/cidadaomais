@@ -73,7 +73,11 @@ const showPassword = ref(false)
                   class="absolute inset-y-0 right-0 flex w-10 items-center justify-center"
                   @click="showPassword = !showPassword"
                 >
-                  <Eye v-if="!showPassword" class="text-muted-foreground" :size="20" />
+                  <Eye
+                    v-if="!showPassword"
+                    class="text-muted-foreground"
+                    :size="20"
+                  />
                   <EyeOff v-else class="text-muted-foreground" :size="20" />
                 </button>
               </div>
