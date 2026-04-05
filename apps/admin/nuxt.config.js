@@ -4,11 +4,21 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
+    optimizeDeps: {
+      include: [
+        '@vee-validate/zod',
+        'vee-validate',
+        'zod',
+        'clsx',
+        'tailwind-merge',
+        'class-variance-authority',
+        'reka-ui',
+        '@vueuse/core'
+      ]
+    }
   },
-
   css: ['./app/assets/main.css'],
   modules: ['@nuxt/fonts'],
   components: [
