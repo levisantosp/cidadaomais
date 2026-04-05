@@ -29,5 +29,6 @@ export default defineNuxtConfig({
       path: './app/components',
       ignore: ['./app/components/ui/**/index.ts']
     }
-  ]
+  ],
+  ssr: false
 })
