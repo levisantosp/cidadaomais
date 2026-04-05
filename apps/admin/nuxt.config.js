@@ -15,7 +15,9 @@ export default defineNuxtConfig({
         'tailwind-merge',
         'class-variance-authority',
         'reka-ui',
-        '@vueuse/core'
+        '@vueuse/core',
+        'lucide-vue-next',
+        'vue-sonner'
       ]
     }
   },
