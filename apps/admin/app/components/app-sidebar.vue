@@ -4,6 +4,14 @@ import { Sidebar, SidebarHeader } from '~/components/ui/sidebar'
 
 <template>
   <Sidebar>
-    <SidebarHeader> <h2>teste</h2> </SidebarHeader>
+    <SidebarHeader>
+      <h1 class="text-2xl text-center font-[1000]">
+        <span class="text-[#0186ca]">CIDADÃO</span>
+        <span class="text-[#3f9731]">MAIS</span>
+      </h1>
+      <h2 class="md:text-base text-center text-muted-foreground">
+        Painel Administrativo
+      </h2>
+    </SidebarHeader>
   </Sidebar>
 </template>
