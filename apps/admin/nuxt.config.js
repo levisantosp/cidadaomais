@@ -17,7 +17,8 @@ export default defineNuxtConfig({
         'reka-ui',
         '@vueuse/core',
         'lucide-vue-next',
-        'vue-sonner'
+        'vue-sonner',
+        'better-auth/vue'
       ]
     }
   },
