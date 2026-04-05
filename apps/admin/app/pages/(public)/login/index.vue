@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { toTypedSchema } from '@vee-validate/zod'
+import type { User } from 'db'
 import { Eye, EyeOff } from 'lucide-vue-next'
 import { useForm } from 'vee-validate'
 import { toast } from 'vue-sonner'
@@ -16,9 +17,8 @@ import {
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
 import { Spinner } from '~/components/ui/spinner'
-import { auth } from '~/lib/auth'
 import { error } from '~/config'
-import type { User } from 'db'
+import { auth } from '~/lib/auth'
 
 definePageMeta({
   layout: 'public'

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { Toaster } from '~/components/ui/sonner'
 import 'vue-sonner/style.css'
-import { auth } from '~/lib/auth'
 import Loading from '~/components/loading.vue'
+import { auth } from '~/lib/auth'
 
 const session = auth.useSession()
 </script>
@@ -12,7 +12,7 @@ const session = auth.useSession()
     v-if="session.isPending"
     class="flex min-h-screen justify-center items-center"
   >
-     <Loading />
+    <Loading />
   </div>
   <div v-else>
     <div>
