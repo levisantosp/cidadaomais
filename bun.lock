@@ -6,6 +6,7 @@
       "name": "cidadaomais",
       "dependencies": {
         "axios": "1.14.0",
+        "better-auth": "1.5.6",
         "drizzle-orm": "0.45.2",
         "pg": "8.20.0",
         "zod": "4.3.6",
@@ -49,7 +50,6 @@
       "dependencies": {
         "@elysiajs/cors": "1.4.1",
         "@elysiajs/openapi": "1.4.14",
-        "better-auth": "1.5.6",
         "db": "workspace:*",
         "elysia": "1.4.28",
         "logger": "workspace:*",
