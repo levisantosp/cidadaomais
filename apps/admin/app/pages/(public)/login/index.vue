@@ -2,6 +2,7 @@
 import { toTypedSchema } from '@vee-validate/zod'
 import { Eye, EyeOff } from 'lucide-vue-next'
 import { useForm } from 'vee-validate'
+import { toast } from 'vue-sonner'
 import { z } from 'zod'
 import { Button } from '~/components/ui/button'
 import {
@@ -15,29 +16,53 @@ import {
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
 import { Spinner } from '~/components/ui/spinner'
+import { auth } from '~/lib/auth'
+import { error } from '~/config'
+import type { User } from 'db'
 
 definePageMeta({
   layout: 'public'
 })
 
 const schema = z.object({
-  email: z.email('Informe um e-mail válido.'),
-  password: z.string('Informe a senha.')
+  email: z.email('Informe um e-mail válido.').trim(),
+  password: z.string('Informe a senha.').min(1, 'Informe a senha.').trim()
 })
 const typedSchema = toTypedSchema(schema)
 const { defineField, errors, handleSubmit, isSubmitting } = useForm({
   validationSchema: typedSchema
 })
 
-const [email] = defineField('email')
-const [password] = defineField('password')
+const onSubmit = handleSubmit(async (data) => {
+  const response = await auth.signIn.email(data, {
+    onError(ctx) {
+      if (error[ctx.error.code]) {
+        toast.error(error[ctx.error.code] ?? ctx.error.message)
+      } else {
+        toast.error('Ocorreu um erro inesperado...', {
+          description: ctx.error.message
+        })
+      }
+    }
+  })
+  if (response.error) return
+  if ((response.data.user as unknown as User).role !== 'Administrator') {
+    await auth.signOut()
+    return toast.warning('Acesso restrito para administradores')
+  }
+
+  await navigateTo('/')
+})
+
+const [email, emailAttr] = defineField('email')
+const [password, passwordAttr] = defineField('password')
 
 const showPassword = ref(false)
 </script>
 
 <template>
   <div class="flex pt-15 md:pt-20 justify-center">
-    <Card class="w-full max-w-sm rounded-sm">
+    <Card class="w-full max-w-sm">
       <CardHeader>
         <CardTitle>Entre com a sua conta</CardTitle>
         <CardDescription>
@@ -46,11 +71,18 @@ const showPassword = ref(false)
       </CardHeader>
 
       <CardContent>
-        <form>
+        <form @submit.prevent="onSubmit">
           <div class="grid w-full items-center gap-4">
             <div class="flex flex-col space-y-1.5">
               <Label for="email">E-mail</Label>
-              <Input id="email" type="email" placeholder="seu@email.com" />
+              <Input
+                id="email"
+                type="email"
+                v-model="email"
+                v-bind="emailAttr"
+                placeholder="seu@email.com"
+              />
+
               <span v-if="errors.email" class="text-sm text-red-400">
                 {{ errors.email }}
               </span>
@@ -62,11 +94,11 @@ const showPassword = ref(false)
               <div class="relative">
                 <Input
                   id="password"
+                  v-model="password"
+                  v-bind="passwordAttr"
                   :type="showPassword ? 'text' : 'password'"
+                  class="pr-10"
                 />
-                <span v-if="errors.password" class="text-sm text-red-400">
-                  {{ errors.password }}
-                </span>
 
                 <button
                   type="button"
@@ -81,14 +113,22 @@ const showPassword = ref(false)
                   <EyeOff v-else class="text-muted-foreground" :size="20" />
                 </button>
               </div>
+
+              <span v-if="errors.password" class="text-sm text-red-400">
+                {{ errors.password }}
+              </span>
             </div>
           </div>
         </form>
       </CardContent>
       <CardFooter>
-        <Button class="w-full cursor-pointer">
+        <Button
+          class="w-full cursor-pointer"
+          @click="onSubmit"
+          :disabled="isSubmitting"
+        >
           <span v-if="!isSubmitting">Entrar</span>
-          <Spinner v-else />
+          <Spinner class="size-5" v-else />
         </Button>
       </CardFooter>
     </Card>
