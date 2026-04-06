@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "description": "",
   "scripts": {
+    "build": "turbo run build",
     "start": "turbo run start",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
@@ -25,8 +26,9 @@
     "typescript": "6.0.2"
   },
   "workspaces": [
-    "apps/*",
-    "packages/*"
+    "packages/*",
+    "admin",
+    "api"
   ],
   "dependencies": {
     "axios": "1.14.0",

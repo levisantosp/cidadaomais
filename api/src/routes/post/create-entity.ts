@@ -15,7 +15,11 @@ export const createEntity = new Elysia().use(authPlugin).post(
   {
     authorize: ["Administrator"],
     body: z.object({
-      name: z.string().min(2)
+      name: z.string().min(2),
+      description: z.string().min(2),
+      phone: z.string().optional(),
+      email: z.email().optional(),
+      website: z.url().optional()
     })
   }
 );
