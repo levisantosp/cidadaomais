@@ -3,7 +3,8 @@ services:
     image: postgres:18
     container_name: pg-cidadaomais
     restart: always
-    network_mode: host
+    ports:
+      - "5433:5432"
     shm_size: 2gb
     
     environment:
@@ -16,7 +17,6 @@ services:
 
     command: >
       postgres
-      -p 5433
       -c shared_buffers=1536MB
       -c work_mem=4MB
       -c effective_cache_size=5GB
