@@ -1,10 +1,10 @@
 import type { Role } from "db"
 import { Elysia } from "elysia"
-import { auth } from "@/auth"
+import { auth } from "../auth"
 import {
   ForbiddenException,
   UnauthorizedException
-} from "@/utils/HttpException"
+} from "../utils/HttpException"
 
 export const authPlugin = new Elysia().mount(auth.handler).macro({
   authorize: (allowed: Role[]) => ({

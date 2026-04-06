@@ -2,7 +2,7 @@ import { db, schema } from "db"
 import { eq } from "drizzle-orm"
 import { Elysia } from "elysia"
 import { z } from "zod"
-import { authPlugin } from "@/plugins/auth-plugin"
+import { authPlugin } from "../../plugins/auth-plugin"
 
 export const deleteEntity = new Elysia().use(authPlugin).delete(
   "/entities/:id",

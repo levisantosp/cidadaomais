@@ -2,8 +2,8 @@ import { db, schema } from "db"
 import { eq } from "drizzle-orm"
 import { Elysia } from "elysia"
 import { z } from "zod"
-import { authPlugin } from "@/plugins/auth-plugin"
-import { NotFoundException } from "@/utils/HttpException"
+import { authPlugin } from "../../plugins/auth-plugin"
+import { NotFoundException } from "../../utils/HttpException"
 
 export const editEntity = new Elysia().use(authPlugin).put(
   "/entities/:id",
