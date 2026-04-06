@@ -8,5 +8,5 @@
   "js/ts.preferences.importModuleSpecifierEnding": "minimal",
   "html.completion.attributeDefaultValue": "doublequotes",
   "js/ts.format.insertSpaceAfterSemicolonInForStatements": true,
-  "js/ts.format.semicolons": "remove"
+  "js/ts.format.semicolons": "insert"
 }
