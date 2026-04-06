@@ -38,10 +38,7 @@
   },
   "javascript": {
     "formatter": {
-      "quoteStyle": "double",
-      "semicolons": "asNeeded",
-      "trailingCommas": "none",
-      "arrowParentheses": "always"
+      "trailingCommas": "none"
     }
   },
   "assist": {
