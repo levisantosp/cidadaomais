@@ -3,9 +3,9 @@ import { openapi } from "@elysiajs/openapi";
 import { Elysia } from "elysia";
 import { logger } from "logger";
 import { z } from "zod";
-import { auth } from "./auth";
 import { OpenAPI } from "./plugins/auth-plugin";
 import { deleteEntity } from "./routes/delete/delete-entity";
+import { getEntitiesCount } from "./routes/get/get-entities-count";
 import { getEntity } from "./routes/get/get-entity";
 import { getServicesCount } from "./routes/get/get-services-count";
 import { createEntity } from "./routes/post/create-entity";
@@ -57,11 +57,11 @@ export const app = new Elysia()
       allowedHeaders: ["Content-Type", "Authorization"]
     })
   )
-  .mount(auth.handler)
   .use(deleteEntity)
   .use(getEntity)
   .use(createEntity)
   .use(editEntity)
-  .use(getServicesCount);
+  .use(getServicesCount)
+  .use(getEntitiesCount);
 
 export type App = typeof app;
