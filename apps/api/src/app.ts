@@ -22,7 +22,7 @@ export const app = new Elysia()
       return ctx.status(ctx.error.statusText, {
         status: ctx.error.statusText,
         code: ctx.code,
-        error: ctx.error.message
+        message: ctx.error.message
       })
     }
 
@@ -33,7 +33,7 @@ export const app = new Elysia()
     return ctx.status("Internal Server Error", {
       status: "Internal Server Error",
       code: ctx.code,
-      error: "Internal Server Error"
+      message: "Internal Server Error"
     })
   })
   .get("/", () => ({ message: "Hello, Elysia!" }))
