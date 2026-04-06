@@ -1,4 +1,4 @@
-import { defineConfig } from "drizzle-kit"
+import { defineConfig } from "drizzle-kit";
 
 export default defineConfig({
   out: "./packages/db/src/migrations",
@@ -8,4 +8,4 @@ export default defineConfig({
   },
   dialect: "postgresql",
   casing: "snake_case"
-})
+});

@@ -1,9 +1,9 @@
-import { db, schema } from "db"
-import { eq } from "drizzle-orm"
-import { Elysia } from "elysia"
-import { z } from "zod"
-import { authPlugin } from "../../plugins/auth-plugin"
-import { NotFoundException } from "../../utils/HttpException"
+import { db, schema } from "db";
+import { eq } from "drizzle-orm";
+import { Elysia } from "elysia";
+import { z } from "zod";
+import { authPlugin } from "../../plugins/auth-plugin";
+import { NotFoundException } from "../../utils/HttpException";
 
 export const getEntity = new Elysia().use(authPlugin).get(
   "/entities/:id",
@@ -12,12 +12,12 @@ export const getEntity = new Elysia().use(authPlugin).get(
       .select()
       .from(schema.entity)
       .where(eq(schema.entity.id, ctx.params.id))
-      .limit(1)
+      .limit(1);
     if (!entity) {
-      throw new NotFoundException()
+      throw new NotFoundException();
     }
 
-    return entity
+    return entity;
   },
   {
     authorize: ["Administrator"],
@@ -25,4 +25,4 @@ export const getEntity = new Elysia().use(authPlugin).get(
       id: z.coerce.bigint()
     })
   }
-)
+);

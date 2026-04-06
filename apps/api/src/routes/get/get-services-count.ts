@@ -1,7 +1,7 @@
-import { db, schema } from "db"
-import { count } from "drizzle-orm"
-import { Elysia } from "elysia"
-import { authPlugin } from "../../plugins/auth-plugin"
+import { db, schema } from "db";
+import { count } from "drizzle-orm";
+import { Elysia } from "elysia";
+import { authPlugin } from "../../plugins/auth-plugin";
 
 export const getServicesCount = new Elysia().use(authPlugin).get(
   "/services-count",
@@ -10,13 +10,13 @@ export const getServicesCount = new Elysia().use(authPlugin).get(
       .select({
         count: count()
       })
-      .from(schema.service)
+      .from(schema.service);
 
     return {
       count: rows.count
-    }
+    };
   },
   {
     authorize: ["Administrator"]
   }
-)
+);

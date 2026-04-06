@@ -1,8 +1,8 @@
-import { db, schema } from "db"
-import { eq } from "drizzle-orm"
-import { Elysia } from "elysia"
-import { z } from "zod"
-import { authPlugin } from "../../plugins/auth-plugin"
+import { db, schema } from "db";
+import { eq } from "drizzle-orm";
+import { Elysia } from "elysia";
+import { z } from "zod";
+import { authPlugin } from "../../plugins/auth-plugin";
 
 export const deleteEntity = new Elysia().use(authPlugin).delete(
   "/entities/:id",
@@ -10,9 +10,9 @@ export const deleteEntity = new Elysia().use(authPlugin).delete(
     const [entity] = await db
       .delete(schema.entity)
       .where(eq(schema.entity.id, ctx.params.id))
-      .returning()
+      .returning();
 
-    return entity
+    return entity;
   },
   {
     authorize: ["Administrator"],
@@ -20,4 +20,4 @@ export const deleteEntity = new Elysia().use(authPlugin).delete(
       id: z.coerce.bigint()
     })
   }
-)
+);

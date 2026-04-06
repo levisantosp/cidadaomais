@@ -1,38 +1,38 @@
 <script setup lang="ts">
-import { useQuery } from "@tanstack/vue-query"
-import { BriefcaseBusiness } from "lucide-vue-next"
-import { toast } from "vue-sonner"
-import { Card } from "~/components/ui/card"
-import { Spinner } from "~/components/ui/spinner"
-import { api } from "~/lib/api"
+import { useQuery } from "@tanstack/vue-query";
+import { BriefcaseBusiness } from "lucide-vue-next";
+import { toast } from "vue-sonner";
+import { Card } from "~/components/ui/card";
+import { Spinner } from "~/components/ui/spinner";
+import { api } from "~/lib/api";
 
 definePageMeta({
   layout: "private"
-})
+});
 
 const { isPending, isFetching, data, error } = useQuery({
   queryKey: ["counts"],
   staleTime: 60_000,
   async queryFn() {
-    const [servicesResponse] = await Promise.all([api["services-count"].get()])
+    const [servicesResponse] = await Promise.all([api["services-count"].get()]);
 
     if (servicesResponse.error) {
-      throw servicesResponse.error.value
+      throw servicesResponse.error.value;
     }
 
     return {
       servicesCount: servicesResponse.data.count.toLocaleString("pt-BR")
-    }
+    };
   }
-})
+});
 
 watch(error, (e) => {
-  if (!e) return
+  if (!e) return;
 
   toast.error("Ocorreu um erro inesperado...", {
     description: e.message
-  })
-})
+  });
+});
 
 const statsConfig = [
   {
@@ -41,7 +41,7 @@ const statsConfig = [
     icon: BriefcaseBusiness,
     color: "text-orange-400"
   }
-] as const
+] as const;
 </script>
 
 <template>

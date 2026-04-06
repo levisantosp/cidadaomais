@@ -1,5 +1,5 @@
-import { bigint, pgTable, text, timestamp } from "drizzle-orm/pg-core"
-import { snowflake } from "../utils/snowflake"
+import { bigint, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { snowflake } from "../utils/snowflake";
 export const entity = pgTable("entity", {
   id: bigint("id", {
     mode: "bigint"
@@ -24,4 +24,4 @@ export const entity = pgTable("entity", {
     .notNull()
     .defaultNow()
     .$onUpdateFn(() => new Date())
-})
+});

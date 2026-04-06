@@ -1,5 +1,5 @@
-import { bigint, index, pgTable, text, timestamp } from "drizzle-orm/pg-core"
-import { snowflake } from "../utils/snowflake"
+import { bigint, index, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { snowflake } from "../utils/snowflake";
 
 export const verification = pgTable(
   "verification",
@@ -15,4 +15,4 @@ export const verification = pgTable(
       .notNull()
   },
   (table) => [index("verification_identifier_idx").on(table.identifier)]
-)
+);

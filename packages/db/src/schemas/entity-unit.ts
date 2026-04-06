@@ -1,13 +1,13 @@
-import { relations } from "drizzle-orm"
+import { relations } from "drizzle-orm";
 import {
   bigint,
   doublePrecision,
   pgTable,
   text,
   timestamp
-} from "drizzle-orm/pg-core"
-import { snowflake } from "../utils/snowflake"
-import { entity } from "./entity"
+} from "drizzle-orm/pg-core";
+import { snowflake } from "../utils/snowflake";
+import { entity } from "./entity";
 
 export const entityUnit = pgTable("entity_unit", {
   id: bigint("id", {
@@ -38,11 +38,11 @@ export const entityUnit = pgTable("entity_unit", {
     .notNull()
     .defaultNow()
     .$onUpdateFn(() => new Date())
-})
+});
 
 export const entityUnitRelations = relations(entityUnit, ({ one }) => ({
   entity: one(entity, {
     fields: [entityUnit.entityId],
     references: [entity.id]
   })
-}))
+}));

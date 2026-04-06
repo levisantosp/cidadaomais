@@ -1,7 +1,7 @@
-import { relations } from "drizzle-orm"
-import { bigint, index, pgTable, text, timestamp } from "drizzle-orm/pg-core"
-import { snowflake } from "../utils/snowflake"
-import { user } from "./user"
+import { relations } from "drizzle-orm";
+import { bigint, index, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { snowflake } from "../utils/snowflake";
+import { user } from "./user";
 
 export const session = pgTable(
   "session",
@@ -20,11 +20,11 @@ export const session = pgTable(
       .references(() => user.id, { onDelete: "cascade" })
   },
   (table) => [index("session_userId_idx").on(table.userId)]
-)
+);
 
 export const sessionRelations = relations(session, ({ one }) => ({
   user: one(user, {
     fields: [session.userId],
     references: [user.id]
   })
-}))
+}));
