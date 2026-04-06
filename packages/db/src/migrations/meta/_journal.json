@@ -15,6 +15,13 @@
       "when": 1775435041511,
       "tag": "0001_colossal_swarm",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1775507553896,
+      "tag": "0002_tidy_whizzer",
+      "breakpoints": true
     }
   ]
 }
