@@ -1,6 +1,5 @@
 import { bigint, pgTable, text, timestamp } from "drizzle-orm/pg-core"
 import { snowflake } from "../utils/snowflake"
-
 export const entity = pgTable("entity", {
   id: bigint("id", {
     mode: "bigint"
@@ -8,6 +7,10 @@ export const entity = pgTable("entity", {
     .primaryKey()
     .$defaultFn(snowflake),
   name: text("name").notNull(),
+  description: text("description").notNull(),
+  phone: text("phone"),
+  email: text("email"),
+  website: text("website"),
   createdAt: timestamp("created_at", {
     mode: "date",
     precision: 3
