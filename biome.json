@@ -6,7 +6,7 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "includes": ["**", "!.nuxt", "!.output"]
+    "includes": ["**", "!.nuxt", "!.output", "!migrations"]
   },
   "formatter": {
     "enabled": true,
