@@ -7,10 +7,10 @@ import { auth } from "./auth"
 import { OpenAPI } from "./plugins/auth-plugin"
 import { deleteEntity } from "./routes/delete/delete-entity"
 import { getEntity } from "./routes/get/get-entity"
+import { getServicesCount } from "./routes/get/get-services-count"
 import { createEntity } from "./routes/post/create-entity"
 import { editEntity } from "./routes/put/edit-entity"
 import { HttpException } from "./utils/HttpException"
-import { getServicesCount } from "./routes/get/get-services-count"
 
 export const app = new Elysia()
   .onError((ctx) => {
