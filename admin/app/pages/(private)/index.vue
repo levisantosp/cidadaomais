@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { useQuery } from "@tanstack/vue-query";
-import { BriefcaseBusiness } from "lucide-vue-next";
+import { BriefcaseBusiness, Landmark } from "lucide-vue-next";
 import { toast } from "vue-sonner";
 import { Card } from "~/components/ui/card";
 import { Spinner } from "~/components/ui/spinner";
+import { unwrapResponse } from "~/config";
 import { api } from "~/lib/api";
 
 definePageMeta({
@@ -14,14 +15,17 @@ const { isPending, isFetching, data, error } = useQuery({
   queryKey: ["counts"],
   staleTime: 60_000,
   async queryFn() {
-    const [servicesResponse] = await Promise.all([api["services-count"].get()]);
+    const [servicesResponse, entitiesResponse] = await Promise.all([
+      api["services-count"].get(),
+      api["entities-count"].get()
+    ]);
 
-    if (servicesResponse.error) {
-      throw servicesResponse.error.value;
-    }
+    const services = unwrapResponse(servicesResponse);
+    const entities = unwrapResponse(entitiesResponse);
 
     return {
-      servicesCount: servicesResponse.data.count.toLocaleString("pt-BR")
+      servicesCount: services?.count,
+      entitiesCount: entities?.count
     };
   }
 });
@@ -40,6 +44,12 @@ const statsConfig = [
     label: "Serviços Totais",
     icon: BriefcaseBusiness,
     color: "text-orange-400"
+  },
+  {
+    key: "entitiesCount",
+    label: "Órgãos Totais",
+    icon: Landmark,
+    color: "text-blue-400"
   }
 ] as const;
 </script>
