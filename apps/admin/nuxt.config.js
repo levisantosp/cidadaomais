@@ -18,7 +18,8 @@ export default defineNuxtConfig({
         "@vueuse/core",
         "lucide-vue-next",
         "vue-sonner",
-        "better-auth/vue"
+        "better-auth/vue",
+        "@elysiajs/eden"
       ]
     }
   },
