@@ -14,16 +14,10 @@ export const entity = pgTable("entity", {
   phone: text("phone"),
   email: text("email"),
   website: text("website"),
-  createdAt: timestamp("created_at", {
-    mode: "date",
-    precision: 3
-  })
+  createdAt: timestamp("created_at")
     .notNull()
     .defaultNow(),
-  updatedAt: timestamp("updated_at", {
-    mode: "date",
-    precision: 3
-  })
+  updatedAt: timestamp("updated_at")
     .notNull()
     .defaultNow()
     .$onUpdateFn(() => new Date())

@@ -9,16 +9,10 @@ export const service = pgTable("service", {
     .$defaultFn(snowflake),
   name: text("name").notNull(),
   description: text("description").notNull(),
-  createdAt: timestamp("created_at", {
-    mode: "date",
-    precision: 3
-  })
+  createdAt: timestamp("created_at")
     .notNull()
     .defaultNow(),
-  updatedAt: timestamp("updated_at", {
-    mode: "date",
-    precision: 3
-  })
+  updatedAt: timestamp("updated_at")
     .notNull()
     .defaultNow()
     .$onUpdateFn(() => new Date())

@@ -24,16 +24,10 @@ export const entityUnit = pgTable("entity_unit", {
   name: text("name").notNull(),
   latitude: doublePrecision("latitude").notNull(),
   longitude: doublePrecision("longitude").notNull(),
-  createdAt: timestamp("created_at", {
-    mode: "date",
-    precision: 3
-  })
+  createdAt: timestamp("created_at")
     .notNull()
     .defaultNow(),
-  updatedAt: timestamp("updated_at", {
-    mode: "date",
-    precision: 3
-  })
+  updatedAt: timestamp("updated_at")
     .notNull()
     .defaultNow()
     .$onUpdateFn(() => new Date())
