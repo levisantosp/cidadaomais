@@ -4,10 +4,10 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: var(--radius);
+  --radius-md: var(--radius);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-xl: var(--radius);
   --color-brand-blue: var(--brand-blue);
   --color-brand-green: var(--brand-green);
   --color-brand-teal: var(--brand-teal);
@@ -45,7 +45,7 @@
 }
 
 :root {
-  --radius: 0.4rem;
+  --radius: 0.275rem;
   --brand-blue: #044892;
   --brand-green: #3f9731;
   --brand-teal: #0f6d86;
