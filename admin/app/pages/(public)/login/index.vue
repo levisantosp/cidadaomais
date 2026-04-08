@@ -5,6 +5,7 @@ import { Eye, EyeOff } from "lucide-vue-next";
 import { useForm } from "vee-validate";
 import { toast } from "vue-sonner";
 import { z } from "zod";
+import Loading from "~/components/loading.vue";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -16,7 +17,6 @@ import {
 } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { Spinner } from "~/components/ui/spinner";
 import { error } from "~/config";
 import { auth } from "~/lib/auth";
 
@@ -128,7 +128,7 @@ const showPassword = ref(false);
           :disabled="isSubmitting"
         >
           <span v-if="!isSubmitting">Entrar</span>
-          <Spinner class="size-5" v-else />
+           <Loading v-else :width="8" :height="8" />
         </Button>
       </CardFooter>
     </Card>
