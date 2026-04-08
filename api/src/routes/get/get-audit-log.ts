@@ -7,7 +7,7 @@ import { authPlugin } from "../../plugins/auth-plugin";
 export const getAuditLog = new Elysia().use(authPlugin).get(
   "/audit-log",
   async (ctx) => {
-    const categories = await db
+    const logs = await db
       .select()
       .from(schema.category)
       .orderBy(desc(schema.category.createdAt))
@@ -16,8 +16,8 @@ export const getAuditLog = new Elysia().use(authPlugin).get(
 
     return {
       page: ctx.query.page,
-      hasNextPage: categories.length > ctx.query.limit,
-      categories: categories.slice(0, ctx.query.limit)
+      hasNextPage: logs.length > ctx.query.limit,
+      logs: logs.slice(0, ctx.query.limit)
     };
   },
   {
