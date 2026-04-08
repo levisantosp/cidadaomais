@@ -5,6 +5,7 @@ import { logger } from "logger";
 import { z } from "zod";
 import { OpenAPI } from "./plugins/auth-plugin";
 import { deleteEntity } from "./routes/delete/delete-entity";
+import { getCategoriesCount } from "./routes/get/get-categories-count";
 import { getEntitiesCount } from "./routes/get/get-entities-count";
 import { getEntity } from "./routes/get/get-entity";
 import { getServicesCount } from "./routes/get/get-services-count";
@@ -62,6 +63,7 @@ export const app = new Elysia()
   .use(createEntity)
   .use(editEntity)
   .use(getServicesCount)
-  .use(getEntitiesCount);
+  .use(getEntitiesCount)
+  .use(getCategoriesCount);
 
 export type App = typeof app;
