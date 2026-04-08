@@ -198,9 +198,7 @@ const statsConfig = [
 
       <Card>
         <CardHeader>
-          <CardTitle class="text-muted-foreground">
-            Ações Rápidas
-          </CardTitle>
+          <CardTitle class="text-muted-foreground"> Ações Rápidas </CardTitle>
         </CardHeader>
       </Card>
     </div>
