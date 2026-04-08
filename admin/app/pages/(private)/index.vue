@@ -2,6 +2,7 @@
 import { useQuery } from "@tanstack/vue-query";
 import { BriefcaseBusiness, Landmark } from "lucide-vue-next";
 import { toast } from "vue-sonner";
+import Loading from "~/components/loading.vue";
 import { Card } from "~/components/ui/card";
 import { Spinner } from "~/components/ui/spinner";
 import { unwrapResponse } from "~/config";
@@ -75,7 +76,7 @@ const statsConfig = [
         </div>
 
         <div>
-          <Spinner v-if="isPending || isFetching || !data" class="size-6" />
+          <Loading v-if="isPending || isFetching || !data"/>
           <span v-else class="text-3xl font-bold">{{ data[item.key] }}</span>
         </div>
       </Card>
