@@ -128,7 +128,7 @@ const showPassword = ref(false);
           :disabled="isSubmitting"
         >
           <span v-if="!isSubmitting">Entrar</span>
-           <Loading v-else :width="8" :height="8" />
+          <Loading v-else :width="8" :height="8" />
         </Button>
       </CardFooter>
     </Card>
