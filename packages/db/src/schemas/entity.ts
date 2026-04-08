@@ -1,5 +1,8 @@
 import { bigint, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { snowflake } from "../utils/snowflake";
+import { relations } from "drizzle-orm";
+import { entityUnit } from "./entity-unit";
+
 export const entity = pgTable("entity", {
   id: bigint("id", {
     mode: "bigint"
@@ -25,3 +28,7 @@ export const entity = pgTable("entity", {
     .defaultNow()
     .$onUpdateFn(() => new Date())
 });
+
+export const entityRelations = relations(entity, ({ many }) => ({
+  units: many(entityUnit)
+}))

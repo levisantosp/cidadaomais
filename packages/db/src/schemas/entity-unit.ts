@@ -1,4 +1,3 @@
-import { relations } from "drizzle-orm";
 import {
   bigint,
   doublePrecision,
@@ -39,10 +38,3 @@ export const entityUnit = pgTable("entity_unit", {
     .defaultNow()
     .$onUpdateFn(() => new Date())
 });
-
-export const entityUnitRelations = relations(entityUnit, ({ one }) => ({
-  entity: one(entity, {
-    fields: [entityUnit.entityId],
-    references: [entity.id]
-  })
-}));
