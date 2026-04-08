@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import { useQuery } from "@tanstack/vue-query";
-import { BriefcaseBusiness, ChartBarStacked, Landmark } from "lucide-vue-next";
+import {
+  BriefcaseBusiness,
+  Building,
+  ChartBarStacked,
+  CircleX,
+  Landmark
+} from "lucide-vue-next";
 import { toast } from "vue-sonner";
 import Loading from "~/components/loading.vue";
-import { Card } from "~/components/ui/card";
-import { Spinner } from "~/components/ui/spinner";
+import { Card, CardContent, CardTitle } from "~/components/ui/card";
+import CardHeader from "~/components/ui/card/CardHeader.vue";
 import { unwrapResponse } from "~/config";
 import { api } from "~/lib/api";
 
@@ -13,34 +19,81 @@ definePageMeta({
 });
 
 const { isPending, isFetching, data, error } = useQuery({
-  queryKey: ["counts"],
+  queryKey: ["home-data"],
   staleTime: 60_000,
   async queryFn() {
-    const response = await Promise.all([
+    const [
+      servicesResponse,
+      entitiesResponse,
+      categoriesResponse,
+      unitsResponse,
+      logsResponse
+    ] = await Promise.all([
       api["services-count"].get(),
       api["entities-count"].get(),
-      api["categories-count"].get()
+      api["categories-count"].get(),
+      api["units-count"].get(),
+      api["audit-log"].get({
+        query: {
+          page: 1,
+          limit: 5
+        }
+      })
     ]);
 
-    const services = unwrapResponse(response[0]);
-    const entities = unwrapResponse(response[1]);
-    const categories = unwrapResponse(response[2]);
+    hasServicesError.value = !!servicesResponse.error;
+    hasEntitiesError.value = !!entitiesResponse.error;
+    hasCategoriesError.value = !!categoriesResponse.error;
+    hasUnitsError.value = !!unitsResponse.error;
+    hasLogsError.value = !!logsResponse.error;
 
     return {
-      servicesCount: services?.count,
-      entitiesCount: entities?.count,
-      categoriesCount: categories?.count
+      servicesCount: servicesResponse.error
+        ? null
+        : servicesResponse.data.count,
+      entitiesCount: entitiesResponse.error
+        ? null
+        : entitiesResponse.data.count,
+      categoriesCount: categoriesResponse.error
+        ? null
+        : categoriesResponse.data.count,
+      unitsCount: unitsResponse.error ? null : unitsResponse.data.count,
+      logs: logsResponse.error ? [] : logsResponse.data.logs
     };
   }
 });
 
+const hasServicesError = ref(false);
+const hasEntitiesError = ref(false);
+const hasCategoriesError = ref(false);
+const hasUnitsError = ref(false);
+const hasLogsError = ref(true);
+const hasGlobalError = ref(false);
+
 watch(error, (e) => {
   if (!e) return;
+
+  if (
+    !hasServicesError.value &&
+    !hasEntitiesError.value &&
+    !hasCategoriesError.value &&
+    !hasUnitsError.value &&
+    !hasLogsError.value
+  ) {
+    hasGlobalError.value = true;
+  }
 
   toast.error("Ocorreu um erro inesperado...", {
     description: e.message
   });
 });
+
+const statsErrors = computed(() => ({
+  servicesCount: hasServicesError.value,
+  entitiesCount: hasEntitiesError.value,
+  categoriesCount: hasCategoriesError.value,
+  unitsCount: hasUnitsError.value
+}));
 
 const statsConfig = [
   {
@@ -60,6 +113,12 @@ const statsConfig = [
     label: "Categorias",
     icon: ChartBarStacked,
     color: "text-rose-400"
+  },
+  {
+    key: "unitsCount",
+    label: "Unidades",
+    icon: Building,
+    color: "text-green-400"
   }
 ] as const;
 </script>
@@ -71,7 +130,7 @@ const statsConfig = [
       <p class="text-sm text-muted-foreground">Visão geral do sistema</p>
     </div>
 
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+    <div class="grid grid-cols-1 items-center gap-4 sm:grid-cols-3">
       <Card
         v-for="item in statsConfig"
         :key="item.key"
@@ -86,8 +145,63 @@ const statsConfig = [
 
         <div>
           <Loading v-if="isPending || isFetching || !data" />
+          <div
+            v-else-if="hasGlobalError"
+            class="flex items-center gap-2 text-red-400 text-sm"
+          >
+            <CircleX class="size-4" />
+            <span>Não foi possível buscar os dados no momento</span>
+          </div>
+          <div
+            v-else-if="statsErrors[item.key]"
+            class="flex items-center gap-2 text-red-400 text-sm"
+          >
+            <CircleX class="size-4" />
+            <span>Não foi possível buscar os dados no momento</span>
+          </div>
           <span v-else class="text-3xl font-bold">{{ data[item.key] }}</span>
         </div>
+      </Card>
+    </div>
+
+    <div class="grid gap-4 md:grid-cols-2 grid-cols-7">
+      <Card>
+        <CardHeader>
+          <CardTitle class="text-muted-foreground">
+            Registros Recentes
+          </CardTitle>
+        </CardHeader>
+
+        <CardContent class="space-y-4">
+          <div v-if="isPending || isFetching" class="flex justify-center">
+            <Loading />
+          </div>
+          <div
+            v-else-if="hasGlobalError"
+            class="flex items-center gap-2 text-red-400 text-sm"
+          >
+            <CircleX class="size-4" />
+            <span>Não foi possível buscar os dados no momento</span>
+          </div>
+          <div
+            v-else-if="hasLogsError"
+            class="flex items-center gap-2 text-red-400 text-sm"
+          >
+            <CircleX class="size-4" />
+            <span>Não foi possível buscar os dados no momento</span>
+          </div>
+          <div v-else-if="!data?.logs?.length">
+            Nenhum registro até o momento.
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle class="text-muted-foreground">
+            Ações Rápidas
+          </CardTitle>
+        </CardHeader>
       </Card>
     </div>
   </div>
