@@ -18,6 +18,7 @@ export const service = pgTable("service", {
     }),
   name: text("name").notNull(),
   description: text("description").notNull(),
+  requirements: text("requirements").array().notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at")
     .notNull()
