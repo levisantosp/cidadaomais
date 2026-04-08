@@ -5,14 +5,15 @@ import { logger } from "logger";
 import { z } from "zod";
 import { OpenAPI } from "./plugins/auth-plugin";
 import { deleteEntity } from "./routes/delete/delete-entity";
+import { getAuditLog } from "./routes/get/get-audit-log";
 import { getCategoriesCount } from "./routes/get/get-categories-count";
 import { getEntitiesCount } from "./routes/get/get-entities-count";
 import { getEntity } from "./routes/get/get-entity";
 import { getServicesCount } from "./routes/get/get-services-count";
+import { getUnitsCount } from "./routes/get/get-units-count";
 import { createEntity } from "./routes/post/create-entity";
 import { editEntity } from "./routes/put/edit-entity";
 import { HttpException } from "./utils/HttpException";
-import { getUnitsCount } from "./routes/get/get-units-count";
 
 export const app = new Elysia()
   .onError((ctx) => {
@@ -66,6 +67,7 @@ export const app = new Elysia()
   .use(getServicesCount)
   .use(getEntitiesCount)
   .use(getCategoriesCount)
-  .use(getUnitsCount);
+  .use(getUnitsCount)
+  .use(getAuditLog);
 
 export type App = typeof app;
