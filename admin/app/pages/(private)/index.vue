@@ -11,7 +11,6 @@ import { toast } from "vue-sonner";
 import Loading from "~/components/loading.vue";
 import { Card, CardContent, CardTitle } from "~/components/ui/card";
 import CardHeader from "~/components/ui/card/CardHeader.vue";
-import { unwrapResponse } from "~/config";
 import { api } from "~/lib/api";
 
 definePageMeta({

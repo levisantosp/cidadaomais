@@ -3,15 +3,3 @@ export const error: Record<string, string> = {
   USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL:
     "Já existe uma conta com este e-mail. Use outro e-mail."
 };
-
-export const unwrapResponse = <T>(response: {
-  data: T;
-  error: {
-    value: unknown;
-  } | null;
-}) => {
-  if (response.error) {
-    throw response.error.value;
-  }
-  return response.data;
-};
