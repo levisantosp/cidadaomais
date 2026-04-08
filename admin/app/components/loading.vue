@@ -18,7 +18,7 @@ const props = withDefaults(
     class="inline-flex items-center justify-center"
     :style="{
       gap: `${Math.max(props.width * 0.25, 3)}px`,
-      '--dot-jump': `${Math.max(props.height * 1.25, 15)}px`
+      '--dot-jump': `${Math.max(props.height * 0.65, 8)}px`
     }"
   >
     <span
