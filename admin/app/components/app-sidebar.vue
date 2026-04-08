@@ -1,8 +1,17 @@
 <script setup lang="ts">
-import { BriefcaseBusiness, Home } from "lucide-vue-next";
+import {
+  BriefcaseBusiness,
+  Building,
+  ChartBarStacked,
+  Home,
+  Landmark,
+  LogOut
+} from "lucide-vue-next";
+import Loading from "~/components/loading.vue";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -11,6 +20,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem
 } from "~/components/ui/sidebar";
+import { auth } from "~/lib/auth";
 
 const navItems = [
   {
@@ -22,8 +32,31 @@ const navItems = [
     title: "Serviços",
     href: "/servicos",
     icon: BriefcaseBusiness
+  },
+  {
+    title: "Órgãos",
+    href: "/orgaos",
+    icon: Landmark
+  },
+  {
+    title: "Categorias",
+    href: "/categorias",
+    icon: ChartBarStacked
+  },
+  {
+    title: "Unidades",
+    href: "/unidades",
+    icon: Building
   }
 ] as const;
+
+const isPending = ref(false);
+
+const handleSignout = async () => {
+  isPending.value = true;
+  await auth.signOut();
+  await navigateTo("/login");
+};
 </script>
 
 <template>
@@ -56,5 +89,27 @@ const navItems = [
         </SidebarGroupContent>
       </SidebarGroup>
     </SidebarContent>
+
+    <SidebarFooter>
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton
+            class="bg-red-900 hover:bg-red-800 cursor-pointer"
+            @click="handleSignout"
+          >
+            <span>Sair</span>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    </SidebarFooter>
   </Sidebar>
+
+  <Teleport to="body">
+    <div
+      v-if="isPending"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/70"
+    >
+      <Loading :width="14" :height="14" class="text-white" />
+    </div>
+  </Teleport>
 </template>
