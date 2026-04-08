@@ -1,5 +1,6 @@
 export * from "./account";
 export * from "./audit";
+export * from "./category";
 export * from "./entity";
 export * from "./entity-unit";
 export * from "./service";
