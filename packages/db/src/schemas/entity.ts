@@ -1,6 +1,6 @@
+import { relations } from "drizzle-orm";
 import { bigint, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { snowflake } from "../utils/snowflake";
-import { relations } from "drizzle-orm";
 import { entityUnit } from "./entity-unit";
 
 export const entity = pgTable("entity", {
@@ -14,9 +14,7 @@ export const entity = pgTable("entity", {
   phone: text("phone"),
   email: text("email"),
   website: text("website"),
-  createdAt: timestamp("created_at")
-    .notNull()
-    .defaultNow(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at")
     .notNull()
     .defaultNow()
@@ -25,4 +23,4 @@ export const entity = pgTable("entity", {
 
 export const entityRelations = relations(entity, ({ many }) => ({
   units: many(entityUnit)
-}))
+}));

@@ -76,7 +76,7 @@ const statsConfig = [
         </div>
 
         <div>
-          <Loading v-if="isPending || isFetching || !data"/>
+          <Loading v-if="isPending || isFetching || !data" />
           <span v-else class="text-3xl font-bold">{{ data[item.key] }}</span>
         </div>
       </Card>
