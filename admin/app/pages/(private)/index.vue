@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useQuery } from "@tanstack/vue-query";
-import { BriefcaseBusiness, Landmark } from "lucide-vue-next";
+import { BriefcaseBusiness, ChartBarStacked, Landmark } from "lucide-vue-next";
 import { toast } from "vue-sonner";
 import Loading from "~/components/loading.vue";
 import { Card } from "~/components/ui/card";
@@ -16,17 +16,20 @@ const { isPending, isFetching, data, error } = useQuery({
   queryKey: ["counts"],
   staleTime: 60_000,
   async queryFn() {
-    const [servicesResponse, entitiesResponse] = await Promise.all([
+    const response = await Promise.all([
       api["services-count"].get(),
-      api["entities-count"].get()
+      api["entities-count"].get(),
+      api["categories-count"].get()
     ]);
 
-    const services = unwrapResponse(servicesResponse);
-    const entities = unwrapResponse(entitiesResponse);
+    const services = unwrapResponse(response[0]);
+    const entities = unwrapResponse(response[1]);
+    const categories = unwrapResponse(response[2]);
 
     return {
       servicesCount: services?.count,
-      entitiesCount: entities?.count
+      entitiesCount: entities?.count,
+      categoriesCount: categories?.count
     };
   }
 });
@@ -42,15 +45,21 @@ watch(error, (e) => {
 const statsConfig = [
   {
     key: "servicesCount",
-    label: "Serviços Totais",
+    label: "Serviços",
     icon: BriefcaseBusiness,
     color: "text-orange-400"
   },
   {
     key: "entitiesCount",
-    label: "Órgãos Totais",
+    label: "Órgãos",
     icon: Landmark,
     color: "text-blue-400"
+  },
+  {
+    key: "categoriesCount",
+    label: "Categorias",
+    icon: ChartBarStacked,
+    color: "text-rose-400"
   }
 ] as const;
 </script>
