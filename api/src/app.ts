@@ -6,6 +6,7 @@ import { z } from "zod";
 import { OpenAPI } from "./plugins/auth-plugin";
 import { deleteEntity } from "./routes/delete/delete-entity";
 import { getAuditLog } from "./routes/get/get-audit-log";
+import { getCategories } from "./routes/get/get-categories";
 import { getCategoriesCount } from "./routes/get/get-categories-count";
 import { getEntitiesCount } from "./routes/get/get-entities-count";
 import { getEntity } from "./routes/get/get-entity";
@@ -70,6 +71,7 @@ export const app = new Elysia()
   .use(getCategoriesCount)
   .use(getUnitsCount)
   .use(getAuditLog)
-  .use(createService);
+  .use(createService)
+  .use(getCategories);
 
 export type App = typeof app;
