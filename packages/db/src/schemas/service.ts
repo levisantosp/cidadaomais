@@ -16,7 +16,7 @@ export const service = pgTable("service", {
     .references(() => category.id, {
       onDelete: "restrict"
     }),
-  name: text("name").notNull(),
+  name: text("name").notNull().unique(),
   description: text("description").notNull(),
   requirements: text("requirements").array().notNull(),
   guidelines: text("guidelines").notNull(),
