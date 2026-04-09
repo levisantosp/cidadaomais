@@ -7,7 +7,7 @@ export const category = pgTable("category", {
   })
     .primaryKey()
     .$defaultFn(snowflake),
-  name: text("name").notNull(),
+  name: text("name").notNull().unique(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at")
     .notNull()
