@@ -3,6 +3,7 @@ import { desc } from "drizzle-orm";
 import { Elysia } from "elysia";
 import { z } from "zod";
 import { authPlugin } from "../../plugins/auth-plugin";
+import { paginatedResponse } from "../../utils/paginated-response";
 
 export const getAuditLog = new Elysia().use(authPlugin).get(
   "/audit-log",
@@ -14,11 +15,7 @@ export const getAuditLog = new Elysia().use(authPlugin).get(
       .offset((ctx.query.page - 1) * ctx.query.limit)
       .limit(ctx.query.limit + 1);
 
-    return {
-      page: ctx.query.page,
-      hasNextPage: logs.length > ctx.query.limit,
-      logs: logs.slice(0, ctx.query.limit)
-    };
+    return paginatedResponse(logs, ctx.query);
   },
   {
     authorize: ["Administrator"],

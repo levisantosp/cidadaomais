@@ -57,7 +57,7 @@ const { isPending, isFetching, data, error } = useQuery({
         ? null
         : categoriesResponse.data.count,
       unitsCount: unitsResponse.error ? null : unitsResponse.data.count,
-      logs: logsResponse.error ? [] : logsResponse.data.logs
+      logs: logsResponse.error ? [] : logsResponse.data.data
     };
   }
 });
