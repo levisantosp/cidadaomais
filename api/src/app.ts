@@ -12,6 +12,7 @@ import { getEntity } from "./routes/get/get-entity";
 import { getServicesCount } from "./routes/get/get-services-count";
 import { getUnitsCount } from "./routes/get/get-units-count";
 import { createEntity } from "./routes/post/create-entity";
+import { createService } from "./routes/post/create-service";
 import { editEntity } from "./routes/put/edit-entity";
 import { HttpException } from "./utils/HttpException";
 
@@ -68,6 +69,7 @@ export const app = new Elysia()
   .use(getEntitiesCount)
   .use(getCategoriesCount)
   .use(getUnitsCount)
-  .use(getAuditLog);
+  .use(getAuditLog)
+  .use(createService);
 
 export type App = typeof app;
