@@ -10,7 +10,8 @@
     "format": "turbo run format",
     "push": "bunx --bun drizzle-kit push",
     "generate": "bunx --bun drizzle-kit generate",
-    "migrate": "bunx --bun drizzle-kit migrate"
+    "migrate": "bunx --bun drizzle-kit migrate",
+    "studio": "bunx --bun drizzle-kit studio"
   },
   "keywords": [],
   "author": "",
