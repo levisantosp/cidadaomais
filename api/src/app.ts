@@ -51,7 +51,18 @@ export const app = new Elysia()
       },
       path: "/docs",
       mapJsonSchema: {
-        zod: z.toJSONSchema
+        zod: (schema: z.ZodType) =>
+          z.toJSONSchema(schema, {
+            target: "openapi-3.0",
+            unrepresentable: "any",
+            override(ctx) {
+              if (ctx.zodSchema._zod.def.type === "bigint") {
+                ctx.jsonSchema.type = "string";
+                ctx.jsonSchema.format = "int64";
+                ctx.jsonSchema.example = "1234567890123456789";
+              }
+            }
+          })
       }
     })
   )
