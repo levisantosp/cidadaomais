@@ -3,7 +3,10 @@ import { eq } from "drizzle-orm";
 import { Elysia } from "elysia";
 import { z } from "zod";
 import { authPlugin } from "../../plugins/auth-plugin";
-import { ConflictException, NotFoundException } from "../../utils/HttpException";
+import {
+  ConflictException,
+  NotFoundException
+} from "../../utils/HttpException";
 
 export const createService = new Elysia().use(authPlugin).post(
   "/services",
