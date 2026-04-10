@@ -37,7 +37,7 @@ jobs:
           persist-credentials: true
           
       - name: Setup Biome
-        uses: biomejs/setup-biome@v2
+        uses: biomejs/setup-biome@main
         with:
           version: latest
           
