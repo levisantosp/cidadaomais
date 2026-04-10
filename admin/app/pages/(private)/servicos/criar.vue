@@ -60,7 +60,7 @@ const schema = z.object({
     .string("Informe um guia válido")
     .min(10, "O guia precisa ter no mínimo 10 caracteres")
     .trim(),
-  categoryId: z.coerce.bigint("Informe a categoria")
+  categoryId: z.string("Informe a categoria")
 });
 const typedSchema = toTypedSchema(schema);
 const { defineField, errors, handleSubmit } = useForm({
@@ -77,7 +77,7 @@ const isComboboxOpen = ref(false);
 const search = ref<string>();
 const selectedCategory = ref<{
   name: string;
-  id: bigint;
+  id: string;
 }>();
 const trimmedSearch = computed(() => search.value?.trim());
 
@@ -110,21 +110,26 @@ const handleSearch = (event: Event) => {
   search.value = (event.target as HTMLInputElement).value;
 };
 
-const handleSelect = (value: { name: string; id: bigint }) => {
+const handleSelect = (value: { name: string; id: string }) => {
   selectedCategory.value = value;
+  categoryId.value = value.id;
 };
 
-const { isPending, error, mutate } = useMutation({
+const { isPending, mutate } = useMutation({
   mutationKey: ["services"],
   async mutationFn(data: z.infer<typeof schema>) {
-    await api.services.post({
+    const response = await api.services.post({
       ...data,
-      categoryId: BigInt(data.categoryId)
+      categoryId: data.categoryId as unknown as bigint
     });
+    if (response.error) {
+      throw response.error.value;
+    }
   },
-  onError(e) {
+  onError(error) {
+    console.error(error);
     toast.error("Ocorreu um erro inesperado...", {
-      description: e.message
+      description: error.message
     });
   },
   onSuccess() {
@@ -253,7 +258,10 @@ const onSubmit = handleSubmit((data) => mutate(data));
                           v-for="item in data"
                           :key="item.id.toString()"
                           :value="item.name"
-                          @select="handleSelect(item)"
+                          @select="handleSelect({
+                            ...item,
+                            id: item.id.toString()
+                          })"
                         >
                           <Check />
                           {{ item.name }}
