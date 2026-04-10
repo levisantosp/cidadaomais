@@ -11,7 +11,7 @@
     "postinstall": "nuxt prepare",
     "lint": "biome ci",
     "format": "biome check --write",
-    "check": "tsgo --noEmit"
+    "check": "tsc --noEmit"
   },
   "dependencies": {
     "@elysiajs/eden": "1.4.9",

@@ -12,7 +12,7 @@
     "dev": "bun --watch .",
     "lint": "biome ci",
     "format": "biome check --write",
-    "build": "biome ci && tsgo"
+    "build": "biome ci && tsc"
   },
   "keywords": [],
   "author": "",
