@@ -10,6 +10,7 @@ import { getCategories } from "./routes/get/get-categories";
 import { getCategoriesCount } from "./routes/get/get-categories-count";
 import { getEntitiesCount } from "./routes/get/get-entities-count";
 import { getEntity } from "./routes/get/get-entity";
+import { getServices } from "./routes/get/get-services";
 import { getServicesCount } from "./routes/get/get-services-count";
 import { getUnitsCount } from "./routes/get/get-units-count";
 import { createCategory } from "./routes/post/create-category";
@@ -85,6 +86,7 @@ export const app = new Elysia()
   .use(getAuditLog)
   .use(createService)
   .use(getCategories)
-  .use(createCategory);
+  .use(createCategory)
+  .use(getServices);
 
 export type App = typeof app;
