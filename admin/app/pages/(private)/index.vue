@@ -19,7 +19,6 @@ definePageMeta({
 
 const { isPending, isFetching, data, error } = useQuery({
   queryKey: ["home-data"],
-  staleTime: 60_000,
   async queryFn() {
     const [
       servicesResponse,
