@@ -308,14 +308,9 @@ const handlePage = async (action: "previous" | "next") => {
 
       <DialogFooter>
         <DialogClose>
-          <Button
-            variant="outline"
-            class="cursor-pointer"
-          >
-            Cancelar
-          </Button>
+          <Button variant="outline" class="cursor-pointer"> Cancelar </Button>
         </DialogClose>
-        
+
         <Button
           class="cursor-pointer"
           @click="mutateEdit()"
@@ -347,12 +342,7 @@ const handlePage = async (action: "previous" | "next") => {
 
       <DialogFooter>
         <DialogClose>
-          <Button
-            variant="outline"
-            class="cursor-pointer"
-          >
-            Cancelar
-          </Button>
+          <Button variant="outline" class="cursor-pointer"> Cancelar </Button>
         </DialogClose>
 
         <Button

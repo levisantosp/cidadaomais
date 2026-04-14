@@ -15,7 +15,7 @@ export const getCategory = new Elysia().get(
     if (!category) {
       throw new NotFoundException();
     }
-    
+
     return category;
   },
   {

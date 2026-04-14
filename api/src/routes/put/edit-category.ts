@@ -16,7 +16,7 @@ export const editCategory = new Elysia().use(authPlugin).put(
     if (!category) {
       throw new NotFoundException();
     }
-    
+
     return category;
   },
   {
