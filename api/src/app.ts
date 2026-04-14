@@ -4,6 +4,7 @@ import { Elysia } from "elysia";
 import { logger } from "logger";
 import { z } from "zod";
 import { OpenAPI } from "./plugins/auth-plugin";
+import { deleteCategory } from "./routes/delete/delete-category";
 import { deleteEntity } from "./routes/delete/delete-entity";
 import { getAuditLog } from "./routes/get/get-audit-log";
 import { getCategories } from "./routes/get/get-categories";
@@ -17,9 +18,9 @@ import { getUnitsCount } from "./routes/get/get-units-count";
 import { createCategory } from "./routes/post/create-category";
 import { createEntity } from "./routes/post/create-entity";
 import { createService } from "./routes/post/create-service";
+import { editCategory } from "./routes/put/edit-category";
 import { editEntity } from "./routes/put/edit-entity";
 import { HttpException } from "./utils/HttpException";
-import { deleteCategory } from "./routes/delete/delete-category";
 
 export const app = new Elysia()
   .onError((ctx) => {
@@ -91,6 +92,7 @@ export const app = new Elysia()
   .use(createCategory)
   .use(getServices)
   .use(getCategory)
-  .use(deleteCategory);
+  .use(deleteCategory)
+  .use(editCategory);
 
 export type App = typeof app;
