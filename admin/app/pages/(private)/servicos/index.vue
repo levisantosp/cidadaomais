@@ -48,7 +48,6 @@ const handlePage = async (action: "previous" | "next") => {
 
   await refetch();
 };
-
 </script>
 
 <template>
@@ -145,7 +144,7 @@ const handlePage = async (action: "previous" | "next") => {
               </TableBody>
             </Table>
           </div>
-          
+
           <div class="flex items-center justify-center space-x-2 py-2">
             <Button
               variant="outline"
