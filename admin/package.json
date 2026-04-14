@@ -24,6 +24,7 @@
     "api": "workspace:*",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
+    "dayjs": "1.11.20",
     "db": "workspace:*",
     "lucide-vue-next": "1.0.0",
     "nuxt": "4.4.2",
