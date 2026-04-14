@@ -1,11 +1,52 @@
 <script setup lang="ts">
-import { Plus } from "lucide-vue-next";
+import { useQuery } from "@tanstack/vue-query";
+import dayjs from "dayjs";
+import { ChevronLeft, ChevronRight, Plus } from "lucide-vue-next";
+import Loading from "~/components/loading.vue";
 import { Button } from "~/components/ui/button";
-import { Card, CardHeader, CardTitle } from "~/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from "~/components/ui/table";
+import { api } from "~/lib/api";
 
 definePageMeta({
   layout: "private"
 });
+
+const page = ref(1);
+
+const { isPending, isFetching, data, refetch } = useQuery({
+  queryKey: ["categories"],
+  async queryFn() {
+    const response = await api.categories.get({
+      query: {
+        limit: 10,
+        page: page.value
+      }
+    });
+    if (response.error) {
+      throw response.error.value;
+    }
+
+    return response.data;
+  }
+});
+
+const handlePage = async (action: "previous" | "next") => {
+  if (action === "previous") {
+    page.value = Math.max(1, page.value - 1);
+  } else {
+    page.value += 1;
+  }
+
+  await refetch();
+};
 </script>
 
 <template>
@@ -30,6 +71,94 @@ definePageMeta({
           </Button>
         </NuxtLink>
       </CardHeader>
+
+      <CardContent>
+        <div
+          v-if="isPending || isFetching || !data"
+          class="flex justify-center"
+        >
+          <Loading />
+        </div>
+
+        <div v-else>
+          <div class="flex items-center justify-center space-x-2 py-2">
+            <Button
+              variant="outline"
+              class="cursor-pointer"
+              :disabled="data.page <= 1"
+              @click="handlePage('previous')"
+            >
+              <ChevronLeft />
+            </Button>
+            <div>Página {{ data.page }}</div>
+            <Button
+              variant="outline"
+              class="cursor-pointer"
+              :disabled="!data.hasNextPage"
+              @click="handlePage('next')"
+            >
+              <ChevronRight />
+            </Button>
+          </div>
+
+          <div>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Nome</TableHead>
+                  <TableHead>Criada em</TableHead>
+                  <TableHead>Atualizada em</TableHead>
+                </TableRow>
+              </TableHeader>
+
+              <TableBody>
+                <TableRow
+                  v-if="!data.data.length"
+                  :colSpan="6"
+                  class="text-muted-foreground text-center h-25"
+                >
+                  <TableCell>Nenhuma categoria encontrada</TableCell>
+                </TableRow>
+
+                <TableRow
+                  v-else
+                  v-for="category in data.data"
+                  class="text-muted-foreground cursor-pointer"
+                  @click="navigateTo(`/categorias/${category.id}`)"
+                >
+                  <TableCell>{{ category.name }}</TableCell>
+                  <TableCell
+                    >{{ dayjs(category.createdAt).format("DD/MM/YYYY HH:mm:ss") }}</TableCell
+                  >
+                  <TableCell
+                    >{{ dayjs(category.updatedAt).format("DD/MM/YYYY HH:mm:ss") }}</TableCell
+                  >
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
+          
+          <div class="flex items-center justify-center space-x-2 py-2">
+            <Button
+              variant="outline"
+              class="cursor-pointer"
+              :disabled="data.page <= 1"
+              @click="handlePage('previous')"
+            >
+              <ChevronLeft />
+            </Button>
+            <div>Página {{ data.page }}</div>
+            <Button
+              variant="outline"
+              class="cursor-pointer"
+              :disabled="!data.hasNextPage"
+              @click="handlePage('next')"
+            >
+              <ChevronRight />
+            </Button>
+          </div>
+        </div>
+      </CardContent>
     </Card>
   </div>
 </template>
