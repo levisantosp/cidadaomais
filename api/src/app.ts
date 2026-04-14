@@ -19,6 +19,7 @@ import { createEntity } from "./routes/post/create-entity";
 import { createService } from "./routes/post/create-service";
 import { editEntity } from "./routes/put/edit-entity";
 import { HttpException } from "./utils/HttpException";
+import { deleteCategory } from "./routes/delete/delete-category";
 
 export const app = new Elysia()
   .onError((ctx) => {
@@ -89,6 +90,7 @@ export const app = new Elysia()
   .use(getCategories)
   .use(createCategory)
   .use(getServices)
-  .use(getCategory);
+  .use(getCategory)
+  .use(deleteCategory);
 
 export type App = typeof app;
