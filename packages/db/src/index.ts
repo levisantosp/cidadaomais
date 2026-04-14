@@ -11,3 +11,4 @@ export { schema };
 
 export type Role = typeof schema.user.$inferSelect.role;
 export type User = typeof schema.user.$inferSelect;
+export type Category = typeof schema.category.$inferSelect;
