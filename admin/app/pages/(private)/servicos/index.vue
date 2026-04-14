@@ -126,6 +126,7 @@ const handlePage = async (action: "previous" | "next") => {
                 </TableRow>
 
                 <TableRow
+                  v-else
                   v-for="service in data.data"
                   class="text-muted-foreground cursor-pointer"
                   @click="navigateTo(`/servicos/${service.id}`)"
