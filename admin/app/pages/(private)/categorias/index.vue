@@ -1,10 +1,37 @@
 <script setup lang="ts">
-import { useQuery } from "@tanstack/vue-query";
+import { useMutation, useQuery } from "@tanstack/vue-query";
 import dayjs from "dayjs";
-import { ChevronLeft, ChevronRight, Plus } from "lucide-vue-next";
+import type { Category } from "db";
+import {
+  ChevronLeft,
+  ChevronRight,
+  MoreHorizontal,
+  Pencil,
+  Plus,
+  Trash
+} from "lucide-vue-next";
+import { toast } from "vue-sonner";
 import Loading from "~/components/loading.vue";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from "~/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger
+} from "~/components/ui/dropdown-menu";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
 import {
   Table,
   TableBody,
@@ -20,6 +47,11 @@ definePageMeta({
 });
 
 const page = ref(1);
+const isDialogMenuOpen = ref(false);
+const selectedCategory = ref<Category>();
+const editValues = ref({
+  name: ""
+});
 
 const { isPending, isFetching, data, refetch } = useQuery({
   queryKey: ["categories"],
@@ -35,6 +67,57 @@ const { isPending, isFetching, data, refetch } = useQuery({
     }
 
     return response.data;
+  }
+});
+
+const { mutate, isPending: isDeletePending } = useMutation({
+  async mutationFn() {
+    if (!selectedCategory.value) {
+      return toast.warning(
+        "Não foi possível deletar essa categoria no momento"
+      );
+    }
+
+    await api
+      .categories({
+        id: selectedCategory.value.id.toString()
+      })
+      .delete();
+
+    selectedCategory.value = undefined;
+
+    await refetch();
+  },
+  onError(error) {
+    toast.error("Ocorreu um erro inesperado...", {
+      description: error.message
+    });
+    console.error(error);
+  }
+});
+
+const { mutate: mutateEdit, isPending: isEditPending } = useMutation({
+  async mutationFn() {
+    if (!selectedCategory.value || !editValues.value) {
+      return toast.warning("Não foi possível editar essa categoria no momento");
+    }
+
+    await api
+      .categories({
+        id: selectedCategory.value.id.toString()
+      })
+      .put(editValues.value);
+
+    isDialogMenuOpen.value = false;
+    selectedCategory.value = undefined;
+
+    await refetch();
+  },
+  onError(error) {
+    toast.error("Ocorreu um erro inesperado...", {
+      description: error.message
+    });
+    console.error(error);
   }
 });
 
@@ -108,6 +191,7 @@ const handlePage = async (action: "previous" | "next") => {
                   <TableHead>Nome</TableHead>
                   <TableHead>Criada em</TableHead>
                   <TableHead>Atualizada em</TableHead>
+                  <TableHead class="text-right">Ações</TableHead>
                 </TableRow>
               </TableHeader>
 
@@ -124,7 +208,6 @@ const handlePage = async (action: "previous" | "next") => {
                   v-else
                   v-for="category in data.data"
                   class="text-muted-foreground cursor-pointer"
-                  @click="navigateTo(`/categorias/${category.id}`)"
                 >
                   <TableCell>{{ category.name }}</TableCell>
                   <TableCell
@@ -133,6 +216,40 @@ const handlePage = async (action: "previous" | "next") => {
                   <TableCell
                     >{{ dayjs(category.updatedAt).format("DD/MM/YYYY HH:mm:ss") }}</TableCell
                   >
+
+                  <TableCell class="text-right">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" class="w-6 h-6 cursor-pointer">
+                          <MoreHorizontal />
+                        </Button>
+                      </DropdownMenuTrigger>
+
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Ações</DropdownMenuLabel>
+
+                        <DropdownMenuItem
+                          class="cursor-pointer"
+                          @click="() => {
+                            selectedCategory = category;
+                            isDialogMenuOpen = true;
+                            editValues.name = category.name;
+                          }"
+                        >
+                          <Pencil />
+                          Editar
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          variant="destructive"
+                          class="cursor-pointer"
+                          @click="selectedCategory = category"
+                        >
+                          <Trash />
+                          Deletar
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -161,4 +278,93 @@ const handlePage = async (action: "previous" | "next") => {
       </CardContent>
     </Card>
   </div>
+
+  <Dialog
+    :open="isDialogMenuOpen"
+    @update:open="(open) => {
+      isDialogMenuOpen = open;
+      if (!open) {
+        selectedCategory = undefined;
+        editValues.name = '';
+      }
+    }"
+  >
+    <DialogContent>
+      <DialogHeader>
+        <DialogTitle>Editar categoria</DialogTitle>
+        <DialogDescription>Edite as informações da categoria</DialogDescription>
+      </DialogHeader>
+
+      <div class="flex items-center gap-2">
+        <div class="grid flex-1 gap-2">
+          <Label for="name">Nome</Label>
+          <Input
+            id="link"
+            :defaultValue="editValues.name"
+            v-model="editValues.name"
+          />
+        </div>
+      </div>
+
+      <DialogFooter>
+        <DialogClose>
+          <Button
+            variant="outline"
+            class="cursor-pointer"
+          >
+            Cancelar
+          </Button>
+        </DialogClose>
+        
+        <Button
+          class="cursor-pointer"
+          @click="mutateEdit()"
+          :disabled="isEditPending"
+        >
+          <Loading v-if="isEditPending" :height="6" :width="6" class="w-12" />
+          <span v-else>Salvar alterações</span>
+        </Button>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
+
+  <Dialog
+    :open="!!selectedCategory && !isDialogMenuOpen"
+    @update:open="(open) => {
+      if (!open) {
+        selectedCategory = undefined;
+      }
+    }"
+  >
+    <DialogContent>
+      <DialogHeader>
+        <DialogTitle>Excluir categoria</DialogTitle>
+        <DialogDescription>
+          Esta ação não poderá ser desfeita e a categoria será removida
+          permanantemente.
+        </DialogDescription>
+      </DialogHeader>
+
+      <DialogFooter>
+        <DialogClose>
+          <Button
+            variant="outline"
+            class="cursor-pointer"
+          >
+            Cancelar
+          </Button>
+        </DialogClose>
+
+        <Button
+          variant="destructive"
+          @click="mutate()"
+          class="cursor-pointer"
+          :disabled="isDeletePending"
+        >
+          <Loading v-if="isDeletePending" :height="6" :width="6" class="w-12" />
+          <span v-else>Deletar</span>
+        </Button>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
 </template>
