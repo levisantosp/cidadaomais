@@ -8,9 +8,9 @@ import {
   Landmark
 } from "lucide-vue-next";
 import { toast } from "vue-sonner";
-import Loading from "~/components/loading.vue";
 import { Card, CardContent, CardTitle } from "~/components/ui/card";
 import CardHeader from "~/components/ui/card/CardHeader.vue";
+import { Skeleton } from "~/components/ui/skeleton";
 import { api } from "~/lib/api";
 
 definePageMeta({
@@ -142,7 +142,9 @@ const statsConfig = [
         </div>
 
         <div>
-          <Loading v-if="isPending || isFetching || !data" />
+          <div v-if="isPending || isFetching || !data">
+            <Skeleton class="h-8 w-8" />
+          </div>
           <div
             v-else-if="hasGlobalError"
             class="flex items-center gap-2 text-red-400 text-sm"
@@ -162,7 +164,7 @@ const statsConfig = [
       </Card>
     </div>
 
-    <div class="grid gap-4 md:grid-cols-2 grid-cols-7">
+    <div class="grid gap-4 md:grid-cols-2 grid-cols-1">
       <Card>
         <CardHeader>
           <CardTitle class="text-muted-foreground">
@@ -171,8 +173,18 @@ const statsConfig = [
         </CardHeader>
 
         <CardContent class="space-y-4">
-          <div v-if="isPending || isFetching" class="flex justify-center">
-            <Loading />
+          <div
+            v-if="isPending || isFetching || !data"
+            class="flex flex-col gap-5"
+          >
+            <div v-for="n in 5" :key="n" class="flex gap-2">
+              <Skeleton class="rounded-full h-10 w-10" />
+
+              <div class="flex flex-col gap-1">
+                <Skeleton class="h-5 w-xs" />
+                <Skeleton class="h-3 w-48" />
+              </div>
+            </div>
           </div>
           <div
             v-else-if="hasGlobalError"
