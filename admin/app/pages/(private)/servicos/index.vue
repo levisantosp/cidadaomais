@@ -8,7 +8,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -21,6 +20,7 @@ definePageMeta({
 });
 
 const page = ref(1);
+const router = useRouter();
 
 const { isPending, isFetching, data, refetch } = useQuery({
   queryKey: ["services"],
@@ -129,7 +129,7 @@ const handlePage = async (action: "previous" | "next") => {
                   v-else
                   v-for="service in data.data"
                   class="text-muted-foreground cursor-pointer"
-                  @click="navigateTo(`/servicos/${service.id}`)"
+                  @click="router.push(`/servicos/${service.id}`)"
                 >
                   <TableCell>{{ service.name }}</TableCell>
                   <TableCell>{{ service.category.name }}</TableCell>
