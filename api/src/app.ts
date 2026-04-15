@@ -21,8 +21,8 @@ import { createEntity } from "./routes/post/create-entity";
 import { createService } from "./routes/post/create-service";
 import { editCategory } from "./routes/put/edit-category";
 import { editEntity } from "./routes/put/edit-entity";
-import { HttpException } from "./utils/HttpException";
 import { editService } from "./routes/put/edit-service";
+import { HttpException } from "./utils/HttpException";
 
 export const app = new Elysia()
   .onError((ctx) => {
