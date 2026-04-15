@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useMutation, useQuery } from "@tanstack/vue-query";
 import { toTypedSchema } from "@vee-validate/zod";
+import { refDebounced } from "@vueuse/core";
 import { Check, ChevronsUpDown } from "lucide-vue-next";
 import { useForm } from "vee-validate";
 import { toast } from "vue-sonner";
@@ -80,6 +81,7 @@ const selectedCategory = ref<{
   id: string;
 }>();
 const trimmedSearch = computed(() => search.value?.trim());
+const debouncedSearch = refDebounced(trimmedSearch, 1000);
 
 const {
   isPending: isCategoryPending,
@@ -87,7 +89,7 @@ const {
   error: categoryError,
   data
 } = useQuery({
-  queryKey: ["categories", trimmedSearch],
+  queryKey: ["categories", debouncedSearch],
   enabled: computed(() => isComboboxOpen.value),
   staleTime: 60_000,
   async queryFn() {
@@ -95,7 +97,7 @@ const {
       query: {
         limit: 100,
         page: 1,
-        name: trimmedSearch.value
+        name: debouncedSearch.value
       }
     });
     if (response.error) {
@@ -246,7 +248,7 @@ const onSubmit = handleSubmit((data) => mutate(data));
                           v-if="isCategoryPending || isFetching"
                           class="pl-5"
                         />
-                        <span v-else class="pl-5"
+                        <span v-else-if="!data?.length" class="pl-5"
                           >Nenhuma categoria encontrada</span
                         >
                       </CommandEmpty>

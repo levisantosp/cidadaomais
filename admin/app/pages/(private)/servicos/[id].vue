@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useMutation, useQuery } from "@tanstack/vue-query";
 import { toTypedSchema } from "@vee-validate/zod";
+import { refDebounced } from "@vueuse/core";
 import { ChevronsUpDown, Edit, Undo2 } from "lucide-vue-next";
 import { useForm } from "vee-validate";
 import { toast } from "vue-sonner";
@@ -46,7 +47,6 @@ import {
   TagsInputItemText
 } from "~/components/ui/tags-input";
 import { Textarea } from "~/components/ui/textarea";
-import { wait } from "~/config";
 import { api } from "~/lib/api";
 
 definePageMeta({
@@ -145,7 +145,7 @@ const [name, nameAttr] = defineField("name");
 const [desc, descAttr] = defineField("description");
 const [requirements, requirementsAttr] = defineField("requirements");
 const [guidelines, guidelinesAttr] = defineField("guidelines");
-const [categoryId, categoryIdAttr] = defineField("categoryId");
+const [categoryId] = defineField("categoryId");
 
 const isComboboxOpen = ref(false);
 const search = ref<string>();
@@ -154,6 +154,7 @@ const selectedCategory = ref<{
   id: string;
 }>();
 const trimmedSearch = computed(() => search.value?.trim());
+const debouncedSearch = refDebounced(trimmedSearch, 1000);
 
 const handleSearch = (event: Event) => {
   search.value = (event.target as HTMLInputElement).value;
@@ -201,15 +202,14 @@ const {
   isFetching: isCategoriesFetching,
   data: categories
 } = useQuery({
-  queryKey: ["categories", trimmedSearch],
+  queryKey: ["categories", debouncedSearch],
   enabled: computed(() => isComboboxOpen.value),
   async queryFn() {
-    await wait(2);
     const response = await api.categories.get({
       query: {
         limit: 100,
         page: 1,
-        name: trimmedSearch.value
+        name: debouncedSearch.value
       }
     });
     if (response.error) {
