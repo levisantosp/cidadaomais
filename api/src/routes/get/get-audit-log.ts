@@ -10,8 +10,8 @@ export const getAuditLog = new Elysia().use(authPlugin).get(
   async (ctx) => {
     const logs = await db
       .select()
-      .from(schema.category)
-      .orderBy(desc(schema.category.createdAt))
+      .from(schema.audit)
+      .orderBy(desc(schema.audit.createdAt))
       .offset((ctx.query.page - 1) * ctx.query.limit)
       .limit(ctx.query.limit + 1);
 
