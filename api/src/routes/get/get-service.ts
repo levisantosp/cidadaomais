@@ -7,11 +7,12 @@ import { NotFoundException } from "../../utils/HttpException";
 export const getService = new Elysia().get(
   "/services/:id",
   async (ctx) => {
-    const [service] = await db
-      .select()
-      .from(schema.service)
-      .where(eq(schema.service.id, ctx.params.id))
-      .limit(1);
+    const service = await db.query.service.findFirst({
+      where: eq(schema.service.id, ctx.params.id),
+      with: {
+        category: true
+      }
+    });
     if (!service) {
       throw new NotFoundException();
     }
