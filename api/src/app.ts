@@ -22,6 +22,7 @@ import { createService } from "./routes/post/create-service";
 import { editCategory } from "./routes/put/edit-category";
 import { editEntity } from "./routes/put/edit-entity";
 import { HttpException } from "./utils/HttpException";
+import { editService } from "./routes/put/edit-service";
 
 export const app = new Elysia()
   .onError((ctx) => {
@@ -95,6 +96,7 @@ export const app = new Elysia()
   .use(getCategory)
   .use(deleteCategory)
   .use(editCategory)
-  .use(getService);
+  .use(getService)
+  .use(editService);
 
 export type App = typeof app;
