@@ -316,7 +316,7 @@ const handlePage = async (action: "previous" | "next") => {
           @click="mutateEdit()"
           :disabled="isEditPending"
         >
-          <Loading v-if="isEditPending" :height="6" :width="6" class="w-12" />
+          <Loading v-if="isEditPending" class="w-12" />
           <span v-else>Salvar alterações</span>
         </Button>
       </DialogFooter>
@@ -351,7 +351,7 @@ const handlePage = async (action: "previous" | "next") => {
           class="cursor-pointer"
           :disabled="isDeletePending"
         >
-          <Loading v-if="isDeletePending" :height="6" :width="6" class="w-12" />
+          <Loading v-if="isDeletePending" class="w-12" />
           <span v-else>Deletar</span>
         </Button>
       </DialogFooter>

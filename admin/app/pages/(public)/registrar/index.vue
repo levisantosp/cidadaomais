@@ -197,7 +197,7 @@ const showPassword = ref(false);
           :disabled="isSubmitting"
         >
           <span v-if="!isSubmitting">Criar conta</span>
-          <Loading v-else :width="8" :height="8" />
+          <Loading v-else />
         </Button>
       </CardFooter>
     </Card>

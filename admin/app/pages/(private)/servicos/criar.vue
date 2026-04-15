@@ -244,8 +244,6 @@ const onSubmit = handleSubmit((data) => mutate(data));
                       <CommandEmpty>
                         <Loading
                           v-if="isCategoryPending || isFetching"
-                          :width="6"
-                          :height="6"
                           class="pl-5"
                         />
                         <span v-else class="pl-5"

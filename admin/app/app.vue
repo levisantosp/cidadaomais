@@ -12,7 +12,7 @@ const session = auth.useSession();
     v-if="session.isPending"
     class="flex min-h-screen justify-center items-center"
   >
-    <Loading />
+    <Loading :width="20" :height="20" />
   </div>
   <div v-else>
     <div>

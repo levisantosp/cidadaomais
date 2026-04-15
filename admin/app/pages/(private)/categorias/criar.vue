@@ -89,7 +89,7 @@ const onSubmit = handleSubmit((data) => mutate(data));
           :disabled="isPending === true"
         >
           <span v-if="!isPending">Criar</span>
-          <Loading v-else :width="8" :height="8" />
+          <Loading v-else />
         </Button>
       </CardFooter>
     </Card>

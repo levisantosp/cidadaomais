@@ -109,7 +109,7 @@ const handleSignout = async () => {
       v-if="isPending"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/70"
     >
-      <Loading :width="14" :height="14" class="text-white" />
+      <Loading :width="20" :height="20" class="text-white" />
     </div>
   </Teleport>
 </template>
