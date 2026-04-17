@@ -11,7 +11,11 @@
     "push": "bunx --bun drizzle-kit push",
     "generate": "bunx --bun drizzle-kit generate",
     "migrate": "bunx --bun drizzle-kit migrate",
-    "studio": "bunx --bun drizzle-kit studio"
+    "studio": "bunx --bun drizzle-kit studio",
+    "build:api": "turbo run build -F api",
+    "start:api": "turbo run start -F api",
+    "build:admin": "turbo run build -F admin",
+    "start:admin": "turbo run start -F admin"
   },
   "keywords": [],
   "author": "",

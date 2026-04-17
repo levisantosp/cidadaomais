@@ -6,7 +6,7 @@ services:
     ports:
       - "5433:5432"
     shm_size: 2gb
-    
+
     environment:
       - PGDATA=/var/lib/postgresql/18/data
     env_file:
@@ -21,3 +21,34 @@ services:
       -c work_mem=4MB
       -c effective_cache_size=5GB
       -c random_page_cost=1.1
+
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+      secrets:
+        - api_secrets
+    image: cidadaomais/api
+    container_name: cidadaomais-api
+    env_file: api/.env
+    ports:
+      - "3333:3333"
+
+  admin:
+    build:
+      context: .
+      dockerfile: admin/Dockerfile
+      secrets:
+        - admin_secrets
+    image: cidadaomais/admin
+    container_name: cidadaomais-admin
+    env_file: admin/.env
+    restart: always
+    ports:
+      - "5173:3000"
+
+secrets:
+  api_secrets:
+    file: api/.env
+  admin_secrets:
+    file: admin/.env

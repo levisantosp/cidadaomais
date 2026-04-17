@@ -1,0 +1,13 @@
+node_modules
+**.md
+.turbo
+.env
+.gitignore
+mobile
+LICENSE
+.zed
+.vscode
+.github
+.nuxt
+.output
+postgres
