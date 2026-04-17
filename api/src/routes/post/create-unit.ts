@@ -10,7 +10,7 @@ export const createUnit = new Elysia().use(authPlugin).post(
       .insert(schema.entityUnit)
       .values(ctx.body)
       .returning();
-  
+
     return unit;
   },
   {

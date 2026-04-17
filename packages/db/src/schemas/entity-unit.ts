@@ -16,10 +16,9 @@ export const entityUnit = pgTable("entity_unit", {
     .$defaultFn(snowflake),
   entityId: bigint("entity_id", {
     mode: "bigint"
-  })
-    .references(() => entity.id, {
-      onDelete: "cascade"
-    }),
+  }).references(() => entity.id, {
+    onDelete: "cascade"
+  }),
   name: text("name").notNull(),
   latitude: doublePrecision("latitude").notNull(),
   longitude: doublePrecision("longitude").notNull(),

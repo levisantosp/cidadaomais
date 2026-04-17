@@ -21,11 +21,11 @@ import { getUnitsCount } from "./routes/get/get-units-count";
 import { createCategory } from "./routes/post/create-category";
 import { createEntity } from "./routes/post/create-entity";
 import { createService } from "./routes/post/create-service";
+import { createUnit } from "./routes/post/create-unit";
 import { editCategory } from "./routes/put/edit-category";
 import { editEntity } from "./routes/put/edit-entity";
 import { editService } from "./routes/put/edit-service";
 import { HttpException } from "./utils/HttpException";
-import { createUnit } from "./routes/post/create-unit";
 
 export const app = new Elysia()
   .onError((ctx) => {
