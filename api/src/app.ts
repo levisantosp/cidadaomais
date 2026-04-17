@@ -26,6 +26,7 @@ import { editCategory } from "./routes/put/edit-category";
 import { editEntity } from "./routes/put/edit-entity";
 import { editService } from "./routes/put/edit-service";
 import { HttpException } from "./utils/HttpException";
+import { env } from "./env";
 
 export const app = new Elysia()
   .onError((ctx) => {
@@ -77,7 +78,7 @@ export const app = new Elysia()
   )
   .use(
     cors({
-      origin: "http://localhost:3000",
+      origin: env.ORIGINS,
       methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
       credentials: true,
       allowedHeaders: ["Content-Type", "Authorization"]
