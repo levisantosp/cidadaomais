@@ -3,6 +3,7 @@ import { openapi } from "@elysiajs/openapi";
 import { Elysia } from "elysia";
 import { logger } from "logger";
 import { z } from "zod";
+import { env } from "./env";
 import { OpenAPI } from "./plugins/auth-plugin";
 import { deleteCategory } from "./routes/delete/delete-category";
 import { deleteEntity } from "./routes/delete/delete-entity";
@@ -26,7 +27,6 @@ import { editCategory } from "./routes/put/edit-category";
 import { editEntity } from "./routes/put/edit-entity";
 import { editService } from "./routes/put/edit-service";
 import { HttpException } from "./utils/HttpException";
-import { env } from "./env";
 
 export const app = new Elysia()
   .onError((ctx) => {
