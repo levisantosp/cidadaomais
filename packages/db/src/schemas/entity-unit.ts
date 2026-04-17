@@ -17,7 +17,6 @@ export const entityUnit = pgTable("entity_unit", {
   entityId: bigint("entity_id", {
     mode: "bigint"
   })
-    .notNull()
     .references(() => entity.id, {
       onDelete: "cascade"
     }),
