@@ -2,6 +2,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { openAPI } from "better-auth/plugins";
 import { db } from "db";
+import { env } from "./env";
 
 export const auth = betterAuth({
   basePath: "/auth",
@@ -23,7 +24,7 @@ export const auth = betterAuth({
     updateAge: 60 * 60 * 24
   },
   plugins: [openAPI()],
-  trustedOrigins: ["http://localhost:3000"],
+  trustedOrigins: env.ORIGINS,
   user: {
     additionalFields: {
       role: {
