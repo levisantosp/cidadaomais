@@ -57,13 +57,13 @@ const schema = z.object({
   website: z
     .url("Link inválido. O link deve começar com 'https://' ou 'http://'.")
     .optional(),
-  units: z.string("Informe as unidades").array()
+  unitsIds: z
+    .array(z.coerce.bigint("Unidade inválida"), "Informe as unidades")
+    .min(1, "Selecione ao menos uma unidade")
+    .max(100, "Selecione até 100 unidades")
 });
 const { defineField, errors, handleSubmit } = useForm({
-  validationSchema: toTypedSchema(schema),
-  initialValues: {
-    units: []
-  }
+  validationSchema: toTypedSchema(schema)
 });
 
 const [name, nameProps] = defineField("name");
@@ -71,12 +71,15 @@ const [description, descriptionProps] = defineField("description");
 const [phone, phoneProps] = defineField("phone");
 const [email, emailProps] = defineField("email");
 const [website, websiteProps] = defineField("website");
-const [units, unitsProps] = defineField("units");
+const [units, unitsProps] = defineField("unitsIds");
 
 const { mutate, isPending } = useMutation({
   mutationKey: ["entities", name],
-  async mutationFn({ units: _units, ...data }: z.infer<typeof schema>) {
-    const response = await api.entities.post(data);
+  async mutationFn(data: z.infer<typeof schema>) {
+    const response = await api.entities.post({
+      ...data,
+      unitsIds: data.unitsIds.map(id => id.toString()) as unknown as bigint[]
+    });
     if (response.error) {
       throw response.error.value;
     }
@@ -277,8 +280,8 @@ const onSubmit = handleSubmit((data) => mutate(data));
                 </PopoverContent>
               </Popover>
 
-              <span v-if="errors.units" class="text-sm text-red-400">
-                {{ errors.units }}
+              <span v-if="errors.unitsIds" class="text-sm text-red-400">
+                {{ errors.unitsIds }}
               </span>
             </div>
           </div>
