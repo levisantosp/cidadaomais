@@ -78,7 +78,7 @@ const { mutate, isPending } = useMutation({
   async mutationFn(data: z.infer<typeof schema>) {
     const response = await api.entities.post({
       ...data,
-      unitsIds: data.unitsIds.map(id => id.toString()) as unknown as bigint[]
+      unitsIds: data.unitsIds.map((id) => id.toString()) as unknown as bigint[]
     });
     if (response.error) {
       throw response.error.value;
