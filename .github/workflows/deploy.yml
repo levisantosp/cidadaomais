@@ -65,13 +65,13 @@ jobs:
           cat >>~/.ssh/config << END
           Host prod
             HostName $SSH_HOST
-            User $SSH_USERNAME
+            User $SSH_USER
             Port $SSH_PORT
             IdentityFile ~/.ssh/key
             StrictHostKeyChecking no
           END
         env:
-          SSH_USERNAME: ${{ secrets.USERNAME }}
+          SSH_USER: ${{ secrets.USER }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_HOST: ${{ secrets.HOST }}
           SSH_PORT: 22
