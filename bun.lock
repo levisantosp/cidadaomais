@@ -26,7 +26,7 @@
         "@elysiajs/eden": "1.4.9",
         "@nuxt/fonts": "0.14.0",
         "@tailwindcss/vite": "4.2.2",
-        "@tanstack/vue-query": "5.97.0",
+        "@tanstack/vue-query": "5.99.1",
         "@tanstack/vue-table": "8.21.3",
         "@vee-validate/zod": "4.15.1",
         "@vueuse/core": "14.2.1",
@@ -598,13 +598,13 @@
 
     "@tanstack/match-sorter-utils": ["@tanstack/match-sorter-utils@8.19.4", "", { "dependencies": { "remove-accents": "0.5.0" } }, "sha512-Wo1iKt2b9OT7d+YGhvEPD3DXvPv2etTusIMhMUoG7fbhmxcXCtIjJDEygy91Y2JFlwGyjqiBPRozme7UD8hoqg=="],
 
-    "@tanstack/query-core": ["@tanstack/query-core@5.97.0", "", {}, "sha512-QdpLP5VzVMgo4VtaPppRA2W04UFjIqX+bxke/ZJhE5cfd5UPkRzqIAJQt9uXkQJjqE8LBOMbKv7f8HCsZltXlg=="],
+    "@tanstack/query-core": ["@tanstack/query-core@5.99.1", "", {}, "sha512-5E8xwxyWvr22yt7zvzP3KOZ5TUElOdVA45NP3/Ao1m9mvc9i18NLTDe9m3M00BH2DR5J20cv7xckMPlhKNs+vQ=="],
 
     "@tanstack/table-core": ["@tanstack/table-core@8.21.3", "", {}, "sha512-ldZXEhOBb8Is7xLs01fR3YEc3DERiz5silj8tnGkFZytt1abEvl/GhUmCE0PMLaMPTa3Jk4HbKmRlHmu+gCftg=="],
 
     "@tanstack/virtual-core": ["@tanstack/virtual-core@3.13.23", "", {}, "sha512-zSz2Z2HNyLjCplANTDyl3BcdQJc2k1+yyFoKhNRmCr7V7dY8o8q5m8uFTI1/Pg1kL+Hgrz6u3Xo6eFUB7l66cg=="],
 
-    "@tanstack/vue-query": ["@tanstack/vue-query@5.97.0", "", { "dependencies": { "@tanstack/match-sorter-utils": "^8.19.4", "@tanstack/query-core": "5.97.0", "@vue/devtools-api": "^6.6.3", "vue-demi": "^0.14.10" }, "peerDependencies": { "@vue/composition-api": "^1.1.2", "vue": "^2.6.0 || ^3.3.0" }, "optionalPeers": ["@vue/composition-api"] }, "sha512-lziGgJTrEVXX98nQ9D+MfvjHgD92uHPrVXjB1GSfK+mq0rTr/I0ovwraGqaNTfwORmzHtQOObksPVf2NH17djw=="],
+    "@tanstack/vue-query": ["@tanstack/vue-query@5.99.1", "", { "dependencies": { "@tanstack/match-sorter-utils": "^8.19.4", "@tanstack/query-core": "5.99.1", "@vue/devtools-api": "^6.6.3", "vue-demi": "^0.14.10" }, "peerDependencies": { "@vue/composition-api": "^1.1.2", "vue": "^2.6.0 || ^3.3.0" }, "optionalPeers": ["@vue/composition-api"] }, "sha512-N7+wl/n4C/MfebxnqeceWnz/0VOPH7JrrqwzA0DJbTOyv7iW7Amp/kShJGwDPmyIKrzKpkFrSYvsXUWQfSPwtA=="],
 
     "@tanstack/vue-table": ["@tanstack/vue-table@8.21.3", "", { "dependencies": { "@tanstack/table-core": "8.21.3" }, "peerDependencies": { "vue": ">=3.2" } }, "sha512-rusRyd77c5tDPloPskctMyPLFEQUeBzxdQ+2Eow4F7gDPlPOB1UnnhzfpdvqZ8ZyX2rRNGmqNnQWm87OI2OQPw=="],
 

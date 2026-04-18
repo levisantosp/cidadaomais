@@ -17,7 +17,7 @@
     "@elysiajs/eden": "1.4.9",
     "@nuxt/fonts": "0.14.0",
     "@tailwindcss/vite": "4.2.2",
-    "@tanstack/vue-query": "5.97.0",
+    "@tanstack/vue-query": "5.99.1",
     "@tanstack/vue-table": "8.21.3",
     "@vee-validate/zod": "4.15.1",
     "@vueuse/core": "14.2.1",
