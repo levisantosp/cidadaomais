@@ -1,0 +1,136 @@
+name: Deploy Apps
+on:
+  workflow_call:
+    inputs:
+      base_sha:
+        required: true
+        type: string
+      deploy_sha:
+        required: true
+        type: string
+      source_event_name:
+        required: true
+        type: string
+      source_ref:
+        required: true
+        type: string
+jobs:
+  deploy:
+    name: "Deploy to Production"
+    if: ${{ inputs.source_event_name == 'push' && inputs.source_ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@main
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.deploy_sha }}
+
+      - name: Verify deploy SHA belongs to main
+        run: |
+          git fetch origin refs/heads/main:refs/remotes/origin/main --force
+
+          if ! git merge-base --is-ancestor "${{ inputs.deploy_sha }}" origin/main; then
+            echo "Refusing deploy: ${{ inputs.deploy_sha }} is not contained in origin/main."
+            exit 1
+          fi
+
+      - uses: dorny/paths-filter@master
+        id: changes
+        with:
+          base: ${{ inputs.base_sha }}
+          ref: ${{ inputs.deploy_sha }}
+          filters: |
+            api:
+              - "api/**"
+            admin:
+              - "admin/**"
+            web:
+              - "web/**"
+            global:
+              - "package.json"
+              - "bun.lock"
+              - "turbo.json"
+              - "biome.json"
+              - "docker-compose.yml"
+              - "drizzle.config.js"
+              - "packages/**"
+
+      - name: Setup ssh
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/key
+          chmod 600 ~/.ssh/key
+          cat >>~/.ssh/config << END
+          Host prod
+            HostName $SSH_HOST
+            User $SSH_USERNAME
+            Port $SSH_PORT
+            IdentityFile ~/.ssh/key
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_USERNAME: ${{ secrets.USERNAME }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.HOST }}
+          SSH_PORT: 22
+
+      - name: Calculate changes and deploy
+        env:
+          CHANGED_API: ${{ steps.changes.outputs.api }}
+          CHANGED_ADMIN: ${{ steps.changes.outputs.admin }}
+          CHANGED_WEB: ${{ steps.changes.outputs.web }}
+          CHANGED_GLOBAL: ${{ steps.changes.outputs.global }}
+          DEPLOY_SHA: ${{ inputs.deploy_sha }}
+          DEPLOY_DELAY_SECONDS: 5
+        run: |
+          # Construct list of services to deploy
+          SERVICES_TO_DEPLOY=""
+
+          append_service() {
+            service="$1"
+
+            if grep -Eq "^[[:space:]]{2}${service}:" docker-compose.yml; then
+              SERVICES_TO_DEPLOY="$SERVICES_TO_DEPLOY $service"
+            else
+              echo "Skipping service \"$service\": not found in docker-compose.yml."
+            fi
+          }
+
+          if [ "$CHANGED_GLOBAL" == "true" ]; then
+            append_service api
+            append_service admin
+            append_service web
+          else
+            [ "$CHANGED_API" == "true" ] && append_service api
+            [ "$CHANGED_ADMIN" == "true" ] && append_service admin
+            [ "$CHANGED_WEB" == "true" ] && append_service web
+          fi
+
+          # Trim leading space
+          SERVICES_TO_DEPLOY=$(echo $SERVICES_TO_DEPLOY | xargs)
+
+          if [ -z "$SERVICES_TO_DEPLOY" ]; then
+            echo "No deployable changes detected."
+            exit 0
+          fi
+
+          echo "Deploying: $SERVICES_TO_DEPLOY"
+
+          # Fetch and deploy the exact commit that passed the Biome workflow.
+          ssh prod "cd cidadaomais && git fetch origin main && git checkout --detach \"$DEPLOY_SHA\" && SERVICES=\"$SERVICES_TO_DEPLOY\" DEPLOY_DELAY=\"$DEPLOY_DELAY_SECONDS\" bash -c '
+            services=(\$SERVICES)
+            last_index=\$((\${#services[@]} - 1))
+
+            for index in \"\${!services[@]}\"; do
+              service=\${services[\$index]}
+              echo \"Rebuilding \$service...\"
+              docker compose up -d --build \$service
+
+              if [ \"\$index\" -lt \"\$last_index\" ]; then
+                echo \"Waiting \${DEPLOY_DELAY}s for VPS stability...\"
+                sleep \$DEPLOY_DELAY
+              fi
+            done
+          '"
