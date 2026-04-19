@@ -2,7 +2,7 @@
 import { useMutation, useQuery } from "@tanstack/vue-query";
 import { toTypedSchema } from "@vee-validate/zod";
 import { refDebounced } from "@vueuse/core";
-import { ChevronsUpDown, Edit, Undo2 } from "lucide-vue-next";
+import { ChevronsUpDown, Edit, Trash, Undo2 } from "lucide-vue-next";
 import { useForm } from "vee-validate";
 import { toast } from "vue-sonner";
 import { z } from "zod";
@@ -220,6 +220,33 @@ const {
   }
 });
 
+const { isPending: isDeletePending, mutate: handleDelete } = useMutation({
+  async mutationFn() {
+    if (!route.params.id) {
+      throw new Error();
+    }
+
+    const response = await api
+      .services({
+        id: route.params.id.toString()
+      })
+      .delete();
+    if (response.error) {
+      throw response.error.value;
+    }
+  },
+  onError(error) {
+    console.error(error);
+    toast.error("Ocorreu um erro inesperado...", {
+      description: error.message
+    });
+  },
+  onSuccess() {
+    toast.success("Serviço deletado com sucesso!");
+    router.push("/servicos");
+  }
+});
+
 const onSubmit = handleSubmit((data) => mutate(data));
 </script>
 
@@ -247,10 +274,22 @@ const onSubmit = handleSubmit((data) => mutate(data));
         </div>
       </div>
 
-      <Button class="cursor-pointer" @click="handleDialogOpen(true)">
-        <Edit />
-        Editar
-      </Button>
+      <div class="flex gap-2">
+        <Button
+          variant="destructive"
+          class="cursor-pointer"
+          @click="handleDelete()"
+          :disabled="isDeletePending"
+        >
+          <Loading v-if="isDeletePending" class="w-16" />
+          <Trash v-if="!isDeletePending" />
+          <span v-if="!isDeletePending">Deletar</span>
+        </Button>
+        <Button class="cursor-pointer" @click="handleDialogOpen(true)">
+          <Edit />
+          Editar
+        </Button>
+      </div>
     </div>
 
     <div class="pt-5 pl-5 pr-5 grid md:grid-cols-1 grid-cols-1">
