@@ -7,6 +7,7 @@ import { env } from "./env";
 import { OpenAPI } from "./plugins/auth-plugin";
 import { deleteCategory } from "./routes/delete/delete-category";
 import { deleteEntity } from "./routes/delete/delete-entity";
+import { deleteService } from "./routes/delete/delete-service";
 import { deleteUnit } from "./routes/delete/delete-unit";
 import { getAuditLog } from "./routes/get/get-audit-log";
 import { getCategories } from "./routes/get/get-categories";
@@ -106,6 +107,7 @@ export const app = new Elysia()
   .use(getEntities)
   .use(getUnits)
   .use(createUnit)
-  .use(deleteUnit);
+  .use(deleteUnit)
+  .use(deleteService);
 
 export type App = typeof app;
