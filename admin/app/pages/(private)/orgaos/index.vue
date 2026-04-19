@@ -133,7 +133,9 @@ const handlePage = async (action: "previous" | "next") => {
                   @click="router.push(`/servicos/${entity.id}`)"
                 >
                   <TableCell>{{ entity.name }}</TableCell>
-                  <TableCell>{{ entity.description }}</TableCell>
+                  <TableCell class="max-w-80 whitespace-normal wrap-break-word"
+                    >{{ entity.description }}</TableCell
+                  >
                   <TableCell>{{ entity.phone }}</TableCell>
                   <TableCell>{{ entity.email }}</TableCell>
                   <TableCell>{{ entity.website ?? "-" }}</TableCell>
