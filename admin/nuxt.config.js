@@ -26,7 +26,7 @@ export default defineNuxtConfig({
     }
   },
   css: ["./app/assets/main.css"],
-  modules: ["@nuxt/fonts"],
+  modules: ["@nuxt/fonts", "@nuxt/image"],
   components: [
     {
       path: "./app/components",

@@ -7,7 +7,8 @@ import { Button } from "~/components/ui/button";
     <header
       class="flex justify-between px-4 py-5 sm:px-6 md:px-10 lg:px-16 xl:px-20"
     >
-      <div class="cursor-pointer">
+      <div class="flex items-center cursor-pointer">
+        <NuxtImg src="/logo.png" :width="80" :height="80" />
         <h1 class="text-2xl font-[1000] md:text-4xl">
           <span class="text-[#0186ca]">CIDADÃO</span>
           <span class="text-[#3f9731]">MAIS</span>
