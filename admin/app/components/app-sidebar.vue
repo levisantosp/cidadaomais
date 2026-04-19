@@ -62,10 +62,13 @@ const handleSignout = async () => {
 <template>
   <Sidebar>
     <SidebarHeader>
-      <h1 class="text-2xl text-center font-[1000]">
-        <span class="text-[#0186ca]">CIDADÃO</span>
-        <span class="text-[#3f9731]">MAIS</span>
-      </h1>
+      <NuxtLink class="flex items-center" href="/">
+        <NuxtImg src="/logo.png" :width="40" :height="40" />
+        <h1 class="text-2xl text-center font-[1000]">
+          <span class="text-[#0186ca]">CIDADÃO</span>
+          <span class="text-[#3f9731]">MAIS</span>
+        </h1>
+      </NuxtLink>
       <h2 class="md:text-base text-center text-muted-foreground">
         Painel Administrativo
       </h2>
