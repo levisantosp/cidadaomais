@@ -59,7 +59,7 @@ const handlePage = async (action: "previous" | "next") => {
       </p>
     </div>
 
-    <Card>
+    <Card class="min-w-0">
       <CardHeader
         class="flex flex-col gap-4 pb-2 md:flex-row md:items-center md:justify-between"
       >
@@ -73,7 +73,7 @@ const handlePage = async (action: "previous" | "next") => {
         </NuxtLink>
       </CardHeader>
 
-      <CardContent>
+      <CardContent class="min-w-0">
         <div
           v-if="isPending || isFetching || !data"
           class="flex justify-center"
@@ -132,9 +132,15 @@ const handlePage = async (action: "previous" | "next") => {
                   @click="router.push(`/servicos/${service.id}`)"
                 >
                   <TableCell>{{ service.name }}</TableCell>
-                  <TableCell>{{ service.category.name }}</TableCell>
-                  <TableCell>{{ service.requirements.join(", ") }}</TableCell>
-                  <TableCell>{{ service.guidelines }}</TableCell>
+                  <TableCell class="max-w-80 whitespace-normal wrap-break-word"
+                    >{{ service.category.name }}</TableCell
+                  >
+                  <TableCell class="max-w-80 whitespace-normal wrap-break-word"
+                    >{{ service.requirements.join(", ") }}</TableCell
+                  >
+                  <TableCell class="max-w-80 whitespace-normal wrap-break-word"
+                    >{{ service.guidelines }}</TableCell
+                  >
                   <TableCell
                     >{{ dayjs(service.createdAt).format("DD/MM/YYYY HH:mm:ss") }}</TableCell
                   >
