@@ -15,7 +15,7 @@ export const deleteService = new Elysia().use(authPlugin).delete(
     if (!service) {
       throw new NotFoundException();
     }
-    
+
     return service;
   },
   {

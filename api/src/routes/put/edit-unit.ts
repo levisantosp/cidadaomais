@@ -16,7 +16,7 @@ export const editUnit = new Elysia().use(authPlugin).put(
     if (!unit) {
       throw new NotFoundException();
     }
-    
+
     return unit;
   },
   {

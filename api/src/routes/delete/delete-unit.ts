@@ -15,7 +15,7 @@ export const deleteUnit = new Elysia().use(authPlugin).delete(
     if (!unit) {
       throw new NotFoundException();
     }
-    
+
     return unit;
   },
   {
