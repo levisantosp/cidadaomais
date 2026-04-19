@@ -23,6 +23,14 @@ export default defineNuxtConfig({
         "@tanstack/vue-query",
         "dayjs"
       ]
+    },
+    build: {
+      rollupOptions: {
+        onwarn(warning, warn) {
+          if (warning.code === "SOURCEMAP_BROKEN") return;
+          warn(warning);
+        }
+      }
     }
   },
   css: ["./app/assets/main.css"],
@@ -33,5 +41,8 @@ export default defineNuxtConfig({
       ignore: ["./app/components/ui/**/index.ts"]
     }
   ],
-  ssr: false
+  ssr: false,
+  nitro: {
+    preset: "bun"
+  }
 });

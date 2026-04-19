@@ -5,6 +5,7 @@ import { Eye, EyeOff } from "lucide-vue-next";
 import { useForm } from "vee-validate";
 import { toast } from "vue-sonner";
 import { z } from "zod";
+import Loading from "~/components/loading.vue";
 import { Button } from "~/components/ui/button";
 import {
   Card,
