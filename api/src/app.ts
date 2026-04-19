@@ -28,6 +28,7 @@ import { createUnit } from "./routes/post/create-unit";
 import { editCategory } from "./routes/put/edit-category";
 import { editEntity } from "./routes/put/edit-entity";
 import { editService } from "./routes/put/edit-service";
+import { editUnit } from "./routes/put/edit-unit";
 import { HttpException } from "./utils/HttpException";
 
 export const app = new Elysia()
@@ -108,6 +109,7 @@ export const app = new Elysia()
   .use(getUnits)
   .use(createUnit)
   .use(deleteUnit)
-  .use(deleteService);
+  .use(deleteService)
+  .use(editUnit);
 
 export type App = typeof app;
