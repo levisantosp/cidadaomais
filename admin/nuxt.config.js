@@ -33,5 +33,8 @@ export default defineNuxtConfig({
       ignore: ["./app/components/ui/**/index.ts"]
     }
   ],
-  ssr: false
+  ssr: false,
+  nitro: {
+    preset: "bun"
+  }
 });
