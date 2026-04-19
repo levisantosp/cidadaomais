@@ -56,10 +56,7 @@ jobs:
         if: github.event_name == 'push'
         uses: stefanzweifel/git-auto-commit-action@master
         with:
-          commit_message: |
-            style: run biome auto-fix
-
-            Co-authored-by: levisantosp <${{ env.COAUTHOR_EMAIL }}>
+          commit_message: "style: run biome auto-fix"
           commit_user_name: github-actions[bot]
           commit_user_email: 41898282+github-actions[bot]@users.noreply.github.com
           commit_author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>

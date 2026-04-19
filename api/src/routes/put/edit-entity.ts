@@ -25,7 +25,12 @@ export const editEntity = new Elysia().use(authPlugin).put(
       id: z.coerce.bigint()
     }),
     body: z.object({
-      name: z.string().min(2).optional()
+      name: z.string().min(2).optional(),
+      description: z.string().min(2).optional(),
+      phone: z.string().optional().optional(),
+      email: z.email().optional().optional(),
+      website: z.url().optional().optional(),
+      unitsIds: z.coerce.bigint().array().min(1).max(100).optional()
     })
   }
 );

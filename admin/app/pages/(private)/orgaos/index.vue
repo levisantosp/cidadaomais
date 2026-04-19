@@ -119,7 +119,7 @@ const handlePage = async (action: "previous" | "next") => {
               <TableBody>
                 <TableRow v-if="!data.data.length">
                   <TableCell
-                    :colSpan="6"
+                    :colSpan="7"
                     class="text-muted-foreground text-center h-25"
                   >
                     Nenhum órgão encontrado
@@ -130,7 +130,7 @@ const handlePage = async (action: "previous" | "next") => {
                   v-else
                   v-for="entity in data.data"
                   class="text-muted-foreground cursor-pointer"
-                  @click="router.push(`/servicos/${entity.id}`)"
+                  @click="router.push(`/orgaos/${entity.id}`)"
                 >
                   <TableCell>{{ entity.name }}</TableCell>
                   <TableCell class="max-w-80 whitespace-normal wrap-break-word"
