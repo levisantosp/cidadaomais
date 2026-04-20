@@ -28,6 +28,7 @@
     "dayjs": "1.11.20",
     "db": "workspace:*",
     "lucide-vue-next": "1.0.0",
+    "maplibre-gl": "5.23.0",
     "nuxt": "4.4.2",
     "reka-ui": "2.9.6",
     "tailwind-merge": "3.5.0",
