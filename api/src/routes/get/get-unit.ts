@@ -16,7 +16,7 @@ export const getUnit = new Elysia().get(
     if (!unit) {
       throw new NotFoundException();
     }
-    
+
     return unit;
   },
   {
