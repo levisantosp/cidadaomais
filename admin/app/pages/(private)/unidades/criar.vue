@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useMutation } from "@tanstack/vue-query";
 import { toTypedSchema } from "@vee-validate/zod";
+import { Map as Maplibre, Marker } from "maplibre-gl";
+import "maplibre-gl/dist/maplibre-gl.css";
 import { useForm } from "vee-validate";
 import { toast } from "vue-sonner";
 import { z } from "zod";
@@ -26,16 +28,20 @@ const schema = z.object({
     .string("Informe o nome")
     .min(2, "O nome precisa ter no mínimo 2 caracteres")
     .trim(),
-  latitude: z.number("Informe a latitude"),
-  longitude: z.number("Informe a longitude")
+  latitude: z
+    .number("Selecione a localização no mapa")
+    .min(-90, "Latitude inválida")
+    .max(90, "Latitude inválida"),
+  longitude: z
+    .number("Selecione a localização no mapa")
+    .min(-180, "Longitude inválida")
+    .max(180, "Longitude inválida")
 });
-const { defineField, errors, handleSubmit } = useForm({
+const { defineField, errors, handleSubmit, setFieldValue } = useForm({
   validationSchema: toTypedSchema(schema)
 });
 
 const [name, nameProps] = defineField("name");
-const [latitude, latitudeProps] = defineField("latitude");
-const [longitude, longitudeProps] = defineField("longitude");
 
 const { isPending, mutate } = useMutation({
   mutationKey: ["units"],
@@ -58,6 +64,65 @@ const { isPending, mutate } = useMutation({
 });
 
 const onSubmit = handleSubmit((data) => mutate(data));
+
+const mapContainer = ref<HTMLElement>();
+const map = shallowRef<Maplibre>();
+const marker = shallowRef<Marker>();
+
+const updateLocation = (long: number, lat: number) => {
+  setFieldValue("latitude", lat);
+  setFieldValue("longitude", long);
+
+  if (!map.value) {
+    return;
+  }
+
+  if (!marker.value) {
+    marker.value = new Marker({
+      draggable: true
+    })
+      .setLngLat([long, lat])
+      .addTo(map.value);
+
+    marker.value.on("dragend", () => {
+      const position = marker.value?.getLngLat();
+
+      if (!position) {
+        return;
+      }
+
+      updateLocation(position.lng, position.lat);
+    });
+
+    return;
+  }
+
+  marker.value.setLngLat([long, lat]);
+};
+
+onMounted(() => {
+  map.value = new Maplibre({
+    container: mapContainer.value ?? "",
+    style: "https://tiles.openfreemap.org/styles/liberty",
+    center: [-52.206, -3.203],
+    zoom: 12
+  });
+
+  map.value.on("click", (event) =>
+    updateLocation(event.lngLat.lng, event.lngLat.lat)
+  );
+
+  marker.value?.on("dragend", () => {
+    const position = marker.value?.getLngLat();
+    if (!position) return;
+    updateLocation(position.lng, position.lat);
+  });
+});
+
+onBeforeUnmount(() => {
+  marker.value?.remove();
+  map.value?.remove();
+});
 </script>
 
 <template>
@@ -85,32 +150,18 @@ const onSubmit = handleSubmit((data) => mutate(data));
             </div>
 
             <div class="flex flex-col space-y-2">
-              <Label for="latitude">Latitude</Label>
-              <Input
-                id="latitude"
-                v-model="latitude"
-                v-bind="latitudeProps"
-                type="number"
-                step="any"
+              <Label>Localização</Label>
+
+              <div
+                ref="mapContainer"
+                class="h-128 overflow-hidden rounded-md border"
               />
 
-              <span v-if="errors.latitude" class="text-sm text-red-400">
-                {{ errors.latitude }}
-              </span>
-            </div>
-
-            <div class="flex flex-col space-y-2">
-              <Label for="longitude">Longitude</Label>
-              <Input
-                id="longitude"
-                v-model="longitude"
-                v-bind="longitudeProps"
-                type="number"
-                step="any"
-              />
-
-              <span v-if="errors.longitude" class="text-sm text-red-400">
-                {{ errors.longitude }}
+              <span
+                v-if="errors.latitude || errors.longitude"
+                class="text-sm text-red-400"
+              >
+                {{ errors.latitude || errors.longitude }}
               </span>
             </div>
           </div>

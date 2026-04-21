@@ -47,6 +47,8 @@ const handlePage = async (action: "previous" | "next") => {
 
   await refetch();
 };
+
+const router = useRouter();
 </script>
 
 <template>
@@ -127,7 +129,8 @@ const handlePage = async (action: "previous" | "next") => {
                 <TableRow
                   v-else
                   v-for="unit in data.data"
-                  class="text-muted-foreground"
+                  class="text-muted-foreground cursor-pointer"
+                  @click="router.push(`/unidades/${unit.id}`)"
                 >
                   <TableCell>{{ unit.name }}</TableCell>
                   <TableCell>{{ unit.entity?.name ?? "-" }}</TableCell>

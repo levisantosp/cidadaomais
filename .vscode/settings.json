@@ -8,5 +8,7 @@
   "js/ts.preferences.importModuleSpecifierEnding": "minimal",
   "html.completion.attributeDefaultValue": "doublequotes",
   "js/ts.format.insertSpaceAfterSemicolonInForStatements": true,
-  "js/ts.format.semicolons": "insert"
+  "js/ts.format.semicolons": "insert",
+  "js/ts.tsdk.path": "./node_modules/typescript/lib",
+  "js/ts.tsdk.promptToUseWorkspaceVersion": true
 }
