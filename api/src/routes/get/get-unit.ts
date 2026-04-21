@@ -7,11 +7,12 @@ import { NotFoundException } from "../../utils/HttpException";
 export const getUnit = new Elysia().get(
   "/units/:id",
   async (ctx) => {
-    const [unit] = await db
-      .select()
-      .from(schema.entityUnit)
-      .where(eq(schema.entityUnit.id, ctx.params.id))
-      .limit(1);
+    const unit = await db.query.entityUnit.findFirst({
+      where: eq(schema.entityUnit.id, ctx.params.id),
+      with: {
+        entity: true
+      }
+    });
     if (!unit) {
       throw new NotFoundException();
     }
