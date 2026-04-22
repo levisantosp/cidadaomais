@@ -1,17 +1,17 @@
-import { db, schema } from "db";
-import { Elysia } from "elysia";
-import { z } from "zod";
-import { authPlugin } from "../../plugins/auth-plugin";
+import { db, schema } from 'db'
+import { Elysia } from 'elysia'
+import { z } from 'zod'
+import { authPlugin } from '../../plugins/auth-plugin'
 
 export const createUnit = new Elysia().use(authPlugin).post(
-  "/units",
+  '/units',
   async (ctx) => {
     const [unit] = await db
       .insert(schema.entityUnit)
       .values(ctx.body)
-      .returning();
+      .returning()
 
-    return unit;
+    return unit
   },
   {
     body: z.object({
@@ -20,4 +20,4 @@ export const createUnit = new Elysia().use(authPlugin).post(
       longitude: z.number()
     })
   }
-);
+)

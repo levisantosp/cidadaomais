@@ -1,53 +1,58 @@
 <script setup lang="ts">
-import { useQuery } from "@tanstack/vue-query";
-import dayjs from "dayjs";
-import { ChevronLeft, ChevronRight, Plus } from "lucide-vue-next";
-import Loading from "~/components/loading.vue";
-import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from "~/components/ui/table";
-import { api } from "~/lib/api";
+  import { useQuery } from '@tanstack/vue-query'
+  import dayjs from 'dayjs'
+  import { ChevronLeft, ChevronRight, Plus } from 'lucide-vue-next'
+  import Loading from '~/components/loading.vue'
+  import { Button } from '~/components/ui/button'
+  import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle
+  } from '~/components/ui/card'
+  import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow
+  } from '~/components/ui/table'
+  import { api } from '~/lib/api'
 
-definePageMeta({
-  layout: "private"
-});
+  definePageMeta({
+    layout: 'private'
+  })
 
-const page = ref(1);
-const router = useRouter();
+  const page = ref(1)
+  const router = useRouter()
 
-const { isPending, isFetching, data, refetch } = useQuery({
-  queryKey: ["services"],
-  async queryFn() {
-    const response = await api.entities.get({
-      query: {
-        limit: 10,
-        page: page.value
+  const { isPending, isFetching, data, refetch } = useQuery({
+    queryKey: ['services'],
+    async queryFn() {
+      const response = await api.entities.get({
+        query: {
+          limit: 10,
+          page: page.value
+        }
+      })
+      if (response.error) {
+        throw response.error.value
       }
-    });
-    if (response.error) {
-      throw response.error.value;
+
+      return response.data
+    }
+  })
+
+  const handlePage = async (action: 'previous' | 'next') => {
+    if (action === 'previous') {
+      page.value = Math.max(1, page.value - 1)
+    } else {
+      page.value += 1
     }
 
-    return response.data;
+    await refetch()
   }
-});
-
-const handlePage = async (action: "previous" | "next") => {
-  if (action === "previous") {
-    page.value = Math.max(1, page.value - 1);
-  } else {
-    page.value += 1;
-  }
-
-  await refetch();
-};
 </script>
 
 <template>
@@ -133,18 +138,19 @@ const handlePage = async (action: "previous" | "next") => {
                   @click="router.push(`/orgaos/${entity.id}`)"
                 >
                   <TableCell>{{ entity.name }}</TableCell>
-                  <TableCell class="max-w-80 whitespace-normal wrap-break-word"
+                  <TableCell
+                    class="max-w-80 whitespace-normal wrap-break-word"
                     >{{ entity.description }}</TableCell
                   >
                   <TableCell>{{ entity.phone }}</TableCell>
                   <TableCell>{{ entity.email }}</TableCell>
-                  <TableCell>{{ entity.website ?? "-" }}</TableCell>
-                  <TableCell
-                    >{{ dayjs(entity.createdAt).format("DD/MM/YYYY HH:mm:ss") }}</TableCell
-                  >
-                  <TableCell
-                    >{{ dayjs(entity.updatedAt).format("DD/MM/YYYY HH:mm:ss") }}</TableCell
-                  >
+                  <TableCell>{{ entity.website ?? '-' }}</TableCell>
+                  <TableCell>{{
+                    dayjs(entity.createdAt).format('DD/MM/YYYY HH:mm:ss')
+                  }}</TableCell>
+                  <TableCell>{{
+                    dayjs(entity.updatedAt).format('DD/MM/YYYY HH:mm:ss')
+                  }}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>

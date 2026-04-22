@@ -2,15 +2,15 @@
   "name": "logger",
   "version": "1.0.0",
   "description": "",
-  "main": "src/index.ts",
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
   "type": "module",
+  "main": "src/index.ts",
   "scripts": {
     "lint": "oxlint",
     "format": "oxfmt"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "pino": "^10.3.1",
     "pino-pretty": "^13.1.3"

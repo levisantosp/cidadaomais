@@ -1,128 +1,128 @@
 <script setup lang="ts">
-import { useMutation } from "@tanstack/vue-query";
-import { toTypedSchema } from "@vee-validate/zod";
-import { Map as Maplibre, Marker } from "maplibre-gl";
-import "maplibre-gl/dist/maplibre-gl.css";
-import { useForm } from "vee-validate";
-import { toast } from "vue-sonner";
-import { z } from "zod";
-import Loading from "~/components/loading.vue";
-import { Button } from "~/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from "~/components/ui/card";
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
-import { api } from "~/lib/api";
+  import { useMutation } from '@tanstack/vue-query'
+  import { toTypedSchema } from '@vee-validate/zod'
+  import { Map as Maplibre, Marker } from 'maplibre-gl'
+  import 'maplibre-gl/dist/maplibre-gl.css'
+  import { useForm } from 'vee-validate'
+  import { toast } from 'vue-sonner'
+  import { z } from 'zod'
+  import Loading from '~/components/loading.vue'
+  import { Button } from '~/components/ui/button'
+  import {
+    Card,
+    CardContent,
+    CardFooter,
+    CardHeader,
+    CardTitle
+  } from '~/components/ui/card'
+  import { Input } from '~/components/ui/input'
+  import { Label } from '~/components/ui/label'
+  import { api } from '~/lib/api'
 
-definePageMeta({
-  layout: "private"
-});
+  definePageMeta({
+    layout: 'private'
+  })
 
-const schema = z.object({
-  name: z
-    .string("Informe o nome")
-    .min(2, "O nome precisa ter no mínimo 2 caracteres")
-    .trim(),
-  latitude: z
-    .number("Selecione a localização no mapa")
-    .min(-90, "Latitude inválida")
-    .max(90, "Latitude inválida"),
-  longitude: z
-    .number("Selecione a localização no mapa")
-    .min(-180, "Longitude inválida")
-    .max(180, "Longitude inválida")
-});
-const { defineField, errors, handleSubmit, setFieldValue } = useForm({
-  validationSchema: toTypedSchema(schema)
-});
+  const schema = z.object({
+    name: z
+      .string('Informe o nome')
+      .min(2, 'O nome precisa ter no mínimo 2 caracteres')
+      .trim(),
+    latitude: z
+      .number('Selecione a localização no mapa')
+      .min(-90, 'Latitude inválida')
+      .max(90, 'Latitude inválida'),
+    longitude: z
+      .number('Selecione a localização no mapa')
+      .min(-180, 'Longitude inválida')
+      .max(180, 'Longitude inválida')
+  })
+  const { defineField, errors, handleSubmit, setFieldValue } = useForm({
+    validationSchema: toTypedSchema(schema)
+  })
 
-const [name, nameProps] = defineField("name");
+  const [name, nameProps] = defineField('name')
 
-const { isPending, mutate } = useMutation({
-  mutationKey: ["units"],
-  async mutationFn(data: z.infer<typeof schema>) {
-    const response = await api.units.post(data);
-    if (response.error) {
-      throw response.error.value;
-    }
-  },
-  onError(error) {
-    console.error(error);
-    toast.error("Ocorreu um erro inesperado...", {
-      description: error.message
-    });
-  },
-  async onSuccess() {
-    toast.success("Unidade criada com sucesso!");
-    await navigateTo("/unidades");
-  }
-});
-
-const onSubmit = handleSubmit((data) => mutate(data));
-
-const mapContainer = ref<HTMLElement>();
-const map = shallowRef<Maplibre>();
-const marker = shallowRef<Marker>();
-
-const updateLocation = (long: number, lat: number) => {
-  setFieldValue("latitude", lat);
-  setFieldValue("longitude", long);
-
-  if (!map.value) {
-    return;
-  }
-
-  if (!marker.value) {
-    marker.value = new Marker({
-      draggable: true
-    })
-      .setLngLat([long, lat])
-      .addTo(map.value);
-
-    marker.value.on("dragend", () => {
-      const position = marker.value?.getLngLat();
-
-      if (!position) {
-        return;
+  const { isPending, mutate } = useMutation({
+    mutationKey: ['units'],
+    async mutationFn(data: z.infer<typeof schema>) {
+      const response = await api.units.post(data)
+      if (response.error) {
+        throw response.error.value
       }
+    },
+    onError(error) {
+      console.error(error)
+      toast.error('Ocorreu um erro inesperado...', {
+        description: error.message
+      })
+    },
+    async onSuccess() {
+      toast.success('Unidade criada com sucesso!')
+      await navigateTo('/unidades')
+    }
+  })
 
-      updateLocation(position.lng, position.lat);
-    });
+  const onSubmit = handleSubmit((data) => mutate(data))
 
-    return;
+  const mapContainer = ref<HTMLElement>()
+  const map = shallowRef<Maplibre>()
+  const marker = shallowRef<Marker>()
+
+  const updateLocation = (long: number, lat: number) => {
+    setFieldValue('latitude', lat)
+    setFieldValue('longitude', long)
+
+    if (!map.value) {
+      return
+    }
+
+    if (!marker.value) {
+      marker.value = new Marker({
+        draggable: true
+      })
+        .setLngLat([long, lat])
+        .addTo(map.value)
+
+      marker.value.on('dragend', () => {
+        const position = marker.value?.getLngLat()
+
+        if (!position) {
+          return
+        }
+
+        updateLocation(position.lng, position.lat)
+      })
+
+      return
+    }
+
+    marker.value.setLngLat([long, lat])
   }
 
-  marker.value.setLngLat([long, lat]);
-};
+  onMounted(() => {
+    map.value = new Maplibre({
+      container: mapContainer.value ?? '',
+      style: 'https://tiles.openfreemap.org/styles/liberty',
+      center: [-52.206, -3.203],
+      zoom: 12
+    })
 
-onMounted(() => {
-  map.value = new Maplibre({
-    container: mapContainer.value ?? "",
-    style: "https://tiles.openfreemap.org/styles/liberty",
-    center: [-52.206, -3.203],
-    zoom: 12
-  });
+    map.value.on('click', (event) =>
+      updateLocation(event.lngLat.lng, event.lngLat.lat)
+    )
 
-  map.value.on("click", (event) =>
-    updateLocation(event.lngLat.lng, event.lngLat.lat)
-  );
+    marker.value?.on('dragend', () => {
+      const position = marker.value?.getLngLat()
+      if (!position) return
+      updateLocation(position.lng, position.lat)
+    })
+  })
 
-  marker.value?.on("dragend", () => {
-    const position = marker.value?.getLngLat();
-    if (!position) return;
-    updateLocation(position.lng, position.lat);
-  });
-});
-
-onBeforeUnmount(() => {
-  marker.value?.remove();
-  map.value?.remove();
-});
+  onBeforeUnmount(() => {
+    marker.value?.remove()
+    map.value?.remove()
+  })
 </script>
 
 <template>

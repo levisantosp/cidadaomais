@@ -1,62 +1,62 @@
 <script setup lang="ts">
-import {
-  BriefcaseBusiness,
-  Building,
-  ChartBarStacked,
-  Home,
-  Landmark,
-  LogOut
-} from "lucide-vue-next";
-import Loading from "~/components/loading.vue";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem
-} from "~/components/ui/sidebar";
-import { auth } from "~/lib/auth";
+  import {
+    BriefcaseBusiness,
+    Building,
+    ChartBarStacked,
+    Home,
+    Landmark,
+    LogOut
+  } from 'lucide-vue-next'
+  import Loading from '~/components/loading.vue'
+  import {
+    Sidebar,
+    SidebarContent,
+    SidebarFooter,
+    SidebarGroup,
+    SidebarGroupContent,
+    SidebarGroupLabel,
+    SidebarHeader,
+    SidebarMenu,
+    SidebarMenuButton,
+    SidebarMenuItem
+  } from '~/components/ui/sidebar'
+  import { auth } from '~/lib/auth'
 
-const navItems = [
-  {
-    title: "Página principal",
-    href: "/",
-    icon: Home
-  },
-  {
-    title: "Serviços",
-    href: "/servicos",
-    icon: BriefcaseBusiness
-  },
-  {
-    title: "Órgãos",
-    href: "/orgaos",
-    icon: Landmark
-  },
-  {
-    title: "Categorias",
-    href: "/categorias",
-    icon: ChartBarStacked
-  },
-  {
-    title: "Unidades",
-    href: "/unidades",
-    icon: Building
+  const navItems = [
+    {
+      title: 'Página principal',
+      href: '/',
+      icon: Home
+    },
+    {
+      title: 'Serviços',
+      href: '/servicos',
+      icon: BriefcaseBusiness
+    },
+    {
+      title: 'Órgãos',
+      href: '/orgaos',
+      icon: Landmark
+    },
+    {
+      title: 'Categorias',
+      href: '/categorias',
+      icon: ChartBarStacked
+    },
+    {
+      title: 'Unidades',
+      href: '/unidades',
+      icon: Building
+    }
+  ] as const
+
+  const isPending = ref(false)
+
+  const handleSignout = async () => {
+    isPending.value = true
+    await auth.signOut()
+    await navigateTo('/login')
   }
-] as const;
-
-const isPending = ref(false);
-
-const handleSignout = async () => {
-  isPending.value = true;
-  await auth.signOut();
-  await navigateTo("/login");
-};
 </script>
 
 <template>

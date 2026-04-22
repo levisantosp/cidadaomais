@@ -1,12 +1,12 @@
 {
   "name": "db",
   "version": "1.0.0",
-  "author": "",
-  "main": "src/index.ts",
-  "type": "module",
   "description": "",
   "keywords": [],
   "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "src/index.ts",
   "scripts": {
     "lint": "oxlint",
     "format": "oxfmt"

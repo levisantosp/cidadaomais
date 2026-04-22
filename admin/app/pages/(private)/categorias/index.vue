@@ -1,135 +1,142 @@
 <script setup lang="ts">
-import { useMutation, useQuery } from "@tanstack/vue-query";
-import dayjs from "dayjs";
-import type { Category } from "db";
-import {
-  ChevronLeft,
-  ChevronRight,
-  MoreHorizontal,
-  Pencil,
-  Plus,
-  Trash
-} from "lucide-vue-next";
-import { toast } from "vue-sonner";
-import Loading from "~/components/loading.vue";
-import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle
-} from "~/components/ui/dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger
-} from "~/components/ui/dropdown-menu";
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from "~/components/ui/table";
-import { api } from "~/lib/api";
+  import { useMutation, useQuery } from '@tanstack/vue-query'
+  import dayjs from 'dayjs'
+  import type { Category } from 'db'
+  import {
+    ChevronLeft,
+    ChevronRight,
+    MoreHorizontal,
+    Pencil,
+    Plus,
+    Trash
+  } from 'lucide-vue-next'
+  import { toast } from 'vue-sonner'
+  import Loading from '~/components/loading.vue'
+  import { Button } from '~/components/ui/button'
+  import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle
+  } from '~/components/ui/card'
+  import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle
+  } from '~/components/ui/dialog'
+  import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuTrigger
+  } from '~/components/ui/dropdown-menu'
+  import { Input } from '~/components/ui/input'
+  import { Label } from '~/components/ui/label'
+  import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow
+  } from '~/components/ui/table'
+  import { api } from '~/lib/api'
 
-definePageMeta({
-  layout: "private"
-});
+  definePageMeta({
+    layout: 'private'
+  })
 
-const page = ref(1);
-const isDialogMenuOpen = ref(false);
-const selectedCategory = ref<Category>();
-const editValues = ref({
-  name: ""
-});
+  const page = ref(1)
+  const isDialogMenuOpen = ref(false)
+  const selectedCategory = ref<Category>()
+  const editValues = ref({
+    name: ''
+  })
 
-const { isPending, isFetching, data, refetch } = useQuery({
-  queryKey: ["categories"],
-  async queryFn() {
-    const response = await api.categories.get({
-      query: {
-        limit: 10,
-        page: page.value
+  const { isPending, isFetching, data, refetch } = useQuery({
+    queryKey: ['categories'],
+    async queryFn() {
+      const response = await api.categories.get({
+        query: {
+          limit: 10,
+          page: page.value
+        }
+      })
+      if (response.error) {
+        throw response.error.value
       }
-    });
-    if (response.error) {
-      throw response.error.value;
+
+      return response.data
     }
+  })
 
-    return response.data;
-  }
-});
+  const { mutate, isPending: isDeletePending } = useMutation({
+    async mutationFn() {
+      if (!selectedCategory.value) {
+        return toast.warning(
+          'Não foi possível deletar essa categoria no momento'
+        )
+      }
 
-const { mutate, isPending: isDeletePending } = useMutation({
-  async mutationFn() {
-    if (!selectedCategory.value) {
-      return toast.warning(
-        "Não foi possível deletar essa categoria no momento"
-      );
-    }
+      await api
+        .categories({
+          id: selectedCategory.value.id.toString()
+        })
+        .delete()
 
-    await api
-      .categories({
-        id: selectedCategory.value.id.toString()
+      selectedCategory.value = undefined
+
+      await refetch()
+    },
+    onError(error) {
+      toast.error('Ocorreu um erro inesperado...', {
+        description: error.message
       })
-      .delete();
+      console.error(error)
+    }
+  })
 
-    selectedCategory.value = undefined;
+  const { mutate: mutateEdit, isPending: isEditPending } = useMutation({
+    async mutationFn() {
+      if (!selectedCategory.value || !editValues.value) {
+        return toast.warning(
+          'Não foi possível editar essa categoria no momento'
+        )
+      }
 
-    await refetch();
-  },
-  onError(error) {
-    toast.error("Ocorreu um erro inesperado...", {
-      description: error.message
-    });
-    console.error(error);
-  }
-});
+      await api
+        .categories({
+          id: selectedCategory.value.id.toString()
+        })
+        .put(editValues.value)
 
-const { mutate: mutateEdit, isPending: isEditPending } = useMutation({
-  async mutationFn() {
-    if (!selectedCategory.value || !editValues.value) {
-      return toast.warning("Não foi possível editar essa categoria no momento");
+      isDialogMenuOpen.value = false
+      selectedCategory.value = undefined
+
+      await refetch()
+    },
+    onError(error) {
+      toast.error('Ocorreu um erro inesperado...', {
+        description: error.message
+      })
+      console.error(error)
+    }
+  })
+
+  const handlePage = async (action: 'previous' | 'next') => {
+    if (action === 'previous') {
+      page.value = Math.max(1, page.value - 1)
+    } else {
+      page.value += 1
     }
 
-    await api
-      .categories({
-        id: selectedCategory.value.id.toString()
-      })
-      .put(editValues.value);
-
-    isDialogMenuOpen.value = false;
-    selectedCategory.value = undefined;
-
-    await refetch();
-  },
-  onError(error) {
-    toast.error("Ocorreu um erro inesperado...", {
-      description: error.message
-    });
-    console.error(error);
+    await refetch()
   }
-});
-
-const handlePage = async (action: "previous" | "next") => {
-  if (action === "previous") {
-    page.value = Math.max(1, page.value - 1);
-  } else {
-    page.value += 1;
-  }
-
-  await refetch();
-};
 </script>
 
 <template>
@@ -210,12 +217,12 @@ const handlePage = async (action: "previous" | "next") => {
                   class="text-muted-foreground cursor-pointer"
                 >
                   <TableCell>{{ category.name }}</TableCell>
-                  <TableCell
-                    >{{ dayjs(category.createdAt).format("DD/MM/YYYY HH:mm:ss") }}</TableCell
-                  >
-                  <TableCell
-                    >{{ dayjs(category.updatedAt).format("DD/MM/YYYY HH:mm:ss") }}</TableCell
-                  >
+                  <TableCell>{{
+                    dayjs(category.createdAt).format('DD/MM/YYYY HH:mm:ss')
+                  }}</TableCell>
+                  <TableCell>{{
+                    dayjs(category.updatedAt).format('DD/MM/YYYY HH:mm:ss')
+                  }}</TableCell>
 
                   <TableCell class="text-right">
                     <DropdownMenu>
@@ -230,11 +237,13 @@ const handlePage = async (action: "previous" | "next") => {
 
                         <DropdownMenuItem
                           class="cursor-pointer"
-                          @click="() => {
-                            selectedCategory = category;
-                            isDialogMenuOpen = true;
-                            editValues.name = category.name;
-                          }"
+                          @click="
+                            () => {
+                              selectedCategory = category
+                              isDialogMenuOpen = true
+                              editValues.name = category.name
+                            }
+                          "
                         >
                           <Pencil />
                           Editar
@@ -281,13 +290,15 @@ const handlePage = async (action: "previous" | "next") => {
 
   <Dialog
     :open="isDialogMenuOpen"
-    @update:open="(open) => {
-      isDialogMenuOpen = open;
-      if (!open) {
-        selectedCategory = undefined;
-        editValues.name = '';
+    @update:open="
+      (open) => {
+        isDialogMenuOpen = open
+        if (!open) {
+          selectedCategory = undefined
+          editValues.name = ''
+        }
       }
-    }"
+    "
   >
     <DialogContent>
       <DialogHeader>
@@ -325,11 +336,13 @@ const handlePage = async (action: "previous" | "next") => {
 
   <Dialog
     :open="!!selectedCategory && !isDialogMenuOpen"
-    @update:open="(open) => {
-      if (!open) {
-        selectedCategory = undefined;
+    @update:open="
+      (open) => {
+        if (!open) {
+          selectedCategory = undefined
+        }
       }
-    }"
+    "
   >
     <DialogContent>
       <DialogHeader>
