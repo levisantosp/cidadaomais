@@ -5,8 +5,8 @@
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
-    "lint": "biome ci",
-    "format": "biome check --write"
+    "lint": "oxlint",
+    "format": "oxfmt"
   },
   "keywords": [],
   "author": "",

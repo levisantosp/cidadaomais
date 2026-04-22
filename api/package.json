@@ -10,9 +10,9 @@
   "scripts": {
     "start": "bun .",
     "dev": "bun --watch .",
-    "lint": "biome ci",
-    "format": "biome check --write",
-    "build": "biome ci && tsc"
+    "lint": "oxlint",
+    "format": "oxfmt",
+    "build": "oxlint && tsc"
   },
   "keywords": [],
   "author": "",

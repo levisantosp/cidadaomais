@@ -9,8 +9,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "lint": "biome ci",
-    "format": "biome check --write",
+    "lint": "oxlint",
+    "format": "oxfmt",
     "check": "tsc --noEmit"
   },
   "dependencies": {

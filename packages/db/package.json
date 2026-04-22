@@ -8,7 +8,7 @@
   "keywords": [],
   "license": "ISC",
   "scripts": {
-    "lint": "biome ci",
-    "format": "biome check --write"
+    "lint": "oxlint",
+    "format": "oxfmt"
   }
 }
