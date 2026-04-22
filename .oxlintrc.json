@@ -15,5 +15,5 @@
   "env": {
     "builtin": true
   },
-  "ignorePatterns": ["dist", "postgres", ".github"]
+  "ignorePatterns": ["dist", "postgres", ".github", "node_modules"]
 }
