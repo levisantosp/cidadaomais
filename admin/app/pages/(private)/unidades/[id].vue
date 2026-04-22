@@ -1,321 +1,320 @@
 <script setup lang="ts">
-import { useMutation, useQuery } from "@tanstack/vue-query";
-import { toTypedSchema } from "@vee-validate/zod";
-import { Edit, Trash, Undo2 } from "lucide-vue-next";
-import { Map as Maplibre, Marker } from "maplibre-gl";
-import "maplibre-gl/dist/maplibre-gl.css";
-import { useForm } from "vee-validate";
-import { toast } from "vue-sonner";
-import { z } from "zod";
-import Loading from "~/components/loading.vue";
-import { Button } from "~/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from "~/components/ui/card";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle
-} from "~/components/ui/dialog";
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
-import { api } from "~/lib/api";
+  import { useMutation, useQuery } from '@tanstack/vue-query'
+  import { toTypedSchema } from '@vee-validate/zod'
+  import { Edit, Trash, Undo2 } from 'lucide-vue-next'
+  import { Map as Maplibre, Marker } from 'maplibre-gl'
+  import 'maplibre-gl/dist/maplibre-gl.css'
+  import { useForm } from 'vee-validate'
+  import { toast } from 'vue-sonner'
+  import { z } from 'zod'
+  import Loading from '~/components/loading.vue'
+  import { Button } from '~/components/ui/button'
+  import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle
+  } from '~/components/ui/card'
+  import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle
+  } from '~/components/ui/dialog'
+  import { Input } from '~/components/ui/input'
+  import { Label } from '~/components/ui/label'
+  import { api } from '~/lib/api'
 
-definePageMeta({
-  layout: "private"
-});
+  definePageMeta({
+    layout: 'private'
+  })
 
-const router = useRouter();
-const route = useRoute();
+  const router = useRouter()
+  const route = useRoute()
 
-const { isPending, isFetching, error, data, refetch } = useQuery({
-  queryKey: ["units", route.params.id],
-  async queryFn() {
-    if (!route.params.id) {
-      throw new Error();
+  const { isPending, isFetching, error, data, refetch } = useQuery({
+    queryKey: ['units', route.params.id],
+    async queryFn() {
+      if (!route.params.id) {
+        throw new Error()
+      }
+
+      const response = await api
+        .units({
+          id: route.params.id.toString()
+        })
+        .get()
+      if (response.error) {
+        throw response.error.value
+      }
+
+      return response.data
     }
+  })
 
-    const response = await api
-      .units({
-        id: route.params.id.toString()
+  watch(error, (e) => {
+    if (e) {
+      toast.error('Ocorreu um erro inesperado...', {
+        description: e.message
       })
-      .get();
-    if (response.error) {
-      throw response.error.value;
+      router.push('/unidades')
     }
+  })
 
-    return response.data;
-  }
-});
-
-watch(error, (e) => {
-  if (e) {
-    toast.error("Ocorreu um erro inesperado...", {
-      description: e.message
-    });
-    router.push("/unidades");
-  }
-});
-
-const schema = z.object({
-  name: z
-    .string("Informe o nome")
-    .min(2, "O nome precisa ter no mínimo 2 caracteres")
-    .trim(),
-  latitude: z
-    .number("Selecione a localização no mapa")
-    .min(-90, "Latitude inválida")
-    .max(90, "Latitude inválida"),
-  longitude: z
-    .number("Selecione a localização no mapa")
-    .min(-180, "Longitude inválida")
-    .max(180, "Longitude inválida")
-});
-const { defineField, errors, handleSubmit, resetForm, setFieldValue } = useForm(
-  {
-    validationSchema: toTypedSchema(schema)
-  }
-);
-
-const [name, nameProps] = defineField("name");
-
-const editValues = ref<{
-  name: string;
-  latitude: number;
-  longitude: number;
-}>();
-const isDialogOpen = ref(false);
-const mapContainer = ref<HTMLElement>();
-const editMapContainer = ref<HTMLElement>();
-const map = shallowRef<Maplibre>();
-const editMap = shallowRef<Maplibre>();
-const marker = shallowRef<Marker>();
-const editMarker = shallowRef<Marker>();
-
-const createMap = (
-  container: HTMLElement,
-  long: number,
-  lat: number,
-  draggable = false
-) => {
-  return new Maplibre({
-    container,
-    style: "https://tiles.openfreemap.org/styles/liberty",
-    center: [long, lat],
-    zoom: 12,
-    interactive: draggable
-  });
-};
-
-const updateMarker = (
-  currentMap: Maplibre,
-  currentMarker: typeof marker,
-  long: number,
-  lat: number,
-  draggable = false
-) => {
-  if (!currentMarker.value) {
-    currentMarker.value = new Marker({
-      draggable
+  const schema = z.object({
+    name: z
+      .string('Informe o nome')
+      .min(2, 'O nome precisa ter no mínimo 2 caracteres')
+      .trim(),
+    latitude: z
+      .number('Selecione a localização no mapa')
+      .min(-90, 'Latitude inválida')
+      .max(90, 'Latitude inválida'),
+    longitude: z
+      .number('Selecione a localização no mapa')
+      .min(-180, 'Longitude inválida')
+      .max(180, 'Longitude inválida')
+  })
+  const { defineField, errors, handleSubmit, resetForm, setFieldValue } =
+    useForm({
+      validationSchema: toTypedSchema(schema)
     })
-      .setLngLat([long, lat])
-      .addTo(currentMap);
 
-    if (draggable) {
-      currentMarker.value.on("dragend", () => {
-        const position = currentMarker.value?.getLngLat();
+  const [name, nameProps] = defineField('name')
 
-        if (!position) {
-          return;
-        }
+  const editValues = ref<{
+    name: string
+    latitude: number
+    longitude: number
+  }>()
+  const isDialogOpen = ref(false)
+  const mapContainer = ref<HTMLElement>()
+  const editMapContainer = ref<HTMLElement>()
+  const map = shallowRef<Maplibre>()
+  const editMap = shallowRef<Maplibre>()
+  const marker = shallowRef<Marker>()
+  const editMarker = shallowRef<Marker>()
 
-        updateLocation(position.lng, position.lat);
-      });
+  const createMap = (
+    container: HTMLElement,
+    long: number,
+    lat: number,
+    draggable = false
+  ) => {
+    return new Maplibre({
+      container,
+      style: 'https://tiles.openfreemap.org/styles/liberty',
+      center: [long, lat],
+      zoom: 12,
+      interactive: draggable
+    })
+  }
+
+  const updateMarker = (
+    currentMap: Maplibre,
+    currentMarker: typeof marker,
+    long: number,
+    lat: number,
+    draggable = false
+  ) => {
+    if (!currentMarker.value) {
+      currentMarker.value = new Marker({
+        draggable
+      })
+        .setLngLat([long, lat])
+        .addTo(currentMap)
+
+      if (draggable) {
+        currentMarker.value.on('dragend', () => {
+          const position = currentMarker.value?.getLngLat()
+
+          if (!position) {
+            return
+          }
+
+          updateLocation(position.lng, position.lat)
+        })
+      }
+
+      return
     }
 
-    return;
+    currentMarker.value.setLngLat([long, lat])
   }
 
-  currentMarker.value.setLngLat([long, lat]);
-};
+  const updateLocation = (long: number, lat: number) => {
+    setFieldValue('latitude', lat)
+    setFieldValue('longitude', long)
 
-const updateLocation = (long: number, lat: number) => {
-  setFieldValue("latitude", lat);
-  setFieldValue("longitude", long);
+    if (!editMap.value) {
+      return
+    }
 
-  if (!editMap.value) {
-    return;
+    updateMarker(editMap.value, editMarker, long, lat, true)
   }
 
-  updateMarker(editMap.value, editMarker, long, lat, true);
-};
+  const renderMap = async () => {
+    if (!data.value) {
+      return
+    }
 
-const renderMap = async () => {
-  if (!data.value) {
-    return;
+    await nextTick()
+
+    if (!mapContainer.value) {
+      return
+    }
+
+    if (!map.value) {
+      map.value = createMap(
+        mapContainer.value,
+        data.value.longitude,
+        data.value.latitude
+      )
+    }
+
+    map.value.setCenter([data.value.longitude, data.value.latitude])
+    updateMarker(map.value, marker, data.value.longitude, data.value.latitude)
   }
 
-  await nextTick();
+  const renderEditMap = async () => {
+    if (!editValues.value) {
+      return
+    }
 
-  if (!mapContainer.value) {
-    return;
-  }
+    await nextTick()
 
-  if (!map.value) {
-    map.value = createMap(
-      mapContainer.value,
-      data.value.longitude,
-      data.value.latitude
-    );
-  }
+    if (!editMapContainer.value) {
+      return
+    }
 
-  map.value.setCenter([data.value.longitude, data.value.latitude]);
-  updateMarker(map.value, marker, data.value.longitude, data.value.latitude);
-};
+    if (!editMap.value) {
+      editMap.value = createMap(
+        editMapContainer.value,
+        editValues.value.longitude,
+        editValues.value.latitude,
+        true
+      )
 
-const renderEditMap = async () => {
-  if (!editValues.value) {
-    return;
-  }
+      editMap.value.on('click', (event) =>
+        updateLocation(event.lngLat.lng, event.lngLat.lat)
+      )
+    }
 
-  await nextTick();
-
-  if (!editMapContainer.value) {
-    return;
-  }
-
-  if (!editMap.value) {
-    editMap.value = createMap(
-      editMapContainer.value,
+    editMap.value.setCenter([
+      editValues.value.longitude,
+      editValues.value.latitude
+    ])
+    updateMarker(
+      editMap.value,
+      editMarker,
       editValues.value.longitude,
       editValues.value.latitude,
       true
-    );
-
-    editMap.value.on("click", (event) =>
-      updateLocation(event.lngLat.lng, event.lngLat.lat)
-    );
+    )
   }
 
-  editMap.value.setCenter([
-    editValues.value.longitude,
-    editValues.value.latitude
-  ]);
-  updateMarker(
-    editMap.value,
-    editMarker,
-    editValues.value.longitude,
-    editValues.value.latitude,
-    true
-  );
-};
+  const handleDialogOpen = (open: boolean) => {
+    isDialogOpen.value = open
 
-const handleDialogOpen = (open: boolean) => {
-  isDialogOpen.value = open;
-
-  if (!open || !data.value) {
-    editValues.value = undefined;
-    editMarker.value?.remove();
-    editMarker.value = undefined;
-    editMap.value?.remove();
-    editMap.value = undefined;
-    return;
-  }
-
-  editValues.value = {
-    name: data.value.name,
-    latitude: data.value.latitude,
-    longitude: data.value.longitude
-  };
-
-  resetForm({
-    values: editValues.value
-  });
-
-  renderEditMap();
-};
-
-watch(data, () => renderMap(), {
-  immediate: true
-});
-
-const { isPending: isMutationPending, mutate } = useMutation({
-  async mutationFn(formData: z.infer<typeof schema>) {
-    if (!data.value || !editValues.value) {
-      throw new Error();
+    if (!open || !data.value) {
+      editValues.value = undefined
+      editMarker.value?.remove()
+      editMarker.value = undefined
+      editMap.value?.remove()
+      editMap.value = undefined
+      return
     }
 
-    const response = await api
-      .units({
-        id: data.value.id.toString()
+    editValues.value = {
+      name: data.value.name,
+      latitude: data.value.latitude,
+      longitude: data.value.longitude
+    }
+
+    resetForm({
+      values: editValues.value
+    })
+
+    renderEditMap()
+  }
+
+  watch(data, () => renderMap(), {
+    immediate: true
+  })
+
+  const { isPending: isMutationPending, mutate } = useMutation({
+    async mutationFn(formData: z.infer<typeof schema>) {
+      if (!data.value || !editValues.value) {
+        throw new Error()
+      }
+
+      const response = await api
+        .units({
+          id: data.value.id.toString()
+        })
+        .put(formData)
+      if (response.error) {
+        throw response.error.value
+      }
+
+      editValues.value = undefined
+      isDialogOpen.value = false
+      editMarker.value?.remove()
+      editMarker.value = undefined
+      editMap.value?.remove()
+      editMap.value = undefined
+    },
+    onError(e) {
+      toast.error('Ocorreu um erro inesperado...', {
+        description: e.message
       })
-      .put(formData);
-    if (response.error) {
-      throw response.error.value;
+      console.error(e)
+    },
+    async onSuccess() {
+      toast.success('Unidade atualizada com sucesso!')
+      await refetch()
     }
+  })
 
-    editValues.value = undefined;
-    isDialogOpen.value = false;
-    editMarker.value?.remove();
-    editMarker.value = undefined;
-    editMap.value?.remove();
-    editMap.value = undefined;
-  },
-  onError(e) {
-    toast.error("Ocorreu um erro inesperado...", {
-      description: e.message
-    });
-    console.error(e);
-  },
-  async onSuccess() {
-    toast.success("Unidade atualizada com sucesso!");
-    await refetch();
-  }
-});
+  const { isPending: isDeletePending, mutate: handleDelete } = useMutation({
+    async mutationFn() {
+      if (!route.params.id) {
+        throw new Error()
+      }
 
-const { isPending: isDeletePending, mutate: handleDelete } = useMutation({
-  async mutationFn() {
-    if (!route.params.id) {
-      throw new Error();
-    }
-
-    const response = await api
-      .units({
-        id: route.params.id.toString()
+      const response = await api
+        .units({
+          id: route.params.id.toString()
+        })
+        .delete()
+      if (response.error) {
+        throw response.error.value
+      }
+    },
+    onError(error) {
+      console.error(error)
+      toast.error('Ocorreu um erro inesperado...', {
+        description: error.message
       })
-      .delete();
-    if (response.error) {
-      throw response.error.value;
+    },
+    onSuccess() {
+      toast.success('Unidade deletada com sucesso!')
+      router.push('/unidades')
     }
-  },
-  onError(error) {
-    console.error(error);
-    toast.error("Ocorreu um erro inesperado...", {
-      description: error.message
-    });
-  },
-  onSuccess() {
-    toast.success("Unidade deletada com sucesso!");
-    router.push("/unidades");
-  }
-});
+  })
 
-const onSubmit = handleSubmit((data) => mutate(data));
+  const onSubmit = handleSubmit((data) => mutate(data))
 
-onBeforeUnmount(() => {
-  marker.value?.remove();
-  map.value?.remove();
-  editMarker.value?.remove();
-  editMap.value?.remove();
-});
+  onBeforeUnmount(() => {
+    marker.value?.remove()
+    map.value?.remove()
+    editMarker.value?.remove()
+    editMap.value?.remove()
+  })
 </script>
 
 <template>
@@ -371,7 +370,7 @@ onBeforeUnmount(() => {
           <Card class="bg-background/30 w-full max-w-xs md:max-w-full">
             <CardHeader>
               <CardTitle>Órgão</CardTitle>
-              <CardDescription>{{ data.entity?.name ?? "-" }}</CardDescription>
+              <CardDescription>{{ data.entity?.name ?? '-' }}</CardDescription>
 
               <CardTitle>Latitude</CardTitle>
               <CardDescription>{{ data.latitude }}</CardDescription>

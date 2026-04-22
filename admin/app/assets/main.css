@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -137,6 +137,6 @@
       linear-gradient(145deg, #012034 0%, #011a2c 48%, #001523 100%);
     background-size: auto, auto, auto;
     background-repeat: no-repeat;
-    font-family: "Inter", sans-serif;
+    font-family: 'Inter', sans-serif;
   }
 }

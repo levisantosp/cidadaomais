@@ -1,7 +1,7 @@
-import { createAuthClient } from "better-auth/vue";
-import { env } from "~/env";
+import { createAuthClient } from 'better-auth/vue'
+import { env } from '~/env'
 
 export const auth = createAuthClient({
-  basePath: "/auth",
+  basePath: '/auth',
   baseURL: env.VITE_API_URL
-});
+})

@@ -1,54 +1,59 @@
 <script setup lang="ts">
-import { useQuery } from "@tanstack/vue-query";
-import dayjs from "dayjs";
-import { ChevronLeft, ChevronRight, Plus } from "lucide-vue-next";
-import Loading from "~/components/loading.vue";
-import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from "~/components/ui/table";
-import { api } from "~/lib/api";
+  import { useQuery } from '@tanstack/vue-query'
+  import dayjs from 'dayjs'
+  import { ChevronLeft, ChevronRight, Plus } from 'lucide-vue-next'
+  import Loading from '~/components/loading.vue'
+  import { Button } from '~/components/ui/button'
+  import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle
+  } from '~/components/ui/card'
+  import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow
+  } from '~/components/ui/table'
+  import { api } from '~/lib/api'
 
-definePageMeta({
-  layout: "private"
-});
+  definePageMeta({
+    layout: 'private'
+  })
 
-const page = ref(1);
+  const page = ref(1)
 
-const { isPending, isFetching, data, refetch } = useQuery({
-  queryKey: ["units"],
-  async queryFn() {
-    const response = await api.units.get({
-      query: {
-        limit: 10,
-        page: page.value
+  const { isPending, isFetching, data, refetch } = useQuery({
+    queryKey: ['units'],
+    async queryFn() {
+      const response = await api.units.get({
+        query: {
+          limit: 10,
+          page: page.value
+        }
+      })
+      if (response.error) {
+        throw response.error.value
       }
-    });
-    if (response.error) {
-      throw response.error.value;
+
+      return response.data
+    }
+  })
+
+  const handlePage = async (action: 'previous' | 'next') => {
+    if (action === 'previous') {
+      page.value = Math.max(1, page.value - 1)
+    } else {
+      page.value += 1
     }
 
-    return response.data;
-  }
-});
-
-const handlePage = async (action: "previous" | "next") => {
-  if (action === "previous") {
-    page.value = Math.max(1, page.value - 1);
-  } else {
-    page.value += 1;
+    await refetch()
   }
 
-  await refetch();
-};
-
-const router = useRouter();
+  const router = useRouter()
 </script>
 
 <template>
@@ -133,15 +138,15 @@ const router = useRouter();
                   @click="router.push(`/unidades/${unit.id}`)"
                 >
                   <TableCell>{{ unit.name }}</TableCell>
-                  <TableCell>{{ unit.entity?.name ?? "-" }}</TableCell>
+                  <TableCell>{{ unit.entity?.name ?? '-' }}</TableCell>
                   <TableCell>{{ unit.latitude }}</TableCell>
                   <TableCell>{{ unit.longitude }}</TableCell>
-                  <TableCell
-                    >{{ dayjs(unit.createdAt).format("DD/MM/YYYY HH:mm:ss") }}</TableCell
-                  >
-                  <TableCell
-                    >{{ dayjs(unit.updatedAt).format("DD/MM/YYYY HH:mm:ss") }}</TableCell
-                  >
+                  <TableCell>{{
+                    dayjs(unit.createdAt).format('DD/MM/YYYY HH:mm:ss')
+                  }}</TableCell>
+                  <TableCell>{{
+                    dayjs(unit.updatedAt).format('DD/MM/YYYY HH:mm:ss')
+                  }}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>

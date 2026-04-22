@@ -1,17 +1,17 @@
 <script lang="ts" setup>
-import {
-  CircleCheckIcon,
-  InfoIcon,
-  Loader2Icon,
-  OctagonXIcon,
-  TriangleAlertIcon,
-  XIcon
-} from "lucide-vue-next";
-import type { ToasterProps } from "vue-sonner";
-import { Toaster } from "vue-sonner";
-import { cn } from "@/lib/utils";
+  import {
+    CircleCheckIcon,
+    InfoIcon,
+    Loader2Icon,
+    OctagonXIcon,
+    TriangleAlertIcon,
+    XIcon
+  } from 'lucide-vue-next'
+  import type { ToasterProps } from 'vue-sonner'
+  import { Toaster } from 'vue-sonner'
+  import { cn } from '@/lib/utils'
 
-const props = defineProps<ToasterProps>();
+  const props = defineProps<ToasterProps>()
 </script>
 
 <template>
@@ -21,7 +21,7 @@ const props = defineProps<ToasterProps>();
       '--normal-bg': 'var(--popover)',
       '--normal-text': 'var(--popover-foreground)',
       '--normal-border': 'var(--border)',
-      '--border-radius': 'var(--radius)',
+      '--border-radius': 'var(--radius)'
     }"
     v-bind="props"
   >

@@ -1,11 +1,11 @@
-import { db, schema } from "db";
-import { desc, ilike } from "drizzle-orm";
-import { Elysia } from "elysia";
-import { z } from "zod";
-import { paginatedResponse } from "../../utils/paginated-response";
+import { db, schema } from 'db'
+import { desc, ilike } from 'drizzle-orm'
+import { Elysia } from 'elysia'
+import { z } from 'zod'
+import { paginatedResponse } from '../../utils/paginated-response'
 
 export const getUnits = new Elysia().get(
-  "/units",
+  '/units',
   async (ctx) => {
     const units = await db.query.entityUnit.findMany({
       where: ctx.query.name
@@ -17,9 +17,9 @@ export const getUnits = new Elysia().get(
       with: {
         entity: true
       }
-    });
+    })
 
-    return paginatedResponse(units, ctx.query);
+    return paginatedResponse(units, ctx.query)
   },
   {
     query: z.object({
@@ -28,4 +28,4 @@ export const getUnits = new Elysia().get(
       name: z.string().optional()
     })
   }
-);
+)

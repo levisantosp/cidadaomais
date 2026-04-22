@@ -1,15 +1,12 @@
-import { db, schema } from "db";
-import { eq } from "drizzle-orm";
-import { Elysia } from "elysia";
-import { z } from "zod";
-import { authPlugin } from "../../plugins/auth-plugin";
-import {
-  ConflictException,
-  NotFoundException
-} from "../../utils/HttpException";
+import { db, schema } from 'db'
+import { eq } from 'drizzle-orm'
+import { Elysia } from 'elysia'
+import { z } from 'zod'
+import { authPlugin } from '../../plugins/auth-plugin'
+import { ConflictException, NotFoundException } from '../../utils/HttpException'
 
 export const createService = new Elysia().use(authPlugin).post(
-  "/services",
+  '/services',
   async (ctx) => {
     const service = await db.transaction(async (tx) => {
       const [[category], [service]] = await Promise.all([
@@ -26,26 +23,26 @@ export const createService = new Elysia().use(authPlugin).post(
           .from(schema.service)
           .where(eq(schema.service.name, ctx.body.name))
           .limit(1)
-      ]);
+      ])
       if (!category) {
-        throw new NotFoundException("Category not found");
+        throw new NotFoundException('Category not found')
       }
       if (service) {
-        throw new ConflictException("A service with this name already exists");
+        throw new ConflictException('A service with this name already exists')
       }
 
       const [newService] = await tx
         .insert(schema.service)
         .values(ctx.body)
-        .returning();
+        .returning()
 
-      return newService;
-    });
+      return newService
+    })
 
-    return service;
+    return service
   },
   {
-    authorize: ["Administrator"],
+    authorize: ['Administrator'],
     body: z.object({
       name: z.string().min(2),
       description: z.string().min(10),
@@ -54,4 +51,4 @@ export const createService = new Elysia().use(authPlugin).post(
       categoryId: z.coerce.bigint()
     })
   }
-);
+)

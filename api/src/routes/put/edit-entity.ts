@@ -1,26 +1,26 @@
-import { db, schema } from "db";
-import { eq } from "drizzle-orm";
-import { Elysia } from "elysia";
-import { z } from "zod";
-import { authPlugin } from "../../plugins/auth-plugin";
-import { NotFoundException } from "../../utils/HttpException";
+import { db, schema } from 'db'
+import { eq } from 'drizzle-orm'
+import { Elysia } from 'elysia'
+import { z } from 'zod'
+import { authPlugin } from '../../plugins/auth-plugin'
+import { NotFoundException } from '../../utils/HttpException'
 
 export const editEntity = new Elysia().use(authPlugin).put(
-  "/entities/:id",
+  '/entities/:id',
   async (ctx) => {
     const [entity] = await db
       .update(schema.entity)
       .set(ctx.body)
       .where(eq(schema.entity.id, ctx.params.id))
-      .returning();
+      .returning()
     if (!entity) {
-      throw new NotFoundException();
+      throw new NotFoundException()
     }
 
-    return entity;
+    return entity
   },
   {
-    authorize: ["Administrator"],
+    authorize: ['Administrator'],
     params: z.object({
       id: z.coerce.bigint()
     }),
@@ -33,4 +33,4 @@ export const editEntity = new Elysia().use(authPlugin).put(
       unitsIds: z.coerce.bigint().array().min(1).max(100).optional()
     })
   }
-);
+)

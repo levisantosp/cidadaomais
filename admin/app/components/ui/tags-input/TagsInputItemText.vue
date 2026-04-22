@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { reactiveOmit } from "@vueuse/core";
-import type { TagsInputItemTextProps } from "reka-ui";
-import { TagsInputItemText, useForwardProps } from "reka-ui";
-import type { HTMLAttributes } from "vue";
-import { cn } from "@/lib/utils";
+  import { reactiveOmit } from '@vueuse/core'
+  import type { TagsInputItemTextProps } from 'reka-ui'
+  import { TagsInputItemText, useForwardProps } from 'reka-ui'
+  import type { HTMLAttributes } from 'vue'
+  import { cn } from '@/lib/utils'
 
-const props = defineProps<
-  TagsInputItemTextProps & { class?: HTMLAttributes["class"] }
->();
+  const props = defineProps<
+    TagsInputItemTextProps & { class?: HTMLAttributes['class'] }
+  >()
 
-const delegatedProps = reactiveOmit(props, "class");
+  const delegatedProps = reactiveOmit(props, 'class')
 
-const forwardedProps = useForwardProps(delegatedProps);
+  const forwardedProps = useForwardProps(delegatedProps)
 </script>
 
 <template>
