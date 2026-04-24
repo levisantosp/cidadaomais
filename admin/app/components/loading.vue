@@ -1,14 +1,14 @@
 <script setup lang="ts">
-  withDefaults(
-    defineProps<{
-      width?: number
-      height?: number
-    }>(),
-    {
-      width: 16,
-      height: 16
-    }
-  )
+withDefaults(
+  defineProps<{
+    width?: number
+    height?: number
+  }>(),
+  {
+    width: 16,
+    height: 16
+  }
+)
 </script>
 
 <template>

@@ -1,10 +1,10 @@
 <script setup lang="ts">
-  import AppSidebar from '~/components/app-sidebar.vue'
-  import {
-    SidebarInset,
-    SidebarProvider,
-    SidebarTrigger
-  } from '~/components/ui/sidebar'
+import AppSidebar from '~/components/app-sidebar.vue'
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger
+} from '~/components/ui/sidebar'
 </script>
 
 <template>

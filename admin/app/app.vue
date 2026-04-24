@@ -1,10 +1,10 @@
 <script setup lang="ts">
-  import Loading from '~/components/loading.vue'
-  import 'vue-sonner/style.css'
-  import { Toaster } from '~/components/ui/sonner'
-  import { auth } from '~/lib/auth'
+import Loading from '~/components/loading.vue'
+import 'vue-sonner/style.css'
+import { Toaster } from '~/components/ui/sonner'
+import { auth } from '~/lib/auth'
 
-  const session = auth.useSession()
+const session = auth.useSession()
 </script>
 
 <template>

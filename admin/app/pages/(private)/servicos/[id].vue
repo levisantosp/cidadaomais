@@ -1,253 +1,253 @@
 <script setup lang="ts">
-  import { useMutation, useQuery } from '@tanstack/vue-query'
-  import { toTypedSchema } from '@vee-validate/zod'
-  import { refDebounced } from '@vueuse/core'
-  import { ChevronsUpDown, Edit, Trash, Undo2 } from 'lucide-vue-next'
-  import { useForm } from 'vee-validate'
-  import { toast } from 'vue-sonner'
-  import { z } from 'zod'
-  import Loading from '~/components/loading.vue'
-  import { Button } from '~/components/ui/button'
-  import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle
-  } from '~/components/ui/card'
-  import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList
-  } from '~/components/ui/command'
-  import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle
-  } from '~/components/ui/dialog'
-  import { Input } from '~/components/ui/input'
-  import { Label } from '~/components/ui/label'
-  import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger
-  } from '~/components/ui/popover'
-  import {
-    TagsInput,
-    TagsInputInput,
-    TagsInputItem,
-    TagsInputItemDelete,
-    TagsInputItemText
-  } from '~/components/ui/tags-input'
-  import { Textarea } from '~/components/ui/textarea'
-  import { api } from '~/lib/api'
+import { useMutation, useQuery } from '@tanstack/vue-query'
+import { toTypedSchema } from '@vee-validate/zod'
+import { refDebounced } from '@vueuse/core'
+import { ChevronsUpDown, Edit, Trash, Undo2 } from 'lucide-vue-next'
+import { useForm } from 'vee-validate'
+import { toast } from 'vue-sonner'
+import { z } from 'zod'
+import Loading from '~/components/loading.vue'
+import { Button } from '~/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '~/components/ui/card'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList
+} from '~/components/ui/command'
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from '~/components/ui/dialog'
+import { Input } from '~/components/ui/input'
+import { Label } from '~/components/ui/label'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from '~/components/ui/popover'
+import {
+  TagsInput,
+  TagsInputInput,
+  TagsInputItem,
+  TagsInputItemDelete,
+  TagsInputItemText
+} from '~/components/ui/tags-input'
+import { Textarea } from '~/components/ui/textarea'
+import { api } from '~/lib/api'
 
-  definePageMeta({
-    layout: 'private'
-  })
+definePageMeta({
+  layout: 'private'
+})
 
-  const route = useRoute()
-  const router = useRouter()
+const route = useRoute()
+const router = useRouter()
 
-  const { isPending, isFetching, error, data, refetch } = useQuery({
-    queryKey: ['service', route.params.id],
-    async queryFn() {
-      if (!route.params.id) {
-        throw new Error()
-      }
-
-      const response = await api
-        .services({
-          id: route.params.id.toString()
-        })
-        .get()
-      if (response.error) {
-        throw response.error.value
-      }
-
-      return response.data
+const { isPending, isFetching, error, data, refetch } = useQuery({
+  queryKey: ['service', route.params.id],
+  async queryFn() {
+    if (!route.params.id) {
+      throw new Error()
     }
-  })
 
-  watch(error, (e) => {
-    if (e) {
-      toast.error('Ocorreu um erro inesperado...', {
-        description: e.message
+    const response = await api
+      .services({
+        id: route.params.id.toString()
       })
-      router.push('/servicos')
+      .get()
+    if (response.error) {
+      throw response.error.value
+    }
+
+    return response.data
+  }
+})
+
+watch(error, (e) => {
+  if (e) {
+    toast.error('Ocorreu um erro inesperado...', {
+      description: e.message
+    })
+    router.push('/servicos')
+  }
+})
+
+const editValues = ref<{
+  name: string
+  description: string
+  requirements: string[]
+  guidelines: string
+  categoryId: bigint
+}>()
+const isDialogOpen = ref(false)
+
+const handleDialogOpen = (open: boolean) => {
+  isDialogOpen.value = open
+
+  if (!open || !data.value) {
+    editValues.value = undefined
+    selectedCategory.value = undefined
+    return
+  }
+
+  editValues.value = data.value
+  selectedCategory.value = {
+    ...data.value.category,
+    id: data.value.categoryId.toString()
+  }
+
+  resetForm({
+    values: {
+      ...data.value,
+      categoryId: data.value.categoryId.toString()
     }
   })
+}
 
-  const editValues = ref<{
-    name: string
-    description: string
-    requirements: string[]
-    guidelines: string
-    categoryId: bigint
-  }>()
-  const isDialogOpen = ref(false)
+const schema = z.object({
+  name: z
+    .string('Informe um nome válido')
+    .min(2, 'O nome precisa ter no mínimo 2 caracteres')
+    .trim(),
+  description: z
+    .string('Informe uma descrição válida')
+    .min(10, 'A descrição precisa ter no mínimo 10 caracteres')
+    .trim(),
+  requirements: z
+    .string('Informe requisitos válidos')
+    .trim()
+    .array()
+    .min(1, 'Precisa ter no mínimo 1 requisito'),
+  guidelines: z
+    .string('Informe um guia válido')
+    .min(10, 'O guia precisa ter no mínimo 10 caracteres')
+    .trim(),
+  categoryId: z.string('Informe a categoria')
+})
+const { defineField, errors, handleSubmit, resetForm } = useForm({
+  validationSchema: toTypedSchema(schema)
+})
 
-  const handleDialogOpen = (open: boolean) => {
-    isDialogOpen.value = open
+const [name, nameAttr] = defineField('name')
+const [desc, descAttr] = defineField('description')
+const [requirements, requirementsAttr] = defineField('requirements')
+const [guidelines, guidelinesAttr] = defineField('guidelines')
+const [categoryId] = defineField('categoryId')
 
-    if (!open || !data.value) {
-      editValues.value = undefined
-      selectedCategory.value = undefined
-      return
+const isComboboxOpen = ref(false)
+const search = ref<string>()
+const selectedCategory = ref<{
+  name: string
+  id: string
+}>()
+const trimmedSearch = computed(() => search.value?.trim())
+const debouncedSearch = refDebounced(trimmedSearch, 1000)
+
+const handleSearch = (event: Event) => {
+  search.value = (event.target as HTMLInputElement).value
+}
+
+const handleSelect = (value: { name: string; id: string }) => {
+  selectedCategory.value = value
+  categoryId.value = value.id
+}
+
+const { isPending: isMutationPending, mutate } = useMutation({
+  async mutationFn(formData: z.infer<typeof schema>) {
+    if (!data.value || !editValues.value) {
+      throw new Error()
     }
 
-    editValues.value = data.value
-    selectedCategory.value = {
-      ...data.value.category,
-      id: data.value.categoryId.toString()
+    const response = await api
+      .services({
+        id: data.value.id.toString()
+      })
+      .put({
+        ...formData,
+        categoryId: formData.categoryId as unknown as bigint
+      })
+    if (response.error) {
+      throw response.error.value
     }
 
-    resetForm({
-      values: {
-        ...data.value,
-        categoryId: data.value.categoryId.toString()
+    editValues.value = undefined
+    isDialogOpen.value = false
+  },
+  onError(e) {
+    toast.error('Ocorreu um erro inesperado...', {
+      description: e.message
+    })
+    console.error(e)
+  },
+  async onSuccess() {
+    await refetch()
+  }
+})
+
+const {
+  isPending: isCategoriesPending,
+  isFetching: isCategoriesFetching,
+  data: categories
+} = useQuery({
+  queryKey: ['categories', debouncedSearch],
+  enabled: computed(() => isComboboxOpen.value),
+  async queryFn() {
+    const response = await api.categories.get({
+      query: {
+        limit: 100,
+        page: 1,
+        name: debouncedSearch.value
       }
     })
-  }
-
-  const schema = z.object({
-    name: z
-      .string('Informe um nome válido')
-      .min(2, 'O nome precisa ter no mínimo 2 caracteres')
-      .trim(),
-    description: z
-      .string('Informe uma descrição válida')
-      .min(10, 'A descrição precisa ter no mínimo 10 caracteres')
-      .trim(),
-    requirements: z
-      .string('Informe requisitos válidos')
-      .trim()
-      .array()
-      .min(1, 'Precisa ter no mínimo 1 requisito'),
-    guidelines: z
-      .string('Informe um guia válido')
-      .min(10, 'O guia precisa ter no mínimo 10 caracteres')
-      .trim(),
-    categoryId: z.string('Informe a categoria')
-  })
-  const { defineField, errors, handleSubmit, resetForm } = useForm({
-    validationSchema: toTypedSchema(schema)
-  })
-
-  const [name, nameAttr] = defineField('name')
-  const [desc, descAttr] = defineField('description')
-  const [requirements, requirementsAttr] = defineField('requirements')
-  const [guidelines, guidelinesAttr] = defineField('guidelines')
-  const [categoryId] = defineField('categoryId')
-
-  const isComboboxOpen = ref(false)
-  const search = ref<string>()
-  const selectedCategory = ref<{
-    name: string
-    id: string
-  }>()
-  const trimmedSearch = computed(() => search.value?.trim())
-  const debouncedSearch = refDebounced(trimmedSearch, 1000)
-
-  const handleSearch = (event: Event) => {
-    search.value = (event.target as HTMLInputElement).value
-  }
-
-  const handleSelect = (value: { name: string; id: string }) => {
-    selectedCategory.value = value
-    categoryId.value = value.id
-  }
-
-  const { isPending: isMutationPending, mutate } = useMutation({
-    async mutationFn(formData: z.infer<typeof schema>) {
-      if (!data.value || !editValues.value) {
-        throw new Error()
-      }
-
-      const response = await api
-        .services({
-          id: data.value.id.toString()
-        })
-        .put({
-          ...formData,
-          categoryId: formData.categoryId as unknown as bigint
-        })
-      if (response.error) {
-        throw response.error.value
-      }
-
-      editValues.value = undefined
-      isDialogOpen.value = false
-    },
-    onError(e) {
-      toast.error('Ocorreu um erro inesperado...', {
-        description: e.message
-      })
-      console.error(e)
-    },
-    async onSuccess() {
-      await refetch()
+    if (response.error) {
+      throw response.error.value
     }
-  })
 
-  const {
-    isPending: isCategoriesPending,
-    isFetching: isCategoriesFetching,
-    data: categories
-  } = useQuery({
-    queryKey: ['categories', debouncedSearch],
-    enabled: computed(() => isComboboxOpen.value),
-    async queryFn() {
-      const response = await api.categories.get({
-        query: {
-          limit: 100,
-          page: 1,
-          name: debouncedSearch.value
-        }
-      })
-      if (response.error) {
-        throw response.error.value
-      }
+    return response.data.data
+  }
+})
 
-      return response.data.data
+const { isPending: isDeletePending, mutate: handleDelete } = useMutation({
+  async mutationFn() {
+    if (!route.params.id) {
+      throw new Error()
     }
-  })
 
-  const { isPending: isDeletePending, mutate: handleDelete } = useMutation({
-    async mutationFn() {
-      if (!route.params.id) {
-        throw new Error()
-      }
-
-      const response = await api
-        .services({
-          id: route.params.id.toString()
-        })
-        .delete()
-      if (response.error) {
-        throw response.error.value
-      }
-    },
-    onError(error) {
-      console.error(error)
-      toast.error('Ocorreu um erro inesperado...', {
-        description: error.message
+    const response = await api
+      .services({
+        id: route.params.id.toString()
       })
-    },
-    onSuccess() {
-      toast.success('Serviço deletado com sucesso!')
-      router.push('/servicos')
+      .delete()
+    if (response.error) {
+      throw response.error.value
     }
-  })
+  },
+  onError(error) {
+    console.error(error)
+    toast.error('Ocorreu um erro inesperado...', {
+      description: error.message
+    })
+  },
+  onSuccess() {
+    toast.success('Serviço deletado com sucesso!')
+    router.push('/servicos')
+  }
+})
 
-  const onSubmit = handleSubmit((data) => mutate(data))
+const onSubmit = handleSubmit((data) => mutate(data))
 </script>
 
 <template>

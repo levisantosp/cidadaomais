@@ -1,142 +1,133 @@
 <script setup lang="ts">
-  import { useMutation, useQuery } from '@tanstack/vue-query'
-  import dayjs from 'dayjs'
-  import type { Category } from 'db'
-  import {
-    ChevronLeft,
-    ChevronRight,
-    MoreHorizontal,
-    Pencil,
-    Plus,
-    Trash
-  } from 'lucide-vue-next'
-  import { toast } from 'vue-sonner'
-  import Loading from '~/components/loading.vue'
-  import { Button } from '~/components/ui/button'
-  import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle
-  } from '~/components/ui/card'
-  import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle
-  } from '~/components/ui/dialog'
-  import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuTrigger
-  } from '~/components/ui/dropdown-menu'
-  import { Input } from '~/components/ui/input'
-  import { Label } from '~/components/ui/label'
-  import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow
-  } from '~/components/ui/table'
-  import { api } from '~/lib/api'
+import { useMutation, useQuery } from '@tanstack/vue-query'
+import dayjs from 'dayjs'
+import type { Category } from 'db'
+import {
+  ChevronLeft,
+  ChevronRight,
+  MoreHorizontal,
+  Pencil,
+  Plus,
+  Trash
+} from 'lucide-vue-next'
+import { toast } from 'vue-sonner'
+import Loading from '~/components/loading.vue'
+import { Button } from '~/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from '~/components/ui/dialog'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger
+} from '~/components/ui/dropdown-menu'
+import { Input } from '~/components/ui/input'
+import { Label } from '~/components/ui/label'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '~/components/ui/table'
+import { api } from '~/lib/api'
 
-  definePageMeta({
-    layout: 'private'
-  })
+definePageMeta({
+  layout: 'private'
+})
 
-  const page = ref(1)
-  const isDialogMenuOpen = ref(false)
-  const selectedCategory = ref<Category>()
-  const editValues = ref({
-    name: ''
-  })
+const page = ref(1)
+const isDialogMenuOpen = ref(false)
+const selectedCategory = ref<Category>()
+const editValues = ref({
+  name: ''
+})
 
-  const { isPending, isFetching, data, refetch } = useQuery({
-    queryKey: ['categories'],
-    async queryFn() {
-      const response = await api.categories.get({
-        query: {
-          limit: 10,
-          page: page.value
-        }
-      })
-      if (response.error) {
-        throw response.error.value
+const { isPending, isFetching, data, refetch } = useQuery({
+  queryKey: ['categories'],
+  async queryFn() {
+    const response = await api.categories.get({
+      query: {
+        limit: 10,
+        page: page.value
       }
-
-      return response.data
+    })
+    if (response.error) {
+      throw response.error.value
     }
-  })
 
-  const { mutate, isPending: isDeletePending } = useMutation({
-    async mutationFn() {
-      if (!selectedCategory.value) {
-        return toast.warning(
-          'Não foi possível deletar essa categoria no momento'
-        )
-      }
+    return response.data
+  }
+})
 
-      await api
-        .categories({
-          id: selectedCategory.value.id.toString()
-        })
-        .delete()
+const { mutate, isPending: isDeletePending } = useMutation({
+  async mutationFn() {
+    if (!selectedCategory.value) {
+      return toast.warning('Não foi possível deletar essa categoria no momento')
+    }
 
-      selectedCategory.value = undefined
-
-      await refetch()
-    },
-    onError(error) {
-      toast.error('Ocorreu um erro inesperado...', {
-        description: error.message
+    await api
+      .categories({
+        id: selectedCategory.value.id.toString()
       })
-      console.error(error)
-    }
-  })
+      .delete()
 
-  const { mutate: mutateEdit, isPending: isEditPending } = useMutation({
-    async mutationFn() {
-      if (!selectedCategory.value || !editValues.value) {
-        return toast.warning(
-          'Não foi possível editar essa categoria no momento'
-        )
-      }
-
-      await api
-        .categories({
-          id: selectedCategory.value.id.toString()
-        })
-        .put(editValues.value)
-
-      isDialogMenuOpen.value = false
-      selectedCategory.value = undefined
-
-      await refetch()
-    },
-    onError(error) {
-      toast.error('Ocorreu um erro inesperado...', {
-        description: error.message
-      })
-      console.error(error)
-    }
-  })
-
-  const handlePage = async (action: 'previous' | 'next') => {
-    if (action === 'previous') {
-      page.value = Math.max(1, page.value - 1)
-    } else {
-      page.value += 1
-    }
+    selectedCategory.value = undefined
 
     await refetch()
+  },
+  onError(error) {
+    toast.error('Ocorreu um erro inesperado...', {
+      description: error.message
+    })
+    console.error(error)
   }
+})
+
+const { mutate: mutateEdit, isPending: isEditPending } = useMutation({
+  async mutationFn() {
+    if (!selectedCategory.value || !editValues.value) {
+      return toast.warning('Não foi possível editar essa categoria no momento')
+    }
+
+    await api
+      .categories({
+        id: selectedCategory.value.id.toString()
+      })
+      .put(editValues.value)
+
+    isDialogMenuOpen.value = false
+    selectedCategory.value = undefined
+
+    await refetch()
+  },
+  onError(error) {
+    toast.error('Ocorreu um erro inesperado...', {
+      description: error.message
+    })
+    console.error(error)
+  }
+})
+
+const handlePage = async (action: 'previous' | 'next') => {
+  if (action === 'previous') {
+    page.value = Math.max(1, page.value - 1)
+  } else {
+    page.value += 1
+  }
+
+  await refetch()
+}
 </script>
 
 <template>
