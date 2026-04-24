@@ -10,7 +10,7 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint": "oxlint",
-    "format": "oxfmt",
+    "fmt": "oxfmt",
     "check": "tsc --noEmit"
   },
   "dependencies": {

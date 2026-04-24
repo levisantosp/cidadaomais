@@ -9,6 +9,6 @@
   "main": "src/index.ts",
   "scripts": {
     "lint": "oxlint",
-    "format": "oxfmt"
+    "fmt": "oxfmt"
   }
 }

@@ -9,7 +9,7 @@
   "main": "src/index.ts",
   "scripts": {
     "lint": "oxlint",
-    "format": "oxfmt"
+    "fmt": "oxfmt"
   },
   "dependencies": {
     "pino": "^10.3.1",

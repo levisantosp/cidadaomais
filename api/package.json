@@ -15,7 +15,7 @@
     "start": "bun .",
     "dev": "bun --watch .",
     "lint": "oxlint",
-    "format": "oxfmt",
+    "fmt": "oxfmt",
     "build": "oxlint && tsc"
   },
   "dependencies": {

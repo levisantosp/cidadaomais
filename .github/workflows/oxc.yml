@@ -49,7 +49,7 @@ jobs:
         if: github.event_name == 'push'
         run: |
           bun lint --fix
-          bun format
+          bun fmt
 
       - name: Commit changes
         if: github.event_name == 'push'
@@ -68,7 +68,7 @@ jobs:
 
       - name: Check formatting
         if: github.event_name == 'pull_request'
-        run: bun format --check
+        run: bun fmt --check
 
       - name: Run oxlint with GitHub annotations
         if: github.event_name == 'pull_request'
