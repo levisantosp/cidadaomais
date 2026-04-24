@@ -9,5 +9,6 @@
   "sortImports": {
     "order": "asc",
     "newlinesBetween": false
-  }
+  },
+  "insertFinalNewline": false
 }
