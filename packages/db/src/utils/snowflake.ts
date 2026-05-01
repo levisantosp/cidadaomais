@@ -15,17 +15,13 @@ export const snowflake = () => {
   let timestamp = BigInt(Date.now()) - EPOCH
 
   if (timestamp < 0n) {
-    throw new Error(
-      `Current time is before the custom epoch '${EPOCH}'. Check the server clock.`
-    )
+    throw new Error(`Current time is before the custom epoch '${EPOCH}'. Check the server clock.`)
   }
 
   if (timestamp < lastTimestamp) {
     const drift = lastTimestamp - timestamp
     if (drift > CLOCK_ROLLBACK_TOLERANCE) {
-      throw new Error(
-        `Clock moved backwards by ${drift}ms. Refusing to generate ID.`
-      )
+      throw new Error(`Clock moved backwards by ${drift}ms. Refusing to generate ID.`)
     }
 
     const start = Date.now()
@@ -46,9 +42,7 @@ export const snowflake = () => {
 
       do {
         if (Date.now() - start > MAX_WAIT_MS) {
-          throw new Error(
-            'Timed out waiting for the next millisecond. Per-node capacity exceeded.'
-          )
+          throw new Error('Timed out waiting for the next millisecond. Per-node capacity exceeded.')
         }
         timestamp = BigInt(Date.now()) - EPOCH
       } while (timestamp <= lastTimestamp)

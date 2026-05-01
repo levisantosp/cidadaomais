@@ -8,21 +8,8 @@ import { toast } from 'vue-sonner'
 import { z } from 'zod'
 import Loading from '~/components/loading.vue'
 import { Button } from '~/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '~/components/ui/card'
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList
-} from '~/components/ui/command'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card'
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '~/components/ui/command'
 import {
   Dialog,
   DialogClose,
@@ -34,11 +21,7 @@ import {
 } from '~/components/ui/dialog'
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger
-} from '~/components/ui/popover'
+import { Popover, PopoverContent, PopoverTrigger } from '~/components/ui/popover'
 import { Textarea } from '~/components/ui/textarea'
 import { api } from '~/lib/api'
 
@@ -78,10 +61,7 @@ watch(error, (e) => {
 })
 
 const schema = z.object({
-  name: z
-    .string('Informe um nome válido.')
-    .min(2, 'O nome precisa ter no mínimo 2 caracteres.')
-    .trim(),
+  name: z.string('Informe um nome válido.').min(2, 'O nome precisa ter no mínimo 2 caracteres.').trim(),
   description: z
     .string('Informe uma descrição válida.')
     .min(10, 'A descrição precisa ter no mínimo 10 caracteres.')
@@ -94,9 +74,7 @@ const schema = z.object({
     )
     .optional(),
   email: z.email('E-mail inválido.').optional(),
-  website: z
-    .url("Link inválido. O link deve começar com 'https://' ou 'http://'.")
-    .optional(),
+  website: z.url("Link inválido. O link deve começar com 'https://' ou 'http://'.").optional(),
   unitsIds: z
     .array(z.coerce.bigint('Unidade inválida'), 'Informe as unidades')
     .min(1, 'Selecione ao menos uma unidade')
@@ -196,9 +174,7 @@ const entityUnits = computed(() => {
 
   return (
     unitsData.value
-      ?.filter(
-        (item) => item.entityId?.toString() === data.value?.id.toString()
-      )
+      ?.filter((item) => item.entityId?.toString() === data.value?.id.toString())
       .map((item) => ({
         name: item.name,
         id: item.id.toString()
@@ -278,9 +254,7 @@ const handleSelect = (item: Unit) => {
 
   if (isUnitSelected(item)) {
     units.value = units.value?.filter((id) => id !== unitId) ?? []
-    selectedUnits.value = selectedUnits.value.filter(
-      (item) => item.id !== unitId
-    )
+    selectedUnits.value = selectedUnits.value.filter((item) => item.id !== unitId)
     return
   }
 
@@ -306,9 +280,7 @@ const { isPending: isMutationPending, mutate } = useMutation({
       })
       .put({
         ...formData,
-        unitsIds: formData.unitsIds.map((id) =>
-          id.toString()
-        ) as unknown as bigint[]
+        unitsIds: formData.unitsIds.map((id) => id.toString()) as unknown as bigint[]
       })
     if (response.error) {
       throw response.error.value
@@ -368,29 +340,18 @@ const onSubmit = handleSubmit((data) => mutate(data))
   <div v-else class="pt-10">
     <div class="flex items-center justify-between pl-5 pr-5">
       <div class="flex items-center gap-4">
-        <Button
-          variant="outline"
-          class="cursor-pointer"
-          @click="router.push('/orgaos')"
-        >
+        <Button variant="outline" class="cursor-pointer" @click="router.push('/orgaos')">
           <Undo2 />
         </Button>
 
         <div>
           <h1 class="md:text-3xl text-2xl font-bold">Detalhes do Órgão</h1>
-          <p class="text-muted-foreground text-sm md:text-lg">
-            Visualize e gerencie as informações deste órgão
-          </p>
+          <p class="text-muted-foreground text-sm md:text-lg">Visualize e gerencie as informações deste órgão</p>
         </div>
       </div>
 
       <div class="flex gap-2">
-        <Button
-          variant="destructive"
-          class="cursor-pointer"
-          @click="handleDelete()"
-          :disabled="isDeletePending"
-        >
+        <Button variant="destructive" class="cursor-pointer" @click="handleDelete()" :disabled="isDeletePending">
           <Loading v-if="isDeletePending" class="w-16" />
           <Trash v-if="!isDeletePending" />
           <span v-if="!isDeletePending">Deletar</span>
@@ -441,11 +402,7 @@ const onSubmit = handleSubmit((data) => mutate(data))
     </div>
   </div>
 
-  <Dialog
-    v-if="data && editValues"
-    :open="true"
-    @update:open="handleDialogOpen"
-  >
+  <Dialog v-if="data && editValues" :open="true" @update:open="handleDialogOpen">
     <DialogContent>
       <DialogHeader>
         <DialogTitle>Editar {{ data.name }}</DialogTitle>
@@ -465,11 +422,7 @@ const onSubmit = handleSubmit((data) => mutate(data))
 
           <div class="flex flex-col space-y-2">
             <Label for="description">Descrição</Label>
-            <Textarea
-              id="description"
-              v-model="description"
-              v-bind="descriptionProps"
-            />
+            <Textarea id="description" v-model="description" v-bind="descriptionProps" />
 
             <span v-if="errors.description" class="text-sm text-red-400">
               {{ errors.description }}
@@ -521,20 +474,12 @@ const onSubmit = handleSubmit((data) => mutate(data))
 
               <PopoverContent class="w-(--reka-popover-trigger-width) p-0">
                 <Command>
-                  <CommandInput
-                    placeholder="Pesquisar unidade..."
-                    @input="handleSearch"
-                  />
+                  <CommandInput placeholder="Pesquisar unidade..." @input="handleSearch" />
 
                   <CommandList>
                     <CommandEmpty>
-                      <Loading
-                        v-if="isUnitsPending || isUnitsFetching"
-                        class="pl-5"
-                      />
-                      <span v-else-if="!unitsData?.length" class="pl-5">
-                        Nenhuma unidade encontrada
-                      </span>
+                      <Loading v-if="isUnitsPending || isUnitsFetching" class="pl-5" />
+                      <span v-else-if="!unitsData?.length" class="pl-5"> Nenhuma unidade encontrada </span>
                     </CommandEmpty>
 
                     <CommandGroup>
@@ -566,11 +511,7 @@ const onSubmit = handleSubmit((data) => mutate(data))
           <Button variant="outline" class="cursor-pointer">Cancelar</Button>
         </DialogClose>
 
-        <Button
-          @click="onSubmit"
-          class="cursor-pointer"
-          :disabled="isMutationPending"
-        >
+        <Button @click="onSubmit" class="cursor-pointer" :disabled="isMutationPending">
           <Loading v-if="isMutationPending" class="w-10.5" />
           <span v-else>Salvar</span>
         </Button>

@@ -1,12 +1,6 @@
 <script setup lang="ts">
 import { useQuery } from '@tanstack/vue-query'
-import {
-  BriefcaseBusiness,
-  Building,
-  ChartBarStacked,
-  CircleX,
-  Landmark
-} from 'lucide-vue-next'
+import { BriefcaseBusiness, Building, ChartBarStacked, CircleX, Landmark } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
 import { Card, CardContent, CardTitle } from '~/components/ui/card'
 import CardHeader from '~/components/ui/card/CardHeader.vue'
@@ -20,13 +14,7 @@ definePageMeta({
 const { isPending, isFetching, data, error } = useQuery({
   queryKey: ['home-data'],
   async queryFn() {
-    const [
-      servicesResponse,
-      entitiesResponse,
-      categoriesResponse,
-      unitsResponse,
-      logsResponse
-    ] = await Promise.all([
+    const [servicesResponse, entitiesResponse, categoriesResponse, unitsResponse, logsResponse] = await Promise.all([
       api['services-count'].get(),
       api['entities-count'].get(),
       api['categories-count'].get(),
@@ -46,15 +34,9 @@ const { isPending, isFetching, data, error } = useQuery({
     hasLogsError.value = !!logsResponse.error
 
     return {
-      servicesCount: servicesResponse.error
-        ? null
-        : servicesResponse.data.count,
-      entitiesCount: entitiesResponse.error
-        ? null
-        : entitiesResponse.data.count,
-      categoriesCount: categoriesResponse.error
-        ? null
-        : categoriesResponse.data.count,
+      servicesCount: servicesResponse.error ? null : servicesResponse.data.count,
+      entitiesCount: entitiesResponse.error ? null : entitiesResponse.data.count,
+      categoriesCount: categoriesResponse.error ? null : categoriesResponse.data.count,
       unitsCount: unitsResponse.error ? null : unitsResponse.data.count,
       logs: logsResponse.error ? [] : logsResponse.data.data
     }
@@ -129,11 +111,7 @@ const statsConfig = [
     </div>
 
     <div class="grid grid-cols-1 items-center gap-4 sm:grid-cols-3">
-      <Card
-        v-for="item in statsConfig"
-        :key="item.key"
-        class="flex flex-col h-36 justify-between p-6"
-      >
+      <Card v-for="item in statsConfig" :key="item.key" class="flex flex-col h-36 justify-between p-6">
         <div class="flex justify-between items-center">
           <span class="text-lg font-semibold text-muted-foreground">
             {{ item.label }}
@@ -145,17 +123,11 @@ const statsConfig = [
           <div v-if="isPending || isFetching || !data">
             <Skeleton class="h-8 w-8" />
           </div>
-          <div
-            v-else-if="hasGlobalError"
-            class="flex items-center gap-2 text-red-400 text-sm"
-          >
+          <div v-else-if="hasGlobalError" class="flex items-center gap-2 text-red-400 text-sm">
             <CircleX class="size-4" />
             <span>Não foi possível buscar os dados no momento</span>
           </div>
-          <div
-            v-else-if="statsErrors[item.key]"
-            class="flex items-center gap-2 text-red-400 text-sm"
-          >
+          <div v-else-if="statsErrors[item.key]" class="flex items-center gap-2 text-red-400 text-sm">
             <CircleX class="size-4" />
             <span>Não foi possível buscar os dados no momento</span>
           </div>
@@ -167,16 +139,11 @@ const statsConfig = [
     <div class="grid gap-4 md:grid-cols-2 grid-cols-1">
       <Card>
         <CardHeader>
-          <CardTitle class="text-muted-foreground">
-            Registros Recentes
-          </CardTitle>
+          <CardTitle class="text-muted-foreground"> Registros Recentes </CardTitle>
         </CardHeader>
 
         <CardContent class="space-y-4">
-          <div
-            v-if="isPending || isFetching || !data"
-            class="flex flex-col gap-5"
-          >
+          <div v-if="isPending || isFetching || !data" class="flex flex-col gap-5">
             <div v-for="n in 5" :key="n" class="flex gap-2">
               <Skeleton class="rounded-full h-10 w-10" />
 
@@ -186,23 +153,15 @@ const statsConfig = [
               </div>
             </div>
           </div>
-          <div
-            v-else-if="hasGlobalError"
-            class="flex items-center gap-2 text-red-400 text-sm"
-          >
+          <div v-else-if="hasGlobalError" class="flex items-center gap-2 text-red-400 text-sm">
             <CircleX class="size-4" />
             <span>Não foi possível buscar os dados no momento</span>
           </div>
-          <div
-            v-else-if="hasLogsError"
-            class="flex items-center gap-2 text-red-400 text-sm"
-          >
+          <div v-else-if="hasLogsError" class="flex items-center gap-2 text-red-400 text-sm">
             <CircleX class="size-4" />
             <span>Não foi possível buscar os dados no momento</span>
           </div>
-          <div v-else-if="!data?.logs?.length">
-            Nenhum registro até o momento.
-          </div>
+          <div v-else-if="!data?.logs?.length">Nenhum registro até o momento.</div>
         </CardContent>
       </Card>
 

@@ -7,14 +7,7 @@ import { toast } from 'vue-sonner'
 import { z } from 'zod'
 import Loading from '~/components/loading.vue'
 import { Button } from '~/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from '~/components/ui/card'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card'
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
 import { error } from '~/config'
@@ -27,18 +20,9 @@ definePageMeta({
 const schema = z
   .object({
     email: z.email('Informe um e-mail válido.').trim(),
-    password: z
-      .string('Informe a senha.')
-      .min(6, 'A senha precisa ter no mínimo 6 caracteres')
-      .trim(),
-    confirmPassword: z
-      .string('Informe a senha.')
-      .min(6, 'A senha precisa ter no mínimo 6 caracteres')
-      .trim(),
-    name: z
-      .string('Informe seu nome')
-      .min(3, 'O nome precisa ter no mínimo 3 caracteres')
-      .trim()
+    password: z.string('Informe a senha.').min(6, 'A senha precisa ter no mínimo 6 caracteres').trim(),
+    confirmPassword: z.string('Informe a senha.').min(6, 'A senha precisa ter no mínimo 6 caracteres').trim(),
+    name: z.string('Informe seu nome').min(3, 'O nome precisa ter no mínimo 3 caracteres').trim()
   })
   .refine((data) => data.password === data.confirmPassword, {
     error: 'As senhas não coincidem',
@@ -89,9 +73,7 @@ const showPassword = ref(false)
     <Card class="w-full max-w-sm">
       <CardHeader>
         <CardTitle>Crie uma conta</CardTitle>
-        <CardDescription>
-          Informe os dados necessários para criar sua conta
-        </CardDescription>
+        <CardDescription> Informe os dados necessários para criar sua conta </CardDescription>
       </CardHeader>
 
       <CardContent>
@@ -99,13 +81,7 @@ const showPassword = ref(false)
           <div class="grid w-full items-center gap-4">
             <div class="flex flex-col space-y-1.5">
               <Label for="email">E-mail</Label>
-              <Input
-                id="email"
-                type="email"
-                v-model="email"
-                v-bind="emailAttr"
-                placeholder="seu@email.com"
-              />
+              <Input id="email" type="email" v-model="email" v-bind="emailAttr" placeholder="seu@email.com" />
 
               <span v-if="errors.email" class="text-sm text-red-400">
                 {{ errors.email }}
@@ -114,13 +90,7 @@ const showPassword = ref(false)
 
             <div class="flex flex-col space-y-1.5">
               <Label for="email">Nome</Label>
-              <Input
-                id="name"
-                type="text"
-                v-model="name"
-                v-bind="nameAttr"
-                autocomplete="off"
-              />
+              <Input id="name" type="text" v-model="name" v-bind="nameAttr" autocomplete="off" />
 
               <span v-if="errors.name" class="text-sm text-red-400">
                 {{ errors.name }}
@@ -144,11 +114,7 @@ const showPassword = ref(false)
                   class="absolute inset-y-0 right-0 flex w-10 items-center justify-center"
                   @click="showPassword = !showPassword"
                 >
-                  <Eye
-                    v-if="!showPassword"
-                    class="text-muted-foreground"
-                    :size="20"
-                  />
+                  <Eye v-if="!showPassword" class="text-muted-foreground" :size="20" />
                   <EyeOff v-else class="text-muted-foreground" :size="20" />
                 </button>
               </div>
@@ -175,11 +141,7 @@ const showPassword = ref(false)
                   class="absolute inset-y-0 right-0 flex w-10 items-center justify-center"
                   @click="showPassword = !showPassword"
                 >
-                  <Eye
-                    v-if="!showPassword"
-                    class="text-muted-foreground"
-                    :size="20"
-                  />
+                  <Eye v-if="!showPassword" class="text-muted-foreground" :size="20" />
                   <EyeOff v-else class="text-muted-foreground" :size="20" />
                 </button>
               </div>
@@ -192,11 +154,7 @@ const showPassword = ref(false)
         </form>
       </CardContent>
       <CardFooter>
-        <Button
-          class="w-full cursor-pointer"
-          @click="onSubmit"
-          :disabled="isSubmitting"
-        >
+        <Button class="w-full cursor-pointer" @click="onSubmit" :disabled="isSubmitting">
           <span v-if="!isSubmitting">Criar conta</span>
           <Loading v-else />
         </Button>

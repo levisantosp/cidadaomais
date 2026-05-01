@@ -1,12 +1,5 @@
 <script setup lang="ts">
-import {
-  BriefcaseBusiness,
-  Building,
-  ChartBarStacked,
-  Home,
-  Landmark,
-  LogOut
-} from 'lucide-vue-next'
+import { BriefcaseBusiness, Building, ChartBarStacked, Home, Landmark, LogOut } from 'lucide-vue-next'
 import Loading from '~/components/loading.vue'
 import {
   Sidebar,
@@ -69,9 +62,7 @@ const handleSignout = async () => {
           <span class="text-[#3f9731]">MAIS</span>
         </h1>
       </NuxtLink>
-      <h2 class="md:text-base text-center text-muted-foreground">
-        Painel Administrativo
-      </h2>
+      <h2 class="md:text-base text-center text-muted-foreground">Painel Administrativo</h2>
     </SidebarHeader>
 
     <SidebarContent>
@@ -96,10 +87,7 @@ const handleSignout = async () => {
     <SidebarFooter>
       <SidebarMenu>
         <SidebarMenuItem>
-          <SidebarMenuButton
-            class="bg-red-900 hover:bg-red-800 cursor-pointer"
-            @click="handleSignout"
-          >
+          <SidebarMenuButton class="bg-red-900 hover:bg-red-800 cursor-pointer" @click="handleSignout">
             <span>Sair</span>
           </SidebarMenuButton>
         </SidebarMenuItem>
@@ -108,10 +96,7 @@ const handleSignout = async () => {
   </Sidebar>
 
   <Teleport to="body">
-    <div
-      v-if="isPending"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black/70"
-    >
+    <div v-if="isPending" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
       <Loading :width="20" :height="20" class="text-white" />
     </div>
   </Teleport>

@@ -8,9 +8,7 @@ export const getUnits = new Elysia().get(
   '/units',
   async (ctx) => {
     const units = await db.query.entityUnit.findMany({
-      where: ctx.query.name
-        ? ilike(schema.entityUnit.name, `%${ctx.query.name}%`)
-        : undefined,
+      where: ctx.query.name ? ilike(schema.entityUnit.name, `%${ctx.query.name}%`) : undefined,
       orderBy: desc(schema.entityUnit.createdAt),
       offset: (ctx.query.page - 1) * ctx.query.limit,
       limit: ctx.query.limit + 1,

@@ -8,13 +8,7 @@ import { toast } from 'vue-sonner'
 import { z } from 'zod'
 import Loading from '~/components/loading.vue'
 import { Button } from '~/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from '~/components/ui/card'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '~/components/ui/card'
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
 import { api } from '~/lib/api'
@@ -24,18 +18,9 @@ definePageMeta({
 })
 
 const schema = z.object({
-  name: z
-    .string('Informe o nome')
-    .min(2, 'O nome precisa ter no mínimo 2 caracteres')
-    .trim(),
-  latitude: z
-    .number('Selecione a localização no mapa')
-    .min(-90, 'Latitude inválida')
-    .max(90, 'Latitude inválida'),
-  longitude: z
-    .number('Selecione a localização no mapa')
-    .min(-180, 'Longitude inválida')
-    .max(180, 'Longitude inválida')
+  name: z.string('Informe o nome').min(2, 'O nome precisa ter no mínimo 2 caracteres').trim(),
+  latitude: z.number('Selecione a localização no mapa').min(-90, 'Latitude inválida').max(90, 'Latitude inválida'),
+  longitude: z.number('Selecione a localização no mapa').min(-180, 'Longitude inválida').max(180, 'Longitude inválida')
 })
 const { defineField, errors, handleSubmit, setFieldValue } = useForm({
   validationSchema: toTypedSchema(schema)
@@ -108,9 +93,7 @@ onMounted(() => {
     zoom: 12
   })
 
-  map.value.on('click', (event) =>
-    updateLocation(event.lngLat.lng, event.lngLat.lat)
-  )
+  map.value.on('click', (event) => updateLocation(event.lngLat.lng, event.lngLat.lat))
 
   marker.value?.on('dragend', () => {
     const position = marker.value?.getLngLat()
@@ -129,9 +112,7 @@ onBeforeUnmount(() => {
   <div class="grid grid-cols-1 gap-6 space-y-6 p-6">
     <div>
       <h1 class="text-2xl font-bold">Nova Unidade</h1>
-      <p class="text-muted-foreground text-sm">
-        Adicione uma nova unidade para disponibilizar no aplicativo
-      </p>
+      <p class="text-muted-foreground text-sm">Adicione uma nova unidade para disponibilizar no aplicativo</p>
     </div>
 
     <Card>
@@ -152,15 +133,9 @@ onBeforeUnmount(() => {
             <div class="flex flex-col space-y-2">
               <Label>Localização</Label>
 
-              <div
-                ref="mapContainer"
-                class="h-128 overflow-hidden rounded-md border"
-              />
+              <div ref="mapContainer" class="h-128 overflow-hidden rounded-md border" />
 
-              <span
-                v-if="errors.latitude || errors.longitude"
-                class="text-sm text-red-400"
-              >
+              <span v-if="errors.latitude || errors.longitude" class="text-sm text-red-400">
                 {{ errors.latitude || errors.longitude }}
               </span>
             </div>
@@ -169,11 +144,7 @@ onBeforeUnmount(() => {
       </CardContent>
 
       <CardFooter>
-        <Button
-          class="w-full cursor-pointer"
-          @click="onSubmit"
-          :disabled="isPending === true"
-        >
+        <Button class="w-full cursor-pointer" @click="onSubmit" :disabled="isPending === true">
           <span v-if="!isPending">Criar</span>
           <Loading v-else />
         </Button>

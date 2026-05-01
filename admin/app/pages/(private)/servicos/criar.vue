@@ -8,27 +8,11 @@ import { toast } from 'vue-sonner'
 import { z } from 'zod'
 import Loading from '~/components/loading.vue'
 import { Button } from '~/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from '~/components/ui/card'
-import {
-  Command,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList
-} from '~/components/ui/command'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '~/components/ui/card'
+import { Command, CommandGroup, CommandInput, CommandItem, CommandList } from '~/components/ui/command'
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger
-} from '~/components/ui/popover'
+import { Popover, PopoverContent, PopoverTrigger } from '~/components/ui/popover'
 import {
   TagsInput,
   TagsInputInput,
@@ -44,23 +28,13 @@ definePageMeta({
 })
 
 const schema = z.object({
-  name: z
-    .string('Informe um nome válido')
-    .min(2, 'O nome precisa ter no mínimo 2 caracteres')
-    .trim(),
+  name: z.string('Informe um nome válido').min(2, 'O nome precisa ter no mínimo 2 caracteres').trim(),
   description: z
     .string('Informe uma descrição válida')
     .min(10, 'A descrição precisa ter no mínimo 10 caracteres')
     .trim(),
-  requirements: z
-    .string('Informe requisitos válidos')
-    .trim()
-    .array()
-    .min(1, 'Precisa ter no mínimo 1 requisito'),
-  guidelines: z
-    .string('Informe um guia válido')
-    .min(10, 'O guia precisa ter no mínimo 10 caracteres')
-    .trim(),
+  requirements: z.string('Informe requisitos válidos').trim().array().min(1, 'Precisa ter no mínimo 1 requisito'),
+  guidelines: z.string('Informe um guia válido').min(10, 'O guia precisa ter no mínimo 10 caracteres').trim(),
   categoryId: z.string('Informe a categoria')
 })
 const typedSchema = toTypedSchema(schema)
@@ -146,15 +120,11 @@ const onSubmit = handleSubmit((data) => mutate(data))
   <div class="grid grid-cols-1 gap-6 space-y-6 p-6">
     <div>
       <h1 class="text-2xl font-bold">Novo Serviço</h1>
-      <p class="text-muted-foreground text-sm">
-        Adicione um novo serviço para disponibilizar no aplicativo
-      </p>
+      <p class="text-muted-foreground text-sm">Adicione um novo serviço para disponibilizar no aplicativo</p>
     </div>
 
     <Card>
-      <CardHeader
-        class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
-      >
+      <CardHeader class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <CardTitle class="text-xl">Informações do serviço</CardTitle>
       </CardHeader>
 
@@ -181,23 +151,13 @@ const onSubmit = handleSubmit((data) => mutate(data))
 
             <div class="flex flex-col space-y-2">
               <Label for="requirements">Requisitos</Label>
-              <TagsInput
-                id="requirements"
-                v-model="requirements"
-                v-bind="requirementsAttr"
-              >
-                <TagsInputItem
-                  v-for="item in requirements"
-                  :key="item"
-                  :value="item"
-                >
+              <TagsInput id="requirements" v-model="requirements" v-bind="requirementsAttr">
+                <TagsInputItem v-for="item in requirements" :key="item" :value="item">
                   <TagsInputItemText />
                   <TagsInputItemDelete />
                 </TagsInputItem>
 
-                <TagsInputInput
-                  placeholder="Digite o requisito e pressione Enter para adicionar"
-                />
+                <TagsInputInput placeholder="Digite o requisito e pressione Enter para adicionar" />
               </TagsInput>
 
               <span v-if="errors.requirements" class="text-sm text-red-400">
@@ -207,11 +167,7 @@ const onSubmit = handleSubmit((data) => mutate(data))
 
             <div class="flex flex-col space-y-2">
               <Label for="guidelines">Guia</Label>
-              <Textarea
-                id="guidelines"
-                v-model="guidelines"
-                v-bind="guidelinesAttr"
-              />
+              <Textarea id="guidelines" v-model="guidelines" v-bind="guidelinesAttr" />
 
               <span v-if="errors.guidelines" class="text-sm text-red-400">
                 {{ errors.guidelines }}
@@ -223,11 +179,7 @@ const onSubmit = handleSubmit((data) => mutate(data))
 
               <Popover v-model:open="isComboboxOpen">
                 <PopoverTrigger as-child>
-                  <Button
-                    variant="outline"
-                    :aria-expanded="isComboboxOpen"
-                    class="w-full justify-between"
-                  >
+                  <Button variant="outline" :aria-expanded="isComboboxOpen" class="w-full justify-between">
                     <span>
                       {{ selectedCategory?.name || 'Selecione uma categoria' }}
                     </span>
@@ -237,20 +189,12 @@ const onSubmit = handleSubmit((data) => mutate(data))
 
                 <PopoverContent class="w-(--reka-popover-trigger-width) p-0">
                   <Command>
-                    <CommandInput
-                      placeholder="Pesquisar categoria..."
-                      @input="handleSearch"
-                    />
+                    <CommandInput placeholder="Pesquisar categoria..." @input="handleSearch" />
 
                     <CommandList>
                       <CommandEmpty>
-                        <Loading
-                          v-if="isCategoryPending || isFetching"
-                          class="pl-5"
-                        />
-                        <span v-else-if="!data?.length" class="pl-5"
-                          >Nenhuma categoria encontrada</span
-                        >
+                        <Loading v-if="isCategoryPending || isFetching" class="pl-5" />
+                        <span v-else-if="!data?.length" class="pl-5">Nenhuma categoria encontrada</span>
                       </CommandEmpty>
 
                       <CommandGroup>
@@ -283,11 +227,7 @@ const onSubmit = handleSubmit((data) => mutate(data))
       </CardContent>
 
       <CardFooter>
-        <Button
-          class="w-full cursor-pointer"
-          @click="onSubmit"
-          :disabled="isPending"
-        >
+        <Button class="w-full cursor-pointer" @click="onSubmit" :disabled="isPending">
           <div v-if="!isPending"><span>Criar</span></div>
           <Loading v-else :width="8" :height="8" />
         </Button>

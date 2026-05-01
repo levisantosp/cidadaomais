@@ -2,14 +2,7 @@
 import { useMutation, useQuery } from '@tanstack/vue-query'
 import dayjs from 'dayjs'
 import type { Category } from 'db'
-import {
-  ChevronLeft,
-  ChevronRight,
-  MoreHorizontal,
-  Pencil,
-  Plus,
-  Trash
-} from 'lucide-vue-next'
+import { ChevronLeft, ChevronRight, MoreHorizontal, Pencil, Plus, Trash } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
 import Loading from '~/components/loading.vue'
 import { Button } from '~/components/ui/button'
@@ -32,14 +25,7 @@ import {
 } from '~/components/ui/dropdown-menu'
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from '~/components/ui/table'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table'
 import { api } from '~/lib/api'
 
 definePageMeta({
@@ -134,15 +120,11 @@ const handlePage = async (action: 'previous' | 'next') => {
   <div class="space-y-6 p-6">
     <div>
       <h1 class="text-2xl font-bold">Gestão de Categorias</h1>
-      <p class="text-muted-foreground text-sm">
-        Veja e acompanhe as categorias cadastradas no sistema
-      </p>
+      <p class="text-muted-foreground text-sm">Veja e acompanhe as categorias cadastradas no sistema</p>
     </div>
 
     <Card>
-      <CardHeader
-        class="flex flex-col gap-4 pb-2 md:flex-row md:items-center md:justify-between"
-      >
+      <CardHeader class="flex flex-col gap-4 pb-2 md:flex-row md:items-center md:justify-between">
         <CardTitle class="text-2xl">Lista de Categorias</CardTitle>
 
         <NuxtLink href="/categorias/criar">
@@ -154,30 +136,17 @@ const handlePage = async (action: 'previous' | 'next') => {
       </CardHeader>
 
       <CardContent>
-        <div
-          v-if="isPending || isFetching || !data"
-          class="flex justify-center"
-        >
+        <div v-if="isPending || isFetching || !data" class="flex justify-center">
           <Loading />
         </div>
 
         <div v-else>
           <div class="flex items-center justify-center space-x-2 py-2">
-            <Button
-              variant="outline"
-              class="cursor-pointer"
-              :disabled="data.page <= 1"
-              @click="handlePage('previous')"
-            >
+            <Button variant="outline" class="cursor-pointer" :disabled="data.page <= 1" @click="handlePage('previous')">
               <ChevronLeft />
             </Button>
             <div>Página {{ data.page }}</div>
-            <Button
-              variant="outline"
-              class="cursor-pointer"
-              :disabled="!data.hasNextPage"
-              @click="handlePage('next')"
-            >
+            <Button variant="outline" class="cursor-pointer" :disabled="!data.hasNextPage" @click="handlePage('next')">
               <ChevronRight />
             </Button>
           </div>
@@ -194,26 +163,14 @@ const handlePage = async (action: 'previous' | 'next') => {
               </TableHeader>
 
               <TableBody>
-                <TableRow
-                  v-if="!data.data.length"
-                  :colSpan="6"
-                  class="text-muted-foreground text-center h-25"
-                >
+                <TableRow v-if="!data.data.length" :colSpan="6" class="text-muted-foreground text-center h-25">
                   <TableCell>Nenhuma categoria encontrada</TableCell>
                 </TableRow>
 
-                <TableRow
-                  v-else
-                  v-for="category in data.data"
-                  class="text-muted-foreground cursor-pointer"
-                >
+                <TableRow v-else v-for="category in data.data" class="text-muted-foreground cursor-pointer">
                   <TableCell>{{ category.name }}</TableCell>
-                  <TableCell>{{
-                    dayjs(category.createdAt).format('DD/MM/YYYY HH:mm:ss')
-                  }}</TableCell>
-                  <TableCell>{{
-                    dayjs(category.updatedAt).format('DD/MM/YYYY HH:mm:ss')
-                  }}</TableCell>
+                  <TableCell>{{ dayjs(category.createdAt).format('DD/MM/YYYY HH:mm:ss') }}</TableCell>
+                  <TableCell>{{ dayjs(category.updatedAt).format('DD/MM/YYYY HH:mm:ss') }}</TableCell>
 
                   <TableCell class="text-right">
                     <DropdownMenu>
@@ -256,21 +213,11 @@ const handlePage = async (action: 'previous' | 'next') => {
           </div>
 
           <div class="flex items-center justify-center space-x-2 py-2">
-            <Button
-              variant="outline"
-              class="cursor-pointer"
-              :disabled="data.page <= 1"
-              @click="handlePage('previous')"
-            >
+            <Button variant="outline" class="cursor-pointer" :disabled="data.page <= 1" @click="handlePage('previous')">
               <ChevronLeft />
             </Button>
             <div>Página {{ data.page }}</div>
-            <Button
-              variant="outline"
-              class="cursor-pointer"
-              :disabled="!data.hasNextPage"
-              @click="handlePage('next')"
-            >
+            <Button variant="outline" class="cursor-pointer" :disabled="!data.hasNextPage" @click="handlePage('next')">
               <ChevronRight />
             </Button>
           </div>
@@ -300,11 +247,7 @@ const handlePage = async (action: 'previous' | 'next') => {
       <div class="flex items-center gap-2">
         <div class="grid flex-1 gap-2">
           <Label for="name">Nome</Label>
-          <Input
-            id="link"
-            :defaultValue="editValues.name"
-            v-model="editValues.name"
-          />
+          <Input id="link" :defaultValue="editValues.name" v-model="editValues.name" />
         </div>
       </div>
 
@@ -313,11 +256,7 @@ const handlePage = async (action: 'previous' | 'next') => {
           <Button variant="outline" class="cursor-pointer"> Cancelar </Button>
         </DialogClose>
 
-        <Button
-          class="cursor-pointer"
-          @click="mutateEdit()"
-          :disabled="isEditPending"
-        >
+        <Button class="cursor-pointer" @click="mutateEdit()" :disabled="isEditPending">
           <Loading v-if="isEditPending" class="w-12" />
           <span v-else>Salvar alterações</span>
         </Button>
@@ -339,8 +278,7 @@ const handlePage = async (action: 'previous' | 'next') => {
       <DialogHeader>
         <DialogTitle>Excluir categoria</DialogTitle>
         <DialogDescription>
-          Esta ação não poderá ser desfeita e a categoria será removida
-          permanantemente.
+          Esta ação não poderá ser desfeita e a categoria será removida permanantemente.
         </DialogDescription>
       </DialogHeader>
 
@@ -349,12 +287,7 @@ const handlePage = async (action: 'previous' | 'next') => {
           <Button variant="outline" class="cursor-pointer"> Cancelar </Button>
         </DialogClose>
 
-        <Button
-          variant="destructive"
-          @click="mutate()"
-          class="cursor-pointer"
-          :disabled="isDeletePending"
-        >
+        <Button variant="destructive" @click="mutate()" class="cursor-pointer" :disabled="isDeletePending">
           <Loading v-if="isDeletePending" class="w-12" />
           <span v-else>Deletar</span>
         </Button>

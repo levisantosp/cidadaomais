@@ -8,10 +8,7 @@ export const createEntity = new Elysia().use(authPlugin).post(
   '/entities',
   async (ctx) => {
     const entity = await db.transaction(async (tx) => {
-      const [entity] = await tx
-        .insert(schema.entity)
-        .values(ctx.body)
-        .returning()
+      const [entity] = await tx.insert(schema.entity).values(ctx.body).returning()
 
       await tx
         .update(schema.entityUnit)

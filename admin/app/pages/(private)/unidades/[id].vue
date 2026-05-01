@@ -9,13 +9,7 @@ import { toast } from 'vue-sonner'
 import { z } from 'zod'
 import Loading from '~/components/loading.vue'
 import { Button } from '~/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '~/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card'
 import {
   Dialog,
   DialogClose,
@@ -66,24 +60,13 @@ watch(error, (e) => {
 })
 
 const schema = z.object({
-  name: z
-    .string('Informe o nome')
-    .min(2, 'O nome precisa ter no mínimo 2 caracteres')
-    .trim(),
-  latitude: z
-    .number('Selecione a localização no mapa')
-    .min(-90, 'Latitude inválida')
-    .max(90, 'Latitude inválida'),
-  longitude: z
-    .number('Selecione a localização no mapa')
-    .min(-180, 'Longitude inválida')
-    .max(180, 'Longitude inválida')
+  name: z.string('Informe o nome').min(2, 'O nome precisa ter no mínimo 2 caracteres').trim(),
+  latitude: z.number('Selecione a localização no mapa').min(-90, 'Latitude inválida').max(90, 'Latitude inválida'),
+  longitude: z.number('Selecione a localização no mapa').min(-180, 'Longitude inválida').max(180, 'Longitude inválida')
 })
-const { defineField, errors, handleSubmit, resetForm, setFieldValue } = useForm(
-  {
-    validationSchema: toTypedSchema(schema)
-  }
-)
+const { defineField, errors, handleSubmit, resetForm, setFieldValue } = useForm({
+  validationSchema: toTypedSchema(schema)
+})
 
 const [name, nameProps] = defineField('name')
 
@@ -100,12 +83,7 @@ const editMap = shallowRef<Maplibre>()
 const marker = shallowRef<Marker>()
 const editMarker = shallowRef<Marker>()
 
-const createMap = (
-  container: HTMLElement,
-  long: number,
-  lat: number,
-  draggable = false
-) => {
+const createMap = (container: HTMLElement, long: number, lat: number, draggable = false) => {
   return new Maplibre({
     container,
     style: 'https://tiles.openfreemap.org/styles/liberty',
@@ -170,11 +148,7 @@ const renderMap = async () => {
   }
 
   if (!map.value) {
-    map.value = createMap(
-      mapContainer.value,
-      data.value.longitude,
-      data.value.latitude
-    )
+    map.value = createMap(mapContainer.value, data.value.longitude, data.value.latitude)
   }
 
   map.value.setCenter([data.value.longitude, data.value.latitude])
@@ -193,29 +167,13 @@ const renderEditMap = async () => {
   }
 
   if (!editMap.value) {
-    editMap.value = createMap(
-      editMapContainer.value,
-      editValues.value.longitude,
-      editValues.value.latitude,
-      true
-    )
+    editMap.value = createMap(editMapContainer.value, editValues.value.longitude, editValues.value.latitude, true)
 
-    editMap.value.on('click', (event) =>
-      updateLocation(event.lngLat.lng, event.lngLat.lat)
-    )
+    editMap.value.on('click', (event) => updateLocation(event.lngLat.lng, event.lngLat.lat))
   }
 
-  editMap.value.setCenter([
-    editValues.value.longitude,
-    editValues.value.latitude
-  ])
-  updateMarker(
-    editMap.value,
-    editMarker,
-    editValues.value.longitude,
-    editValues.value.latitude,
-    true
-  )
+  editMap.value.setCenter([editValues.value.longitude, editValues.value.latitude])
+  updateMarker(editMap.value, editMarker, editValues.value.longitude, editValues.value.latitude, true)
 }
 
 const handleDialogOpen = (open: boolean) => {
@@ -326,29 +284,18 @@ onBeforeUnmount(() => {
   <div v-else class="pt-10">
     <div class="flex items-center justify-between pl-5 pr-5">
       <div class="flex items-center gap-4">
-        <Button
-          variant="outline"
-          class="cursor-pointer"
-          @click="router.push('/unidades')"
-        >
+        <Button variant="outline" class="cursor-pointer" @click="router.push('/unidades')">
           <Undo2 />
         </Button>
 
         <div>
           <h1 class="md:text-3xl text-2xl font-bold">Detalhes da Unidade</h1>
-          <p class="text-muted-foreground text-sm md:text-lg">
-            Visualize e gerencie as informações desta unidade
-          </p>
+          <p class="text-muted-foreground text-sm md:text-lg">Visualize e gerencie as informações desta unidade</p>
         </div>
       </div>
 
       <div class="flex gap-2">
-        <Button
-          variant="destructive"
-          class="cursor-pointer"
-          @click="handleDelete()"
-          :disabled="isDeletePending"
-        >
+        <Button variant="destructive" class="cursor-pointer" @click="handleDelete()" :disabled="isDeletePending">
           <Loading v-if="isDeletePending" class="w-16" />
           <Trash v-if="!isDeletePending" />
           <span v-if="!isDeletePending">Deletar</span>
@@ -381,10 +328,7 @@ onBeforeUnmount(() => {
 
               <CardTitle>Localização</CardTitle>
               <CardDescription>
-                <div
-                  ref="mapContainer"
-                  class="h-128 overflow-hidden rounded-md border"
-                />
+                <div ref="mapContainer" class="h-128 overflow-hidden rounded-md border" />
               </CardDescription>
             </CardHeader>
           </Card>
@@ -393,17 +337,11 @@ onBeforeUnmount(() => {
     </div>
   </div>
 
-  <Dialog
-    v-if="data && editValues"
-    :open="true"
-    @update:open="handleDialogOpen"
-  >
+  <Dialog v-if="data && editValues" :open="true" @update:open="handleDialogOpen">
     <DialogContent>
       <DialogHeader>
         <DialogTitle>Editar {{ data.name }}</DialogTitle>
-        <DialogDescription
-          >Edite as informações desta unidade</DialogDescription
-        >
+        <DialogDescription>Edite as informações desta unidade</DialogDescription>
       </DialogHeader>
 
       <form @submit.prevent="onSubmit">
@@ -420,15 +358,9 @@ onBeforeUnmount(() => {
           <div class="flex flex-col space-y-2">
             <Label>Localização</Label>
 
-            <div
-              ref="editMapContainer"
-              class="h-128 overflow-hidden rounded-md border"
-            />
+            <div ref="editMapContainer" class="h-128 overflow-hidden rounded-md border" />
 
-            <span
-              v-if="errors.latitude || errors.longitude"
-              class="text-sm text-red-400"
-            >
+            <span v-if="errors.latitude || errors.longitude" class="text-sm text-red-400">
               {{ errors.latitude || errors.longitude }}
             </span>
           </div>
@@ -440,11 +372,7 @@ onBeforeUnmount(() => {
           <Button variant="outline" class="cursor-pointer">Cancelar</Button>
         </DialogClose>
 
-        <Button
-          @click="onSubmit"
-          class="cursor-pointer"
-          :disabled="isMutationPending"
-        >
+        <Button @click="onSubmit" class="cursor-pointer" :disabled="isMutationPending">
           <Loading v-if="isMutationPending" class="w-10.5" />
           <span v-else>Salvar</span>
         </Button>

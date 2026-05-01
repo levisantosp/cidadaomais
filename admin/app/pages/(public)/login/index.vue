@@ -7,14 +7,7 @@ import { toast } from 'vue-sonner'
 import { z } from 'zod'
 import Loading from '~/components/loading.vue'
 import { Button } from '~/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from '~/components/ui/card'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card'
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
 import { error } from '~/config'
@@ -65,9 +58,7 @@ const showPassword = ref(false)
     <Card class="w-full max-w-sm">
       <CardHeader>
         <CardTitle>Entre com a sua conta</CardTitle>
-        <CardDescription>
-          Informe seu e-mail e senha abaixo para entrar na sua conta
-        </CardDescription>
+        <CardDescription> Informe seu e-mail e senha abaixo para entrar na sua conta </CardDescription>
       </CardHeader>
 
       <CardContent>
@@ -75,13 +66,7 @@ const showPassword = ref(false)
           <div class="grid w-full items-center gap-4">
             <div class="flex flex-col space-y-1.5">
               <Label for="email">E-mail</Label>
-              <Input
-                id="email"
-                type="email"
-                v-model="email"
-                v-bind="emailAttr"
-                placeholder="seu@email.com"
-              />
+              <Input id="email" type="email" v-model="email" v-bind="emailAttr" placeholder="seu@email.com" />
 
               <span v-if="errors.email" class="text-sm text-red-400">
                 {{ errors.email }}
@@ -105,11 +90,7 @@ const showPassword = ref(false)
                   class="absolute inset-y-0 right-0 flex w-10 items-center justify-center"
                   @click="showPassword = !showPassword"
                 >
-                  <Eye
-                    v-if="!showPassword"
-                    class="text-muted-foreground"
-                    :size="20"
-                  />
+                  <Eye v-if="!showPassword" class="text-muted-foreground" :size="20" />
                   <EyeOff v-else class="text-muted-foreground" :size="20" />
                 </button>
               </div>
@@ -122,11 +103,7 @@ const showPassword = ref(false)
         </form>
       </CardContent>
       <CardFooter>
-        <Button
-          class="w-full cursor-pointer"
-          @click="onSubmit"
-          :disabled="isSubmitting"
-        >
+        <Button class="w-full cursor-pointer" @click="onSubmit" :disabled="isSubmitting">
           <span v-if="!isSubmitting">Entrar</span>
           <Loading v-else />
         </Button>

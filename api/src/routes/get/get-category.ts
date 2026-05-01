@@ -7,11 +7,7 @@ import { NotFoundException } from '../../utils/HttpException'
 export const getCategory = new Elysia().get(
   '/categories/:id',
   async (ctx) => {
-    const [category] = await db
-      .select()
-      .from(schema.category)
-      .where(eq(schema.category.id, ctx.params.id))
-      .limit(1)
+    const [category] = await db.select().from(schema.category).where(eq(schema.category.id, ctx.params.id)).limit(1)
     if (!category) {
       throw new NotFoundException()
     }

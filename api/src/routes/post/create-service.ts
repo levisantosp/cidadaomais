@@ -31,10 +31,7 @@ export const createService = new Elysia().use(authPlugin).post(
         throw new ConflictException('A service with this name already exists')
       }
 
-      const [newService] = await tx
-        .insert(schema.service)
-        .values(ctx.body)
-        .returning()
+      const [newService] = await tx.insert(schema.service).values(ctx.body).returning()
 
       return newService
     })
