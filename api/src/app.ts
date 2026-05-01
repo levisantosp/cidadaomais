@@ -1,5 +1,5 @@
-import { cors } from '@elysiajs/cors'
-import { openapi } from '@elysiajs/openapi'
+import { cors } from '@elysia/cors'
+import { openapi } from '@elysia/openapi'
 import { Elysia } from 'elysia'
 import { logger } from 'logger'
 import { z } from 'zod'
