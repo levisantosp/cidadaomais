@@ -44,5 +44,8 @@ export default defineNuxtConfig({
   ssr: false,
   nitro: {
     preset: 'bun'
+  },
+  experimental: {
+    viteEnvironmentApi: true
   }
 })
