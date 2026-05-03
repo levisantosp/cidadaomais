@@ -20,10 +20,7 @@ export const createCategory = new Elysia().use(authPlugin).post(
         throw new ConflictException('A category with this name already exists')
       }
 
-      const [newCategory] = await tx
-        .insert(schema.category)
-        .values(ctx.body)
-        .returning()
+      const [newCategory] = await tx.insert(schema.category).values(ctx.body).returning()
 
       return newCategory
     })

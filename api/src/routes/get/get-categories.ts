@@ -10,11 +10,7 @@ export const getCategories = new Elysia().get(
     const categories = await db
       .select()
       .from(schema.category)
-      .where(
-        ctx.query.name
-          ? ilike(schema.category.name, `%${ctx.query.name}%`)
-          : undefined
-      )
+      .where(ctx.query.name ? ilike(schema.category.name, `%${ctx.query.name}%`) : undefined)
       .orderBy(desc(schema.category.createdAt))
       .offset((ctx.query.page - 1) * ctx.query.limit)
       .limit(ctx.query.limit + 1)

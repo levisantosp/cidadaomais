@@ -1,11 +1,5 @@
 import { relations } from 'drizzle-orm'
-import {
-  bigint,
-  doublePrecision,
-  pgTable,
-  text,
-  timestamp
-} from 'drizzle-orm/pg-core'
+import { bigint, doublePrecision, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
 import { snowflake } from '../utils/snowflake'
 import { entity } from './entity'
 

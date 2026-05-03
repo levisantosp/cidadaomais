@@ -2,12 +2,13 @@
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
   "ignorePatterns": ["dist", "postgres", ".github", "node_modules"],
   "singleQuote": true,
+  "jsxSingleQuote": true,
   "semi": false,
   "trailingComma": "none",
-  "printWidth": 80,
-  "vueIndentScriptAndStyle": true,
+  "printWidth": 120,
   "sortImports": {
     "order": "asc",
     "newlinesBetween": false
-  }
+  },
+  "insertFinalNewline": false
 }

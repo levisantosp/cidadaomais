@@ -1,62 +1,55 @@
 <script setup lang="ts">
-  import {
-    BriefcaseBusiness,
-    Building,
-    ChartBarStacked,
-    Home,
-    Landmark,
-    LogOut
-  } from 'lucide-vue-next'
-  import Loading from '~/components/loading.vue'
-  import {
-    Sidebar,
-    SidebarContent,
-    SidebarFooter,
-    SidebarGroup,
-    SidebarGroupContent,
-    SidebarGroupLabel,
-    SidebarHeader,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem
-  } from '~/components/ui/sidebar'
-  import { auth } from '~/lib/auth'
+import { BriefcaseBusiness, Building, ChartBarStacked, Home, Landmark, LogOut } from 'lucide-vue-next'
+import Loading from '~/components/loading.vue'
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem
+} from '~/components/ui/sidebar'
+import { auth } from '~/lib/auth'
 
-  const navItems = [
-    {
-      title: 'Página principal',
-      href: '/',
-      icon: Home
-    },
-    {
-      title: 'Serviços',
-      href: '/servicos',
-      icon: BriefcaseBusiness
-    },
-    {
-      title: 'Órgãos',
-      href: '/orgaos',
-      icon: Landmark
-    },
-    {
-      title: 'Categorias',
-      href: '/categorias',
-      icon: ChartBarStacked
-    },
-    {
-      title: 'Unidades',
-      href: '/unidades',
-      icon: Building
-    }
-  ] as const
-
-  const isPending = ref(false)
-
-  const handleSignout = async () => {
-    isPending.value = true
-    await auth.signOut()
-    await navigateTo('/login')
+const navItems = [
+  {
+    title: 'Página principal',
+    href: '/',
+    icon: Home
+  },
+  {
+    title: 'Serviços',
+    href: '/servicos',
+    icon: BriefcaseBusiness
+  },
+  {
+    title: 'Órgãos',
+    href: '/orgaos',
+    icon: Landmark
+  },
+  {
+    title: 'Categorias',
+    href: '/categorias',
+    icon: ChartBarStacked
+  },
+  {
+    title: 'Unidades',
+    href: '/unidades',
+    icon: Building
   }
+] as const
+
+const isPending = ref(false)
+
+const handleSignout = async () => {
+  isPending.value = true
+  await auth.signOut()
+  await navigateTo('/login')
+}
 </script>
 
 <template>
@@ -69,9 +62,7 @@
           <span class="text-[#3f9731]">MAIS</span>
         </h1>
       </NuxtLink>
-      <h2 class="md:text-base text-center text-muted-foreground">
-        Painel Administrativo
-      </h2>
+      <h2 class="md:text-base text-center text-muted-foreground">Painel Administrativo</h2>
     </SidebarHeader>
 
     <SidebarContent>
@@ -96,10 +87,7 @@
     <SidebarFooter>
       <SidebarMenu>
         <SidebarMenuItem>
-          <SidebarMenuButton
-            class="bg-red-900 hover:bg-red-800 cursor-pointer"
-            @click="handleSignout"
-          >
+          <SidebarMenuButton class="bg-red-900 hover:bg-red-800 cursor-pointer" @click="handleSignout">
             <span>Sair</span>
           </SidebarMenuButton>
         </SidebarMenuItem>
@@ -108,10 +96,7 @@
   </Sidebar>
 
   <Teleport to="body">
-    <div
-      v-if="isPending"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black/70"
-    >
+    <div v-if="isPending" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
       <Loading :width="20" :height="20" class="text-white" />
     </div>
   </Teleport>

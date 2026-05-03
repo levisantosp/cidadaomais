@@ -1,363 +1,335 @@
 <script setup lang="ts">
-  import { useMutation, useQuery } from '@tanstack/vue-query'
-  import { toTypedSchema } from '@vee-validate/zod'
-  import { refDebounced } from '@vueuse/core'
-  import { Check, ChevronsUpDown, Edit, Trash, Undo2 } from 'lucide-vue-next'
-  import { useForm } from 'vee-validate'
-  import { toast } from 'vue-sonner'
-  import { z } from 'zod'
-  import Loading from '~/components/loading.vue'
-  import { Button } from '~/components/ui/button'
-  import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle
-  } from '~/components/ui/card'
-  import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList
-  } from '~/components/ui/command'
-  import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle
-  } from '~/components/ui/dialog'
-  import { Input } from '~/components/ui/input'
-  import { Label } from '~/components/ui/label'
-  import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger
-  } from '~/components/ui/popover'
-  import { Textarea } from '~/components/ui/textarea'
-  import { api } from '~/lib/api'
+import { useMutation, useQuery } from '@tanstack/vue-query'
+import { toTypedSchema } from '@vee-validate/zod'
+import { refDebounced } from '@vueuse/core'
+import { Check, ChevronsUpDown, Edit, Trash, Undo2 } from 'lucide-vue-next'
+import { useForm } from 'vee-validate'
+import { toast } from 'vue-sonner'
+import { z } from 'zod'
+import Loading from '~/components/loading.vue'
+import { Button } from '~/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card'
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '~/components/ui/command'
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from '~/components/ui/dialog'
+import { Input } from '~/components/ui/input'
+import { Label } from '~/components/ui/label'
+import { Popover, PopoverContent, PopoverTrigger } from '~/components/ui/popover'
+import { Textarea } from '~/components/ui/textarea'
+import { api } from '~/lib/api'
 
-  definePageMeta({
-    layout: 'private'
-  })
+definePageMeta({
+  layout: 'private'
+})
 
-  const router = useRouter()
-  const route = useRoute()
+const router = useRouter()
+const route = useRoute()
 
-  const { isPending, isFetching, error, data, refetch } = useQuery({
-    queryKey: ['entities', route.params.id],
-    async queryFn() {
-      if (!route.params.id) {
-        throw new Error()
-      }
-      const response = await api
-        .entities({
-          id: route.params.id.toString()
-        })
-        .get()
-      if (response.error) {
-        throw response.error.value
-      }
-
-      return response.data
+const { isPending, isFetching, error, data, refetch } = useQuery({
+  queryKey: ['entities', route.params.id],
+  async queryFn() {
+    if (!route.params.id) {
+      throw new Error()
     }
-  })
-
-  watch(error, (e) => {
-    if (e) {
-      toast.error('Ocorreu um erro inesperado...', {
-        description: e.message
+    const response = await api
+      .entities({
+        id: route.params.id.toString()
       })
-      router.push('/orgaos')
+      .get()
+    if (response.error) {
+      throw response.error.value
     }
-  })
 
-  const schema = z.object({
-    name: z
-      .string('Informe um nome válido.')
-      .min(2, 'O nome precisa ter no mínimo 2 caracteres.')
-      .trim(),
-    description: z
-      .string('Informe uma descrição válida.')
-      .min(10, 'A descrição precisa ter no mínimo 10 caracteres.')
-      .trim(),
-    phone: z
-      .string('Número inválido. Tente números como 0800, 3515 ou com DDD.')
-      .regex(
-        /^(?:0800\d{7}|3515\d{4}|[1-9]{2}(?:9\d{8}|[2-5]\d{7}))$/,
-        'Número inválido. Tente números como 0800, 3515 ou com DDD.'
-      )
-      .optional(),
-    email: z.email('E-mail inválido.').optional(),
-    website: z
-      .url("Link inválido. O link deve começar com 'https://' ou 'http://'.")
-      .optional(),
-    unitsIds: z
-      .array(z.coerce.bigint('Unidade inválida'), 'Informe as unidades')
-      .min(1, 'Selecione ao menos uma unidade')
-      .max(100, 'Selecione até 100 unidades')
-  })
-  const { defineField, errors, handleSubmit, resetForm } = useForm({
-    validationSchema: toTypedSchema(schema)
-  })
-
-  const [name, nameProps] = defineField('name')
-  const [description, descriptionProps] = defineField('description')
-  const [phone, phoneProps] = defineField('phone')
-  const [email, emailProps] = defineField('email')
-  const [website, websiteProps] = defineField('website')
-  const [units, unitsProps] = defineField('unitsIds')
-
-  const editValues = ref<{
-    name: string
-    description: string
-    phone?: string
-    email?: string
-    website?: string
-    unitsIds: string[]
-  }>()
-  const isDialogOpen = ref(false)
-  const search = ref<string>()
-  const isComboboxOpen = ref(false)
-  const selectedUnits = ref<
-    {
-      name: string
-      id: string
-    }[]
-  >([])
-  const hasSyncedUnits = ref(false)
-  const trimmedSearch = computed(() => search.value?.trim())
-  const debouncedSearch = refDebounced(trimmedSearch, 1000)
-
-  const {
-    isPending: isUnitsPending,
-    isFetching: isUnitsFetching,
-    data: unitsData,
-    refetch: refetchUnits
-  } = useQuery({
-    queryKey: ['units', debouncedSearch],
-    enabled: computed(() => !!data.value),
-    staleTime: 60_000,
-    async queryFn() {
-      const response = await api.units.get({
-        query: {
-          page: 1,
-          limit: 100,
-          name: debouncedSearch.value
-        }
-      })
-      if (response.error) {
-        throw response.error.value
-      }
-
-      return response.data.data
-    }
-  })
-
-  type Unit = NonNullable<typeof unitsData.value>[number]
-  type EntityWithUnits = NonNullable<typeof data.value> & {
-    units?: {
-      name: string
-      id: bigint
-    }[]
-    unitsIds?: (bigint | string)[]
+    return response.data
   }
+})
 
-  const entityUnits = computed(() => {
-    if (!data.value) {
-      return []
-    }
-
-    const entity = data.value as EntityWithUnits
-    const entityUnits = entity.units?.map((item) => ({
-      name: item.name,
-      id: item.id.toString()
-    }))
-    if (entityUnits?.length) {
-      return entityUnits
-    }
-
-    const unitsIds = entity.unitsIds?.map((id) => id.toString()) ?? []
-    const unitsByIds =
-      unitsData.value
-        ?.filter((item) => unitsIds.includes(item.id.toString()))
-        .map((item) => ({
-          name: item.name,
-          id: item.id.toString()
-        })) ?? []
-    if (unitsByIds.length) {
-      return unitsByIds
-    }
-
-    return (
-      unitsData.value
-        ?.filter(
-          (item) => item.entityId?.toString() === data.value?.id.toString()
-        )
-        .map((item) => ({
-          name: item.name,
-          id: item.id.toString()
-        })) ?? []
-    )
-  })
-
-  const unitsLabel = computed(() => {
-    if (!selectedUnits.value.length) {
-      return 'Selecione as unidades'
-    }
-
-    return selectedUnits.value.map((item) => item.name).join(', ')
-  })
-
-  const syncEntityUnits = () => {
-    if (hasSyncedUnits.value) {
-      return
-    }
-
-    if (!entityUnits.value.length) {
-      return
-    }
-
-    selectedUnits.value = entityUnits.value
-    units.value = entityUnits.value.map((item) => item.id)
-    hasSyncedUnits.value = true
-  }
-
-  const handleDialogOpen = (open: boolean) => {
-    isDialogOpen.value = open
-
-    if (!open || !data.value) {
-      editValues.value = undefined
-      selectedUnits.value = []
-      hasSyncedUnits.value = false
-      search.value = undefined
-      return
-    }
-
-    const values = {
-      name: data.value.name,
-      description: data.value.description,
-      phone: data.value.phone ?? undefined,
-      email: data.value.email ?? undefined,
-      website: data.value.website ?? undefined,
-      unitsIds: entityUnits.value.map((item) => item.id)
-    }
-
-    editValues.value = values
-    selectedUnits.value = entityUnits.value
-    hasSyncedUnits.value = !!entityUnits.value.length
-
-    resetForm({
-      values
+watch(error, (e) => {
+  if (e) {
+    toast.error('Ocorreu um erro inesperado...', {
+      description: e.message
     })
+    router.push('/orgaos')
   }
+})
 
-  watch(unitsData, () => {
-    if (!isDialogOpen.value) {
-      return
+const schema = z.object({
+  name: z.string('Informe um nome válido.').min(2, 'O nome precisa ter no mínimo 2 caracteres.').trim(),
+  description: z
+    .string('Informe uma descrição válida.')
+    .min(10, 'A descrição precisa ter no mínimo 10 caracteres.')
+    .trim(),
+  phone: z
+    .string('Número inválido. Tente números como 0800, 3515 ou com DDD.')
+    .regex(
+      /^(?:0800\d{7}|3515\d{4}|[1-9]{2}(?:9\d{8}|[2-5]\d{7}))$/,
+      'Número inválido. Tente números como 0800, 3515 ou com DDD.'
+    )
+    .optional(),
+  email: z.email('E-mail inválido.').optional(),
+  website: z.url("Link inválido. O link deve começar com 'https://' ou 'http://'.").optional(),
+  unitsIds: z
+    .array(z.coerce.bigint('Unidade inválida'), 'Informe as unidades')
+    .min(1, 'Selecione ao menos uma unidade')
+    .max(100, 'Selecione até 100 unidades')
+})
+const { defineField, errors, handleSubmit, resetForm } = useForm({
+  validationSchema: toTypedSchema(schema)
+})
+
+const [name, nameProps] = defineField('name')
+const [description, descriptionProps] = defineField('description')
+const [phone, phoneProps] = defineField('phone')
+const [email, emailProps] = defineField('email')
+const [website, websiteProps] = defineField('website')
+const [units, unitsProps] = defineField('unitsIds')
+
+const editValues = ref<{
+  name: string
+  description: string
+  phone?: string
+  email?: string
+  website?: string
+  unitsIds: string[]
+}>()
+const isDialogOpen = ref(false)
+const search = ref<string>()
+const isComboboxOpen = ref(false)
+const selectedUnits = ref<
+  {
+    name: string
+    id: string
+  }[]
+>([])
+const hasSyncedUnits = ref(false)
+const trimmedSearch = computed(() => search.value?.trim())
+const debouncedSearch = refDebounced(trimmedSearch, 1000)
+
+const {
+  isPending: isUnitsPending,
+  isFetching: isUnitsFetching,
+  data: unitsData,
+  refetch: refetchUnits
+} = useQuery({
+  queryKey: ['units', debouncedSearch],
+  enabled: computed(() => !!data.value),
+  staleTime: 60_000,
+  async queryFn() {
+    const response = await api.units.get({
+      query: {
+        page: 1,
+        limit: 100,
+        name: debouncedSearch.value
+      }
+    })
+    if (response.error) {
+      throw response.error.value
     }
 
-    syncEntityUnits()
-  })
+    return response.data.data
+  }
+})
 
-  const handleSearch = (event: Event) => {
-    search.value = (event.target as HTMLInputElement).value
+type Unit = NonNullable<typeof unitsData.value>[number]
+type EntityWithUnits = NonNullable<typeof data.value> & {
+  units?: {
+    name: string
+    id: bigint
+  }[]
+  unitsIds?: (bigint | string)[]
+}
+
+const entityUnits = computed(() => {
+  if (!data.value) {
+    return []
   }
 
-  const isUnitSelected = (item: Unit) => {
-    return units.value?.includes(item.id.toString()) ?? false
+  const entity = data.value as EntityWithUnits
+  const entityUnits = entity.units?.map((item) => ({
+    name: item.name,
+    id: item.id.toString()
+  }))
+  if (entityUnits?.length) {
+    return entityUnits
   }
 
-  const handleSelect = (item: Unit) => {
-    const unitId = item.id.toString()
-
-    if (isUnitSelected(item)) {
-      units.value = units.value?.filter((id) => id !== unitId) ?? []
-      selectedUnits.value = selectedUnits.value.filter(
-        (item) => item.id !== unitId
-      )
-      return
-    }
-
-    units.value = [...(units.value ?? []), unitId]
-    selectedUnits.value = [
-      ...selectedUnits.value,
-      {
+  const unitsIds = entity.unitsIds?.map((id) => id.toString()) ?? []
+  const unitsByIds =
+    unitsData.value
+      ?.filter((item) => unitsIds.includes(item.id.toString()))
+      .map((item) => ({
         name: item.name,
-        id: unitId
-      }
-    ]
+        id: item.id.toString()
+      })) ?? []
+  if (unitsByIds.length) {
+    return unitsByIds
   }
 
-  const { isPending: isMutationPending, mutate } = useMutation({
-    async mutationFn(formData: z.infer<typeof schema>) {
-      if (!data.value || !editValues.value) {
-        throw new Error()
-      }
+  return (
+    unitsData.value
+      ?.filter((item) => item.entityId?.toString() === data.value?.id.toString())
+      .map((item) => ({
+        name: item.name,
+        id: item.id.toString()
+      })) ?? []
+  )
+})
 
-      const response = await api
-        .entities({
-          id: data.value.id.toString()
-        })
-        .put({
-          ...formData,
-          unitsIds: formData.unitsIds.map((id) =>
-            id.toString()
-          ) as unknown as bigint[]
-        })
-      if (response.error) {
-        throw response.error.value
-      }
+const unitsLabel = computed(() => {
+  if (!selectedUnits.value.length) {
+    return 'Selecione as unidades'
+  }
 
-      editValues.value = undefined
-      isDialogOpen.value = false
-    },
-    onError(e) {
-      toast.error('Ocorreu um erro inesperado...', {
-        description: e.message
-      })
-      console.error(e)
-    },
-    async onSuccess() {
-      toast.success('Órgão atualizado com sucesso!')
-      await refetch()
-      await refetchUnits()
-    }
+  return selectedUnits.value.map((item) => item.name).join(', ')
+})
+
+const syncEntityUnits = () => {
+  if (hasSyncedUnits.value) {
+    return
+  }
+
+  if (!entityUnits.value.length) {
+    return
+  }
+
+  selectedUnits.value = entityUnits.value
+  units.value = entityUnits.value.map((item) => item.id)
+  hasSyncedUnits.value = true
+}
+
+const handleDialogOpen = (open: boolean) => {
+  isDialogOpen.value = open
+
+  if (!open || !data.value) {
+    editValues.value = undefined
+    selectedUnits.value = []
+    hasSyncedUnits.value = false
+    search.value = undefined
+    return
+  }
+
+  const values = {
+    name: data.value.name,
+    description: data.value.description,
+    phone: data.value.phone ?? undefined,
+    email: data.value.email ?? undefined,
+    website: data.value.website ?? undefined,
+    unitsIds: entityUnits.value.map((item) => item.id)
+  }
+
+  editValues.value = values
+  selectedUnits.value = entityUnits.value
+  hasSyncedUnits.value = !!entityUnits.value.length
+
+  resetForm({
+    values
   })
+}
 
-  const { isPending: isDeletePending, mutate: handleDelete } = useMutation({
-    async mutationFn() {
-      if (!route.params.id) {
-        throw new Error()
-      }
+watch(unitsData, () => {
+  if (!isDialogOpen.value) {
+    return
+  }
 
-      const response = await api
-        .entities({
-          id: route.params.id.toString()
-        })
-        .delete()
-      if (response.error) {
-        throw response.error.value
-      }
-    },
-    onError(error) {
-      console.error(error)
-      toast.error('Ocorreu um erro inesperado...', {
-        description: error.message
-      })
-    },
-    onSuccess() {
-      toast.success('Órgão deletado com sucesso!')
-      router.push('/orgaos')
+  syncEntityUnits()
+})
+
+const handleSearch = (event: Event) => {
+  search.value = (event.target as HTMLInputElement).value
+}
+
+const isUnitSelected = (item: Unit) => {
+  return units.value?.includes(item.id.toString()) ?? false
+}
+
+const handleSelect = (item: Unit) => {
+  const unitId = item.id.toString()
+
+  if (isUnitSelected(item)) {
+    units.value = units.value?.filter((id) => id !== unitId) ?? []
+    selectedUnits.value = selectedUnits.value.filter((item) => item.id !== unitId)
+    return
+  }
+
+  units.value = [...(units.value ?? []), unitId]
+  selectedUnits.value = [
+    ...selectedUnits.value,
+    {
+      name: item.name,
+      id: unitId
     }
-  })
+  ]
+}
 
-  const onSubmit = handleSubmit((data) => mutate(data))
+const { isPending: isMutationPending, mutate } = useMutation({
+  async mutationFn(formData: z.infer<typeof schema>) {
+    if (!data.value || !editValues.value) {
+      throw new Error()
+    }
+
+    const response = await api
+      .entities({
+        id: data.value.id.toString()
+      })
+      .put({
+        ...formData,
+        unitsIds: formData.unitsIds.map((id) => id.toString()) as unknown as bigint[]
+      })
+    if (response.error) {
+      throw response.error.value
+    }
+
+    editValues.value = undefined
+    isDialogOpen.value = false
+  },
+  onError(e) {
+    toast.error('Ocorreu um erro inesperado...', {
+      description: e.message
+    })
+    console.error(e)
+  },
+  async onSuccess() {
+    toast.success('Órgão atualizado com sucesso!')
+    await refetch()
+    await refetchUnits()
+  }
+})
+
+const { isPending: isDeletePending, mutate: handleDelete } = useMutation({
+  async mutationFn() {
+    if (!route.params.id) {
+      throw new Error()
+    }
+
+    const response = await api
+      .entities({
+        id: route.params.id.toString()
+      })
+      .delete()
+    if (response.error) {
+      throw response.error.value
+    }
+  },
+  onError(error) {
+    console.error(error)
+    toast.error('Ocorreu um erro inesperado...', {
+      description: error.message
+    })
+  },
+  onSuccess() {
+    toast.success('Órgão deletado com sucesso!')
+    router.push('/orgaos')
+  }
+})
+
+const onSubmit = handleSubmit((data) => mutate(data))
 </script>
 
 <template>
@@ -368,29 +340,18 @@
   <div v-else class="pt-10">
     <div class="flex items-center justify-between pl-5 pr-5">
       <div class="flex items-center gap-4">
-        <Button
-          variant="outline"
-          class="cursor-pointer"
-          @click="router.push('/orgaos')"
-        >
+        <Button variant="outline" class="cursor-pointer" @click="router.push('/orgaos')">
           <Undo2 />
         </Button>
 
         <div>
           <h1 class="md:text-3xl text-2xl font-bold">Detalhes do Órgão</h1>
-          <p class="text-muted-foreground text-sm md:text-lg">
-            Visualize e gerencie as informações deste órgão
-          </p>
+          <p class="text-muted-foreground text-sm md:text-lg">Visualize e gerencie as informações deste órgão</p>
         </div>
       </div>
 
       <div class="flex gap-2">
-        <Button
-          variant="destructive"
-          class="cursor-pointer"
-          @click="handleDelete()"
-          :disabled="isDeletePending"
-        >
+        <Button variant="destructive" class="cursor-pointer" @click="handleDelete()" :disabled="isDeletePending">
           <Loading v-if="isDeletePending" class="w-16" />
           <Trash v-if="!isDeletePending" />
           <span v-if="!isDeletePending">Deletar</span>
@@ -441,11 +402,7 @@
     </div>
   </div>
 
-  <Dialog
-    v-if="data && editValues"
-    :open="true"
-    @update:open="handleDialogOpen"
-  >
+  <Dialog v-if="data && editValues" :open="true" @update:open="handleDialogOpen">
     <DialogContent>
       <DialogHeader>
         <DialogTitle>Editar {{ data.name }}</DialogTitle>
@@ -465,11 +422,7 @@
 
           <div class="flex flex-col space-y-2">
             <Label for="description">Descrição</Label>
-            <Textarea
-              id="description"
-              v-model="description"
-              v-bind="descriptionProps"
-            />
+            <Textarea id="description" v-model="description" v-bind="descriptionProps" />
 
             <span v-if="errors.description" class="text-sm text-red-400">
               {{ errors.description }}
@@ -521,20 +474,12 @@
 
               <PopoverContent class="w-(--reka-popover-trigger-width) p-0">
                 <Command>
-                  <CommandInput
-                    placeholder="Pesquisar unidade..."
-                    @input="handleSearch"
-                  />
+                  <CommandInput placeholder="Pesquisar unidade..." @input="handleSearch" />
 
                   <CommandList>
                     <CommandEmpty>
-                      <Loading
-                        v-if="isUnitsPending || isUnitsFetching"
-                        class="pl-5"
-                      />
-                      <span v-else-if="!unitsData?.length" class="pl-5">
-                        Nenhuma unidade encontrada
-                      </span>
+                      <Loading v-if="isUnitsPending || isUnitsFetching" class="pl-5" />
+                      <span v-else-if="!unitsData?.length" class="pl-5"> Nenhuma unidade encontrada </span>
                     </CommandEmpty>
 
                     <CommandGroup>
@@ -566,11 +511,7 @@
           <Button variant="outline" class="cursor-pointer">Cancelar</Button>
         </DialogClose>
 
-        <Button
-          @click="onSubmit"
-          class="cursor-pointer"
-          :disabled="isMutationPending"
-        >
+        <Button @click="onSubmit" class="cursor-pointer" :disabled="isMutationPending">
           <Loading v-if="isMutationPending" class="w-10.5" />
           <span v-else>Salvar</span>
         </Button>

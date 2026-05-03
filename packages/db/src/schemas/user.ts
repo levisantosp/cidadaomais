@@ -1,12 +1,5 @@
 import { relations } from 'drizzle-orm'
-import {
-  bigint,
-  boolean,
-  pgEnum,
-  pgTable,
-  text,
-  timestamp
-} from 'drizzle-orm/pg-core'
+import { bigint, boolean, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
 import { snowflake } from '../utils/snowflake'
 import { account } from './account'
 import { session } from './session'

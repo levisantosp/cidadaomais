@@ -29,9 +29,7 @@ export class ForbiddenException extends HttpException {
 }
 
 export class ConflictException extends HttpException {
-  public constructor(
-    message = 'The resource already exists or has been modified by another request.'
-  ) {
+  public constructor(message = 'The resource already exists or has been modified by another request.') {
     super('Conflict', message)
   }
 }

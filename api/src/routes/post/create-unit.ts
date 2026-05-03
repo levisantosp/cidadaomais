@@ -6,10 +6,7 @@ import { authPlugin } from '../../plugins/auth-plugin'
 export const createUnit = new Elysia().use(authPlugin).post(
   '/units',
   async (ctx) => {
-    const [unit] = await db
-      .insert(schema.entityUnit)
-      .values(ctx.body)
-      .returning()
+    const [unit] = await db.insert(schema.entityUnit).values(ctx.body).returning()
 
     return unit
   },
