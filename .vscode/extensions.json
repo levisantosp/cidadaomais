@@ -1,3 +1,3 @@
 {
-  "recommendations": ["oxc.oxc-vscode", "Vue.volar"]
+  "recommendations": ["oxc.oxc-vscode", "Vue.volar", "expo.vscode-expo-tools"]
 }
