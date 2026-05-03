@@ -1,46 +1,24 @@
+import { Search } from 'lucide-react-native'
+import { View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Text } from '@/components/ui/text'
+import { Input } from '@/components/ui/input'
 
 export default function HomeScreen() {
   return (
-    <SafeAreaView className='bg-background'>
-      <Text>Hello, world!</Text>
+    <SafeAreaView className='bg-background px-4'>
+      <View className='relative'>
+        <Search
+          pointerEvents='none'
+          size={20}
+          color='#737373'
+          style={{
+            position: 'absolute',
+            left: 12,
+            top: 10
+          }}
+        />
+        <Input className='pl-10' placeholder='Buscar serviço' />
+      </View>
     </SafeAreaView>
   )
 }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     flexDirection: 'row'
-//   },
-//   safeArea: {
-//     flex: 1,
-//     paddingHorizontal: Spacing.four,
-//     alignItems: 'center',
-//     gap: Spacing.three,
-//     paddingBottom: BottomTabInset + Spacing.three,
-//     maxWidth: MaxContentWidth
-//   },
-//   heroSection: {
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     flex: 1,
-//     paddingHorizontal: Spacing.four,
-//     gap: Spacing.four
-//   },
-//   title: {
-//     textAlign: 'center'
-//   },
-//   code: {
-//     textTransform: 'uppercase'
-//   },
-//   stepContainer: {
-//     gap: Spacing.three,
-//     alignSelf: 'stretch',
-//     paddingHorizontal: Spacing.three,
-//     paddingVertical: Spacing.four,
-//     borderRadius: Spacing.four
-//   }
-// })
