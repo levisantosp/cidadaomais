@@ -4,10 +4,6 @@
       "name": "oxfmt"
     }
   },
-  "code_actions_on_format": {
-    "source.fixAll.biome": true,
-    "source.organizeImports.biome": true
-  },
   "lsp": {
     "vtsls": {
       "initialization_options": {
