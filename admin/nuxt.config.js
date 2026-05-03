@@ -19,7 +19,7 @@ export default defineNuxtConfig({
         'lucide-vue-next',
         'vue-sonner',
         'better-auth/vue',
-        '@elysiajs/eden',
+        '@elysia/eden',
         '@tanstack/vue-query',
         'dayjs'
       ]
