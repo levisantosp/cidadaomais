@@ -3,7 +3,6 @@
 **/.turbo
 .env
 .gitignore
-**/mobile
 LICENSE
 .zed
 .vscode
