@@ -109,7 +109,6 @@ export default function CategoriesScreen() {
           </View>
 
           <View className='mt-4 flex-row flex-wrap justify-between gap-y-4'>
-            {!categories && <Text>pinto</Text>}
             {categories?.length &&
               categories.map((category) => {
                 return (
