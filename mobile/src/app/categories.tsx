@@ -52,7 +52,7 @@ export default function CategoriesScreen() {
 
               <View className='flex-1 pt-1'>
                 <Text className='text-3xl font-extrabold text-foreground'>Categorias</Text>
-                <Text className='mt-1 text-base text-muted-foreground'>Explore os servicos por area</Text>
+                <Text className='mt-1 text-base text-muted-foreground'>Explore os serviços por área</Text>
               </View>
             </View>
 
@@ -102,7 +102,7 @@ export default function CategoriesScreen() {
               <View className='flex-1'>
                 <Text className='text-lg font-semibold text-foreground'>Selecione uma categoria para continuar</Text>
                 <Text className='mt-1 text-base text-muted-foreground'>
-                  Encontre rapidamente o servico que voce precisa.
+                  Encontre rapidamente o serviço que você precisa.
                 </Text>
               </View>
             </View>
