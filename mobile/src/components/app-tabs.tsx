@@ -18,9 +18,9 @@ export default function AppTabs() {
         <NativeTabs.Trigger.Icon src={require('@/assets/images/tabIcons/home.png')} renderingMode='template' />
       </NativeTabs.Trigger>
 
-      <NativeTabs.Trigger name='explore'>
-        <NativeTabs.Trigger.Label>Explore</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon src={require('@/assets/images/tabIcons/explore.png')} renderingMode='template' />
+      <NativeTabs.Trigger name='categories'>
+        <NativeTabs.Trigger.Label>Categorias</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon src={require('@/assets/expo.icon/Assets/grid.png')} renderingMode='template' />
       </NativeTabs.Trigger>
     </NativeTabs>
   )
