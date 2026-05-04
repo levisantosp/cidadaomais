@@ -195,7 +195,10 @@ export default function CategoriesScreen() {
                   <Text className='mt-4 text-2xl font-semibold text-foreground'>{category.title}</Text>
                   <Text className='mt-1 min-h-14 text-base leading-6 text-muted-foreground'>{category.subtitle}</Text>
 
-                  <View className='mt-4 self-start rounded-full px-3 py-1' style={{ backgroundColor: `${toneColor}26` }}>
+                  <View
+                    className='mt-4 self-start rounded-full px-3 py-1'
+                    style={{ backgroundColor: `${toneColor}26` }}
+                  >
                     <Text className='font-medium' style={{ color: toneColor }}>
                       {category.servicesCount} servicos
                     </Text>
