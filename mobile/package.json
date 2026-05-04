@@ -12,7 +12,8 @@
     "lint": "oxlint",
     "fmt": "oxfmt",
     "prebuild": "expo prebuild",
-    "check": "tsc --noEmit"
+    "check": "tsc --noEmit",
+    "install:android": "cd android && ./gradlew assembleRelease && adb install -r app/build/outputs/apk/release/app-release.apk"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
