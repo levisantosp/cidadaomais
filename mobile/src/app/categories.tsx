@@ -7,7 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { Input } from '@/components/ui/input'
 import { Text } from '@/components/ui/text'
 import { useTheme } from '@/hooks/use-theme'
-import { api, PaginatedResponse } from '@/lib/api'
+import { api, type PaginatedResponse } from '@/lib/api'
 
 const BRAND_BLUE = '#0186ca'
 
