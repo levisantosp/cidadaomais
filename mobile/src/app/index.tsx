@@ -32,10 +32,7 @@ export default function HomeScreen() {
   const name = form.watch('name').trim()
   const shouldSearch = name.length >= 2
 
-  const {
-    isFetching,
-    data: services = []
-  } = useQuery({
+  const { isFetching, data: services = [] } = useQuery({
     queryKey: ['services', name],
     enabled: shouldSearch,
     async queryFn() {
@@ -78,9 +75,7 @@ export default function HomeScreen() {
 
         {shouldSearch && (
           <View className='absolute left-0 right-0 top-12 z-20 rounded-2xl border border-border bg-card p-2 shadow-lg shadow-black/10'>
-            {isFetching && (
-              <Text className='px-3 py-2 text-sm text-muted-foreground'>Buscando...</Text>
-            )}
+            {isFetching && <Text className='px-3 py-2 text-sm text-muted-foreground'>Buscando...</Text>}
 
             {!isFetching &&
               services.map((service) => (
