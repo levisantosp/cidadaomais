@@ -11,7 +11,8 @@
     "web": "expo start --web",
     "lint": "oxlint",
     "fmt": "oxfmt",
-    "prebuild": "expo prebuild"
+    "prebuild": "expo prebuild",
+    "check": "tsc --noEmit"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
