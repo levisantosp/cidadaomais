@@ -9,6 +9,7 @@ import { Button } from '~/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '~/components/ui/card'
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
+import { Textarea } from '~/components/ui/textarea'
 import { api } from '~/lib/api'
 
 definePageMeta({
@@ -16,13 +17,18 @@ definePageMeta({
 })
 
 const schema = z.object({
-  name: z.string('Informe um nome válido').min(2, 'O nome precisa ter no mínimo 2 caracteres').trim()
+  name: z.string('Informe um nome válido').min(2, 'O nome precisa ter no mínimo 2 caracteres').trim(),
+  description: z
+    .string('Informe uma descrição válida')
+    .min(2, 'A descrição precisa ter no mínimo 2 caracteres')
+    .trim()
 })
 const { defineField, errors, handleSubmit } = useForm({
   validationSchema: toTypedSchema(schema)
 })
 
 const [name, nameAttr] = defineField('name')
+const [description, descriptionAttr] = defineField('description')
 
 const { mutate, isPending } = useMutation({
   mutationKey: ['categories', name],
@@ -65,6 +71,15 @@ const onSubmit = handleSubmit((data) => mutate(data))
 
               <span v-if="errors.name" class="text-sm text-red-400">
                 {{ errors.name }}
+              </span>
+            </div>
+
+            <div class="flex flex-col space-y-2">
+              <Label for="description">Descrição</Label>
+              <Textarea id="description" v-model="description" v-bind="descriptionAttr" />
+
+              <span v-if="errors.description" class="text-sm text-red-400">
+                {{ errors.description }}
               </span>
             </div>
           </div>
