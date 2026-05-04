@@ -30,7 +30,8 @@ export const createCategory = new Elysia().use(authPlugin).post(
   {
     authorize: ['Administrator'],
     body: z.object({
-      name: z.string().min(2).trim()
+      name: z.string().min(2).trim(),
+      description: z.string().min(2).trim()
     })
   }
 )
