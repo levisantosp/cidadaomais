@@ -1,5 +1,5 @@
-import { env } from '@/env'
 import axios from 'axios'
+import { env } from '@/env'
 
 export const api = axios.create({
   baseURL: env.EXPO_PUBLIC_API_URL
@@ -7,7 +7,7 @@ export const api = axios.create({
 
 if (env.EXPO_PUBLIC_ENABLE_API_DELAY) {
   api.interceptors.request.use(async (config) => {
-    await new Promise(r => setTimeout(r, Math.round(Math.random() * 4000)))
+    await new Promise((r) => setTimeout(r, Math.round(Math.random() * 4000)))
     return config
   })
 }

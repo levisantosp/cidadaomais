@@ -109,14 +109,11 @@ export default function CategoriesScreen() {
           </View>
 
           <View className='mt-4 flex-row flex-wrap justify-between gap-y-4'>
-            {!categories && (
-              <Text>pinto</Text>
-            )}
+            {!categories && <Text>pinto</Text>}
             {categories?.length &&
               categories.map((category) => {
                 return (
                   <Pressable key={category.id} className='w-[48.5%] rounded-3xl border border-border bg-card p-4'>
-
                     <Text className='mt-4 text-lg font-semibold text-foreground'>{category.name}</Text>
                     <Text className='mt-1 min-h-14 text-sm leading-6 text-muted-foreground'>
                       {category.description}
