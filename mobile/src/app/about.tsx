@@ -1,5 +1,5 @@
-import { StatusBar } from 'expo-status-bar'
 import { useRouter } from 'expo-router'
+import { StatusBar } from 'expo-status-bar'
 import {
   ArrowLeft,
   ClipboardList,
@@ -132,9 +132,9 @@ export default function AboutScreen() {
 
             <View style={styles.rowText}>
               <Text style={styles.sectionTitle}>Como funciona</Text>
-              <Text style={styles.bodyText}>1.  Pesquise o serviço</Text>
-              <Text style={styles.bodyText}>2.  Consulte os requisitos</Text>
-              <Text style={styles.bodyText}>3.  Acesse o canal oficial</Text>
+              <Text style={styles.bodyText}>1. Pesquise o serviço</Text>
+              <Text style={styles.bodyText}>2. Consulte os requisitos</Text>
+              <Text style={styles.bodyText}>3. Acesse o canal oficial</Text>
             </View>
           </View>
         </View>
