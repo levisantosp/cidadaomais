@@ -120,13 +120,7 @@ export default function SearchScreen() {
     setExpandedServiceId(null)
   }, [debouncedTerm])
 
-  const {
-    data,
-    error,
-    isFetching,
-    isLoading,
-    refetch
-  } = useQuery({
+  const { data, error, isFetching, isLoading, refetch } = useQuery({
     queryKey: ['services-search', debouncedTerm],
     enabled: canFetchServices,
     staleTime: 60_000,
