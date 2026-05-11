@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { reactiveOmit } from '@vueuse/core'
 import type { AlertDialogContentEmits, AlertDialogContentProps } from 'reka-ui'
-import { AlertDialogContent, AlertDialogOverlay, AlertDialogPortal, useForwardPropsEmits } from 'reka-ui'
+import {
+  AlertDialogContent,
+  AlertDialogOverlay,
+  AlertDialogPortal,
+  useForwardPropsEmits
+} from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
 import { cn } from '@/lib/utils'
 

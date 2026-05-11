@@ -7,7 +7,14 @@ import { toast } from 'vue-sonner'
 import { z } from 'zod'
 import Loading from '~/components/loading.vue'
 import { Button } from '~/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from '~/components/ui/card'
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
 import { error } from '~/config'
@@ -58,7 +65,9 @@ const showPassword = ref(false)
     <Card class="w-full max-w-sm">
       <CardHeader>
         <CardTitle>Entre com a sua conta</CardTitle>
-        <CardDescription> Informe seu e-mail e senha abaixo para entrar na sua conta </CardDescription>
+        <CardDescription>
+          Informe seu e-mail e senha abaixo para entrar na sua conta
+        </CardDescription>
       </CardHeader>
 
       <CardContent>
@@ -66,7 +75,13 @@ const showPassword = ref(false)
           <div class="grid w-full items-center gap-4">
             <div class="flex flex-col space-y-1.5">
               <Label for="email">E-mail</Label>
-              <Input id="email" type="email" v-model="email" v-bind="emailAttr" placeholder="seu@email.com" />
+              <Input
+                id="email"
+                type="email"
+                v-model="email"
+                v-bind="emailAttr"
+                placeholder="seu@email.com"
+              />
 
               <span v-if="errors.email" class="text-sm text-red-400">
                 {{ errors.email }}

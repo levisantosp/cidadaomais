@@ -1,12 +1,22 @@
 import { useEffect, useRef, useState } from 'react'
-import { Animated, Easing, StyleSheet, useColorScheme, View, type LayoutChangeEvent } from 'react-native'
+import {
+  Animated,
+  Easing,
+  StyleSheet,
+  useColorScheme,
+  View,
+  type LayoutChangeEvent
+} from 'react-native'
 import { cn } from '@/lib/utils'
 
 function randomBetween(min: number, max: number) {
   return Math.random() * (max - min) + min
 }
 
-function Skeleton({ className, ...props }: React.ComponentProps<typeof View> & React.RefAttributes<View>) {
+function Skeleton({
+  className,
+  ...props
+}: React.ComponentProps<typeof View> & React.RefAttributes<View>) {
   const shimmer = useRef(new Animated.Value(-1)).current
   const shimmerDuration = useRef(randomBetween(1300, 1700)).current
   const shimmerDelay = useRef(randomBetween(0, 500)).current
@@ -42,7 +52,11 @@ function Skeleton({ className, ...props }: React.ComponentProps<typeof View> & R
   })
 
   return (
-    <View className={cn('relative overflow-hidden rounded-md bg-primary/5', className)} {...props} onLayout={onLayout}>
+    <View
+      className={cn('relative overflow-hidden rounded-md bg-primary/5', className)}
+      {...props}
+      onLayout={onLayout}
+    >
       {width > 0 && (
         <Animated.View
           pointerEvents='none'

@@ -5,7 +5,14 @@ import { ChevronLeft, ChevronRight, Plus } from 'lucide-vue-next'
 import Loading from '~/components/loading.vue'
 import { Button } from '~/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '~/components/ui/table'
 import { api } from '~/lib/api'
 
 definePageMeta({
@@ -48,7 +55,9 @@ const router = useRouter()
   <div class="space-y-6 p-6">
     <div>
       <h1 class="text-2xl font-bold">Gestão de Unidades</h1>
-      <p class="text-muted-foreground text-sm">Veja e acompanhe as unidades cadastradas no sistema</p>
+      <p class="text-muted-foreground text-sm">
+        Veja e acompanhe as unidades cadastradas no sistema
+      </p>
     </div>
 
     <Card>
@@ -70,11 +79,21 @@ const router = useRouter()
 
         <div v-else>
           <div class="flex items-center justify-center space-x-2 py-2">
-            <Button variant="outline" class="cursor-pointer" :disabled="data.page <= 1" @click="handlePage('previous')">
+            <Button
+              variant="outline"
+              class="cursor-pointer"
+              :disabled="data.page <= 1"
+              @click="handlePage('previous')"
+            >
               <ChevronLeft />
             </Button>
             <div>Página {{ data.page }}</div>
-            <Button variant="outline" class="cursor-pointer" :disabled="!data.hasNextPage" @click="handlePage('next')">
+            <Button
+              variant="outline"
+              class="cursor-pointer"
+              :disabled="!data.hasNextPage"
+              @click="handlePage('next')"
+            >
               <ChevronRight />
             </Button>
           </div>
@@ -117,11 +136,21 @@ const router = useRouter()
           </div>
 
           <div class="flex items-center justify-center space-x-2 py-2">
-            <Button variant="outline" class="cursor-pointer" :disabled="data.page <= 1" @click="handlePage('previous')">
+            <Button
+              variant="outline"
+              class="cursor-pointer"
+              :disabled="data.page <= 1"
+              @click="handlePage('previous')"
+            >
               <ChevronLeft />
             </Button>
             <div>Página {{ data.page }}</div>
-            <Button variant="outline" class="cursor-pointer" :disabled="!data.hasNextPage" @click="handlePage('next')">
+            <Button
+              variant="outline"
+              class="cursor-pointer"
+              :disabled="!data.hasNextPage"
+              @click="handlePage('next')"
+            >
               <ChevronRight />
             </Button>
           </div>

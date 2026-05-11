@@ -14,18 +14,19 @@ definePageMeta({
 const { isPending, isFetching, data, error } = useQuery({
   queryKey: ['home-data'],
   async queryFn() {
-    const [servicesResponse, entitiesResponse, categoriesResponse, unitsResponse, logsResponse] = await Promise.all([
-      api['services-count'].get(),
-      api['entities-count'].get(),
-      api['categories-count'].get(),
-      api['units-count'].get(),
-      api['audit-log'].get({
-        query: {
-          page: 1,
-          limit: 5
-        }
-      })
-    ])
+    const [servicesResponse, entitiesResponse, categoriesResponse, unitsResponse, logsResponse] =
+      await Promise.all([
+        api['services-count'].get(),
+        api['entities-count'].get(),
+        api['categories-count'].get(),
+        api['units-count'].get(),
+        api['audit-log'].get({
+          query: {
+            page: 1,
+            limit: 5
+          }
+        })
+      ])
 
     hasServicesError.value = !!servicesResponse.error
     hasEntitiesError.value = !!entitiesResponse.error
@@ -111,7 +112,11 @@ const statsConfig = [
     </div>
 
     <div class="grid grid-cols-1 items-center gap-4 sm:grid-cols-3">
-      <Card v-for="item in statsConfig" :key="item.key" class="flex flex-col h-36 justify-between p-6">
+      <Card
+        v-for="item in statsConfig"
+        :key="item.key"
+        class="flex flex-col h-36 justify-between p-6"
+      >
         <div class="flex justify-between items-center">
           <span class="text-lg font-semibold text-muted-foreground">
             {{ item.label }}
@@ -127,7 +132,10 @@ const statsConfig = [
             <CircleX class="size-4" />
             <span>Não foi possível buscar os dados no momento</span>
           </div>
-          <div v-else-if="statsErrors[item.key]" class="flex items-center gap-2 text-red-400 text-sm">
+          <div
+            v-else-if="statsErrors[item.key]"
+            class="flex items-center gap-2 text-red-400 text-sm"
+          >
             <CircleX class="size-4" />
             <span>Não foi possível buscar os dados no momento</span>
           </div>

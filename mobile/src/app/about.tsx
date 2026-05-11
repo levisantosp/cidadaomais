@@ -91,13 +91,18 @@ export default function AboutScreen() {
             </View>
 
             <View className='min-w-0 flex-1'>
-              <Text className='text-3xl font-black leading-9' numberOfLines={1} adjustsFontSizeToFit>
+              <Text
+                className='text-3xl font-black leading-9'
+                numberOfLines={1}
+                adjustsFontSizeToFit
+              >
                 <Text className='text-[#0186ca]'>CIDADÃO</Text>
                 <Text className='text-[#3f9731]'>MAIS</Text>
               </Text>
 
               <Text className='mt-2 text-base leading-6 text-foreground'>
-                Aplicativo que orienta cidadãos sobre serviços públicos, documentos, órgãos e unidades de atendimento.
+                Aplicativo que orienta cidadãos sobre serviços públicos, documentos, órgãos e
+                unidades de atendimento.
               </Text>
             </View>
           </View>
@@ -111,8 +116,8 @@ export default function AboutScreen() {
               <View className='min-w-0 flex-1'>
                 <Text className='text-xl font-extrabold text-foreground'>Nossa missão</Text>
                 <Text className='mt-1 text-sm leading-6 text-muted-foreground'>
-                  Facilitar o acesso à informação, orientar o usuário e conectar o cidadão aos canais oficiais de
-                  atendimento.
+                  Facilitar o acesso à informação, orientar o usuário e conectar o cidadão aos
+                  canais oficiais de atendimento.
                 </Text>
               </View>
             </View>
@@ -149,9 +154,15 @@ export default function AboutScreen() {
 
               <View className='min-w-0 flex-1'>
                 <Text className='text-xl font-extrabold text-foreground'>Como funciona</Text>
-                <Text className='mt-1 text-sm leading-6 text-muted-foreground'>1. Pesquise o serviço</Text>
-                <Text className='text-sm leading-6 text-muted-foreground'>2. Consulte os requisitos</Text>
-                <Text className='text-sm leading-6 text-muted-foreground'>3. Acesse o canal oficial</Text>
+                <Text className='mt-1 text-sm leading-6 text-muted-foreground'>
+                  1. Pesquise o serviço
+                </Text>
+                <Text className='text-sm leading-6 text-muted-foreground'>
+                  2. Consulte os requisitos
+                </Text>
+                <Text className='text-sm leading-6 text-muted-foreground'>
+                  3. Acesse o canal oficial
+                </Text>
               </View>
             </View>
           </View>
@@ -165,8 +176,8 @@ export default function AboutScreen() {
               <View className='min-w-0 flex-1'>
                 <Text className='text-xl font-extrabold text-foreground'>Importante</Text>
                 <Text className='mt-1 text-sm leading-6 text-muted-foreground'>
-                  O CidadãoMais não substitui os órgãos oficiais. As informações devem ser confirmadas nos canais
-                  responsáveis.
+                  O CidadãoMais não substitui os órgãos oficiais. As informações devem ser
+                  confirmadas nos canais responsáveis.
                 </Text>
               </View>
             </View>

@@ -1,5 +1,12 @@
 <script setup lang="ts">
-import { BriefcaseBusiness, Building, ChartBarStacked, Home, Landmark, LogOut } from 'lucide-vue-next'
+import {
+  BriefcaseBusiness,
+  Building,
+  ChartBarStacked,
+  Home,
+  Landmark,
+  LogOut
+} from 'lucide-vue-next'
 import Loading from '~/components/loading.vue'
 import {
   Sidebar,
@@ -87,7 +94,10 @@ const handleSignout = async () => {
     <SidebarFooter>
       <SidebarMenu>
         <SidebarMenuItem>
-          <SidebarMenuButton class="bg-red-900 hover:bg-red-800 cursor-pointer" @click="handleSignout">
+          <SidebarMenuButton
+            class="bg-red-900 hover:bg-red-800 cursor-pointer"
+            @click="handleSignout"
+          >
             <span>Sair</span>
           </SidebarMenuButton>
         </SidebarMenuItem>

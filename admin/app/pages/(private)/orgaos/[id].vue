@@ -9,7 +9,14 @@ import { z } from 'zod'
 import Loading from '~/components/loading.vue'
 import { Button } from '~/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card'
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '~/components/ui/command'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList
+} from '~/components/ui/command'
 import {
   Dialog,
   DialogClose,
@@ -61,7 +68,10 @@ watch(error, (e) => {
 })
 
 const schema = z.object({
-  name: z.string('Informe um nome válido.').min(2, 'O nome precisa ter no mínimo 2 caracteres.').trim(),
+  name: z
+    .string('Informe um nome válido.')
+    .min(2, 'O nome precisa ter no mínimo 2 caracteres.')
+    .trim(),
   description: z
     .string('Informe uma descrição válida.')
     .min(10, 'A descrição precisa ter no mínimo 10 caracteres.')
@@ -346,12 +356,19 @@ const onSubmit = handleSubmit((data) => mutate(data))
 
         <div>
           <h1 class="md:text-3xl text-2xl font-bold">Detalhes do Órgão</h1>
-          <p class="text-muted-foreground text-sm md:text-lg">Visualize e gerencie as informações deste órgão</p>
+          <p class="text-muted-foreground text-sm md:text-lg">
+            Visualize e gerencie as informações deste órgão
+          </p>
         </div>
       </div>
 
       <div class="flex gap-2">
-        <Button variant="destructive" class="cursor-pointer" @click="handleDelete()" :disabled="isDeletePending">
+        <Button
+          variant="destructive"
+          class="cursor-pointer"
+          @click="handleDelete()"
+          :disabled="isDeletePending"
+        >
           <Loading v-if="isDeletePending" class="w-16" />
           <Trash v-if="!isDeletePending" />
           <span v-if="!isDeletePending">Deletar</span>
@@ -479,7 +496,9 @@ const onSubmit = handleSubmit((data) => mutate(data))
                   <CommandList>
                     <CommandEmpty>
                       <Loading v-if="isUnitsPending || isUnitsFetching" class="pl-5" />
-                      <span v-else-if="!unitsData?.length" class="pl-5"> Nenhuma unidade encontrada </span>
+                      <span v-else-if="!unitsData?.length" class="pl-5">
+                        Nenhuma unidade encontrada
+                      </span>
                     </CommandEmpty>
 
                     <CommandGroup>

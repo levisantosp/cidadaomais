@@ -6,6 +6,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { z } from 'zod'
+import { AppHeader } from '@/components/app-header'
 import { Loading } from '@/components/loading'
 import {
   Command,
@@ -17,7 +18,6 @@ import {
 } from '@/components/ui/command'
 import { Text } from '@/components/ui/text'
 import { api, type PaginatedResponse } from '@/lib/api'
-import { AppHeader } from '@/components/app-header'
 
 const searchSchema = z.object({
   name: z.string().max(100)

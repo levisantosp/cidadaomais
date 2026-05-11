@@ -8,7 +8,11 @@ import { NotFoundException } from '../../utils/HttpException'
 export const getEntity = new Elysia().use(authPlugin).get(
   '/entities/:id',
   async (ctx) => {
-    const [entity] = await db.select().from(schema.entity).where(eq(schema.entity.id, ctx.params.id)).limit(1)
+    const [entity] = await db
+      .select()
+      .from(schema.entity)
+      .where(eq(schema.entity.id, ctx.params.id))
+      .limit(1)
     if (!entity) {
       throw new NotFoundException()
     }

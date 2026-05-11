@@ -19,8 +19,14 @@ definePageMeta({
 
 const schema = z.object({
   name: z.string('Informe o nome').min(2, 'O nome precisa ter no mínimo 2 caracteres').trim(),
-  latitude: z.number('Selecione a localização no mapa').min(-90, 'Latitude inválida').max(90, 'Latitude inválida'),
-  longitude: z.number('Selecione a localização no mapa').min(-180, 'Longitude inválida').max(180, 'Longitude inválida')
+  latitude: z
+    .number('Selecione a localização no mapa')
+    .min(-90, 'Latitude inválida')
+    .max(90, 'Latitude inválida'),
+  longitude: z
+    .number('Selecione a localização no mapa')
+    .min(-180, 'Longitude inválida')
+    .max(180, 'Longitude inválida')
 })
 const { defineField, errors, handleSubmit, setFieldValue } = useForm({
   validationSchema: toTypedSchema(schema)
@@ -112,7 +118,9 @@ onBeforeUnmount(() => {
   <div class="grid grid-cols-1 gap-6 space-y-6 p-6">
     <div>
       <h1 class="text-2xl font-bold">Nova Unidade</h1>
-      <p class="text-muted-foreground text-sm">Adicione uma nova unidade para disponibilizar no aplicativo</p>
+      <p class="text-muted-foreground text-sm">
+        Adicione uma nova unidade para disponibilizar no aplicativo
+      </p>
     </div>
 
     <Card>

@@ -7,7 +7,14 @@ import { toast } from 'vue-sonner'
 import { z } from 'zod'
 import Loading from '~/components/loading.vue'
 import { Button } from '~/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from '~/components/ui/card'
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
 import { error } from '~/config'
@@ -20,8 +27,14 @@ definePageMeta({
 const schema = z
   .object({
     email: z.email('Informe um e-mail válido.').trim(),
-    password: z.string('Informe a senha.').min(6, 'A senha precisa ter no mínimo 6 caracteres').trim(),
-    confirmPassword: z.string('Informe a senha.').min(6, 'A senha precisa ter no mínimo 6 caracteres').trim(),
+    password: z
+      .string('Informe a senha.')
+      .min(6, 'A senha precisa ter no mínimo 6 caracteres')
+      .trim(),
+    confirmPassword: z
+      .string('Informe a senha.')
+      .min(6, 'A senha precisa ter no mínimo 6 caracteres')
+      .trim(),
     name: z.string('Informe seu nome').min(3, 'O nome precisa ter no mínimo 3 caracteres').trim()
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -81,7 +94,13 @@ const showPassword = ref(false)
           <div class="grid w-full items-center gap-4">
             <div class="flex flex-col space-y-1.5">
               <Label for="email">E-mail</Label>
-              <Input id="email" type="email" v-model="email" v-bind="emailAttr" placeholder="seu@email.com" />
+              <Input
+                id="email"
+                type="email"
+                v-model="email"
+                v-bind="emailAttr"
+                placeholder="seu@email.com"
+              />
 
               <span v-if="errors.email" class="text-sm text-red-400">
                 {{ errors.email }}

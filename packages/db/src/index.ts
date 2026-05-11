@@ -17,8 +17,5 @@ export type Service = typeof schema.service.$inferSelect
 
 type Schema = ExtractTablesWithRelations<typeof schema>
 
-export type ServiceGetPayload<T extends DBQueryConfig<'many', true, Schema, Schema['service']>> = BuildQueryResult<
-  Schema,
-  Schema['service'],
-  T
->
+export type ServiceGetPayload<T extends DBQueryConfig<'many', true, Schema, Schema['service']>> =
+  BuildQueryResult<Schema, Schema['service'], T>

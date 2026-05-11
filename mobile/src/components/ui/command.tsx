@@ -5,11 +5,17 @@ import { Text, TextClassContext } from '@/components/ui/text'
 import { useTheme } from '@/hooks/use-theme'
 import { cn } from '@/lib/utils'
 
-function Command({ className, ...props }: React.ComponentProps<typeof View> & React.RefAttributes<View>) {
+function Command({
+  className,
+  ...props
+}: React.ComponentProps<typeof View> & React.RefAttributes<View>) {
   return (
     <TextClassContext.Provider value='text-popover-foreground'>
       <View
-        className={cn('bg-popover border-border flex flex-col overflow-hidden rounded-md border', className)}
+        className={cn(
+          'bg-popover border-border flex flex-col overflow-hidden rounded-md border',
+          className
+        )}
         {...props}
       />
     </TextClassContext.Provider>
@@ -29,7 +35,10 @@ function CommandInput({
         className={cn(
           'text-foreground h-11 flex-1 text-sm',
           props.editable === false &&
-            cn('opacity-50', Platform.select({ web: 'disabled:pointer-events-none disabled:cursor-not-allowed' })),
+            cn(
+              'opacity-50',
+              Platform.select({ web: 'disabled:pointer-events-none disabled:cursor-not-allowed' })
+            ),
           Platform.select({
             web: 'placeholder:text-muted-foreground outline-none',
             native: 'placeholder:text-muted-foreground/50'
@@ -58,8 +67,13 @@ function CommandList({
   )
 }
 
-function CommandEmpty({ className, ...props }: React.ComponentProps<typeof Text> & React.RefAttributes<typeof Text>) {
-  return <Text className={cn('py-6 text-center text-sm text-muted-foreground', className)} {...props} />
+function CommandEmpty({
+  className,
+  ...props
+}: React.ComponentProps<typeof Text> & React.RefAttributes<typeof Text>) {
+  return (
+    <Text className={cn('py-6 text-center text-sm text-muted-foreground', className)} {...props} />
+  )
 }
 
 function CommandGroup({
@@ -73,7 +87,9 @@ function CommandGroup({
   }) {
   return (
     <View className={cn('gap-1 p-1', className)} {...props}>
-      {heading ? <Text className='px-2 py-1.5 text-xs font-medium text-muted-foreground'>{heading}</Text> : null}
+      {heading ? (
+        <Text className='px-2 py-1.5 text-xs font-medium text-muted-foreground'>{heading}</Text>
+      ) : null}
       {children}
     </View>
   )
