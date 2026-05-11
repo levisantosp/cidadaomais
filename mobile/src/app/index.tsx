@@ -1,13 +1,16 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery } from '@tanstack/react-query'
-import type { ServiceGetPayload } from 'db'
+import type { Category, ServiceGetPayload } from 'db'
+import { useRouter } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { toast } from 'sonner-native'
 import { z } from 'zod'
 import { AppHeader } from '@/components/app-header'
 import { Loading } from '@/components/loading'
+import { Button } from '@/components/ui/button'
 import {
   Command,
   CommandEmpty,
@@ -16,6 +19,7 @@ import {
   CommandItem,
   CommandList
 } from '@/components/ui/command'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Text } from '@/components/ui/text'
 import { api, type PaginatedResponse } from '@/lib/api'
 
@@ -42,7 +46,11 @@ export default function HomeScreen() {
   const [debouncedName, setDebouncedName] = useState('')
   const shouldSearch = debouncedName.length >= 2
 
-  const { isFetching, data: services = [] } = useQuery({
+  const {
+    isFetching,
+    data: services = [],
+    error: servicesError
+  } = useQuery({
     queryKey: ['services', debouncedName],
     enabled: shouldSearch,
     staleTime: 60_000,
@@ -65,15 +73,42 @@ export default function HomeScreen() {
     return () => clearTimeout(timeout)
   }, [name])
 
+  const {
+    isFetching: isCategoriesFetching,
+    data: categories = [],
+    error: categoriesError
+  } = useQuery({
+    queryKey: ['categories-home'],
+    staleTime: 60_000,
+    async queryFn() {
+      const response = await api.get<PaginatedResponse<Category>>('/categories?limit=5')
+      return response.data.data
+    }
+  })
+
+  const router = useRouter()
+
+  function redirect() {
+    router.push('/categories')
+  }
+
+  useEffect(() => {
+    if (categoriesError || servicesError) {
+      toast.error('Ocorreu um erro inesperado...', {
+        description: categoriesError?.message ?? servicesError?.message
+      })
+    }
+  }, [categoriesError, servicesError])
+
   return (
-    <SafeAreaView className='bg-background px-4'>
+    <SafeAreaView className='bg-background px-4 max-w-sm'>
       <AppHeader />
-      <View>
+      <View className='flex gap-5'>
         <Controller
           control={form.control}
           name='name'
           render={({ field }) => (
-            <Command className='rounded-2xl'>
+            <Command>
               <CommandInput
                 placeholder='Buscar serviço'
                 value={field.value}
@@ -114,6 +149,46 @@ export default function HomeScreen() {
             </Command>
           )}
         />
+
+        {isCategoriesFetching ? (
+          <View className='gap-4'>
+            <View className='flex-row items-center justify-between'>
+              <Skeleton className='h-7 w-32 rounded-full' />
+              <Skeleton className='h-10 w-24 rounded-full' />
+            </View>
+
+            <View className='flex-row flex-wrap gap-2'>
+              {Array.from({ length: 5 }).map((_, index) => (
+                <Skeleton key={index} className='h-8 w-24 rounded-full' />
+              ))}
+            </View>
+          </View>
+        ) : (
+          <View className='gap-4'>
+            <View className='flex-row items-center justify-between'>
+              <Text className='text-xl font-bold'>Categorias</Text>
+              <Button onPress={redirect}>
+                <Text>Ver mais</Text>
+              </Button>
+            </View>
+
+            <View className='flex-row flex-wrap gap-2'>
+              {categories.map((category) => (
+                <View
+                  key={category.id.toString()}
+                  className='h-8 items-center justify-center rounded-full border border-border bg-card px-3'
+                >
+                  <Text
+                    className='text-center text-sm font-semibold text-foreground'
+                    numberOfLines={2}
+                  >
+                    {category.name}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        )}
       </View>
     </SafeAreaView>
   )
