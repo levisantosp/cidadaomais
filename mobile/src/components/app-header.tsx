@@ -9,9 +9,9 @@ export function AppHeader() {
         <View className='flex flex-row items-center justify-start gap-1'>
           <Image source={require('@/assets/images/logo.png')} className='rounded-2xl h-14 w-14' />
 
-          <Text className='font-extrabold text-xl'>
-            <Text className='text-[#0186ca]'>CIDADÃO</Text>
-            <Text className='text-[#3f9731]'>MAIS</Text>
+          <Text className='font-extrabold'>
+            <Text className='text-[#0186ca] text-xl'>CIDADÃO</Text>
+            <Text className='text-[#3f9731] text-xl'>MAIS</Text>
           </Text>
         </View>
       </View>
