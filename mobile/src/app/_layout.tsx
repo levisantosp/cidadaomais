@@ -9,14 +9,29 @@ import { Toaster } from 'sonner-native'
 import AppTabs from '@/components/app-tabs'
 
 const queryClient = new QueryClient()
+const APP_BACKGROUND = '#012034'
 
 export default function TabLayout() {
   const colorScheme = useColorScheme()
+  const baseTheme = colorScheme === 'dark' ? DarkTheme : DefaultTheme
+  const navigationTheme = {
+    ...baseTheme,
+    dark: true,
+    colors: {
+      ...baseTheme.colors,
+      primary: '#044892',
+      background: APP_BACKGROUND,
+      card: '#072940',
+      text: '#f3f8fc',
+      border: 'rgba(255, 255, 255, 0.12)',
+      notification: '#3f9731'
+    }
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <GestureHandlerRootView style={{ flex: 1, backgroundColor: APP_BACKGROUND }}>
+        <ThemeProvider value={navigationTheme}>
           <AppTabs />
           <PortalHost />
           <Toaster
