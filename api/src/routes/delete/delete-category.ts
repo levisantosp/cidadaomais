@@ -8,7 +8,10 @@ import { NotFoundException } from '../../utils/HttpException'
 export const deleteCategory = new Elysia().use(authPlugin).delete(
   '/categories/:id',
   async (ctx) => {
-    const [category] = await db.delete(schema.category).where(eq(schema.category.id, ctx.params.id)).returning()
+    const [category] = await db
+      .delete(schema.category)
+      .where(eq(schema.category.id, ctx.params.id))
+      .returning()
     if (!category) {
       throw new NotFoundException()
     }

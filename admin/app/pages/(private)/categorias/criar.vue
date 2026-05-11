@@ -17,8 +17,14 @@ definePageMeta({
 })
 
 const schema = z.object({
-  name: z.string('Informe um nome válido').min(2, 'O nome precisa ter no mínimo 2 caracteres').trim(),
-  description: z.string('Informe uma descrição válida').min(2, 'A descrição precisa ter no mínimo 2 caracteres').trim()
+  name: z
+    .string('Informe um nome válido')
+    .min(2, 'O nome precisa ter no mínimo 2 caracteres')
+    .trim(),
+  description: z
+    .string('Informe uma descrição válida')
+    .min(2, 'A descrição precisa ter no mínimo 2 caracteres')
+    .trim()
 })
 const { defineField, errors, handleSubmit } = useForm({
   validationSchema: toTypedSchema(schema)
@@ -53,7 +59,9 @@ const onSubmit = handleSubmit((data) => mutate(data))
   <div class="grid grid-cols-1 gap-6 space-y-6 p-6">
     <div>
       <h1 class="text-2xl font-bold">Nova Categoria</h1>
-      <p class="text-muted-foreground text-sm">Adicione uma nova categoria para disponibilizar no aplicativo</p>
+      <p class="text-muted-foreground text-sm">
+        Adicione uma nova categoria para disponibilizar no aplicativo
+      </p>
     </div>
 
     <Card>

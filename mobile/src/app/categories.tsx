@@ -52,7 +52,9 @@ export default function CategoriesScreen() {
 
               <View className='flex-1 pt-1'>
                 <Text className='text-3xl font-extrabold text-foreground'>Categorias</Text>
-                <Text className='mt-1 text-base text-muted-foreground'>Explore os serviços por área</Text>
+                <Text className='mt-1 text-base text-muted-foreground'>
+                  Explore os serviços por área
+                </Text>
               </View>
             </View>
 
@@ -100,7 +102,9 @@ export default function CategoriesScreen() {
               </View>
 
               <View className='flex-1'>
-                <Text className='text-lg font-semibold text-foreground'>Selecione uma categoria para continuar</Text>
+                <Text className='text-lg font-semibold text-foreground'>
+                  Selecione uma categoria para continuar
+                </Text>
                 <Text className='mt-1 text-base text-muted-foreground'>
                   Encontre rapidamente o serviço que você precisa.
                 </Text>
@@ -112,8 +116,13 @@ export default function CategoriesScreen() {
             {categories?.length &&
               categories.map((category) => {
                 return (
-                  <Pressable key={category.id} className='w-[48.5%] rounded-3xl border border-border bg-card p-4'>
-                    <Text className='mt-4 text-lg font-semibold text-foreground'>{category.name}</Text>
+                  <Pressable
+                    key={category.id}
+                    className='w-[48.5%] rounded-3xl border border-border bg-card p-4'
+                  >
+                    <Text className='mt-4 text-lg font-semibold text-foreground'>
+                      {category.name}
+                    </Text>
                     <Text className='mt-1 min-h-14 text-sm leading-6 text-muted-foreground'>
                       {category.description}
                     </Text>

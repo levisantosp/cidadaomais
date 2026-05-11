@@ -1,27 +1,48 @@
-import { NativeTabs } from 'expo-router/unstable-native-tabs'
+import { Tabs } from 'expo-router'
+import { Home, Info, Layers } from 'lucide-react-native'
 import React from 'react'
 import { useColorScheme } from 'react-native'
 import { Colors } from '@/constants/theme'
 
 export default function AppTabs() {
   const scheme = useColorScheme()
-  const colors = Colors[scheme === 'unspecified' ? 'light' : scheme]
+  const colors = Colors[scheme === 'dark' ? 'dark' : 'light']
 
   return (
-    <NativeTabs
-      backgroundColor={colors.background}
-      indicatorColor={colors.backgroundElement}
-      labelStyle={{ selected: { color: colors.text } }}
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: colors.text,
+        tabBarInactiveTintColor: colors.textSecondary,
+        tabBarStyle: {
+          backgroundColor: colors.background,
+          borderTopColor: colors.background
+        }
+      }}
     >
-      <NativeTabs.Trigger name='index'>
-        <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon src={require('@/assets/images/tabIcons/home.png')} renderingMode='template' />
-      </NativeTabs.Trigger>
+      <Tabs.Screen
+        name='index'
+        options={{
+          title: 'Início',
+          tabBarIcon: ({ color, size }) => <Home color={color} size={size} />
+        }}
+      />
 
-      <NativeTabs.Trigger name='categories'>
-        <NativeTabs.Trigger.Label>Categorias</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon src={require('@/assets/expo.icon/Assets/grid.png')} renderingMode='template' />
-      </NativeTabs.Trigger>
-    </NativeTabs>
+      <Tabs.Screen
+        name='categories'
+        options={{
+          title: 'Categorias',
+          tabBarIcon: ({ color, size }) => <Layers color={color} size={size} />
+        }}
+      />
+
+      <Tabs.Screen
+        name='about'
+        options={{
+          title: 'Sobre',
+          tabBarIcon: ({ color, size }) => <Info color={color} size={size} />
+        }}
+      />
+    </Tabs>
   )
 }

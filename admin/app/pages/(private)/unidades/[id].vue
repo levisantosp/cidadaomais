@@ -61,8 +61,14 @@ watch(error, (e) => {
 
 const schema = z.object({
   name: z.string('Informe o nome').min(2, 'O nome precisa ter no mínimo 2 caracteres').trim(),
-  latitude: z.number('Selecione a localização no mapa').min(-90, 'Latitude inválida').max(90, 'Latitude inválida'),
-  longitude: z.number('Selecione a localização no mapa').min(-180, 'Longitude inválida').max(180, 'Longitude inválida')
+  latitude: z
+    .number('Selecione a localização no mapa')
+    .min(-90, 'Latitude inválida')
+    .max(90, 'Latitude inválida'),
+  longitude: z
+    .number('Selecione a localização no mapa')
+    .min(-180, 'Longitude inválida')
+    .max(180, 'Longitude inválida')
 })
 const { defineField, errors, handleSubmit, resetForm, setFieldValue } = useForm({
   validationSchema: toTypedSchema(schema)
@@ -167,13 +173,24 @@ const renderEditMap = async () => {
   }
 
   if (!editMap.value) {
-    editMap.value = createMap(editMapContainer.value, editValues.value.longitude, editValues.value.latitude, true)
+    editMap.value = createMap(
+      editMapContainer.value,
+      editValues.value.longitude,
+      editValues.value.latitude,
+      true
+    )
 
     editMap.value.on('click', (event) => updateLocation(event.lngLat.lng, event.lngLat.lat))
   }
 
   editMap.value.setCenter([editValues.value.longitude, editValues.value.latitude])
-  updateMarker(editMap.value, editMarker, editValues.value.longitude, editValues.value.latitude, true)
+  updateMarker(
+    editMap.value,
+    editMarker,
+    editValues.value.longitude,
+    editValues.value.latitude,
+    true
+  )
 }
 
 const handleDialogOpen = (open: boolean) => {
@@ -290,12 +307,19 @@ onBeforeUnmount(() => {
 
         <div>
           <h1 class="md:text-3xl text-2xl font-bold">Detalhes da Unidade</h1>
-          <p class="text-muted-foreground text-sm md:text-lg">Visualize e gerencie as informações desta unidade</p>
+          <p class="text-muted-foreground text-sm md:text-lg">
+            Visualize e gerencie as informações desta unidade
+          </p>
         </div>
       </div>
 
       <div class="flex gap-2">
-        <Button variant="destructive" class="cursor-pointer" @click="handleDelete()" :disabled="isDeletePending">
+        <Button
+          variant="destructive"
+          class="cursor-pointer"
+          @click="handleDelete()"
+          :disabled="isDeletePending"
+        >
           <Loading v-if="isDeletePending" class="w-16" />
           <Trash v-if="!isDeletePending" />
           <span v-if="!isDeletePending">Deletar</span>

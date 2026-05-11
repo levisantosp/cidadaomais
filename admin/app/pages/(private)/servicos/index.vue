@@ -5,7 +5,14 @@ import { ChevronLeft, ChevronRight, Plus } from 'lucide-vue-next'
 import Loading from '~/components/loading.vue'
 import { Button } from '~/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '~/components/ui/table'
 import { api } from '~/lib/api'
 
 definePageMeta({
@@ -47,7 +54,9 @@ const handlePage = async (action: 'previous' | 'next') => {
   <div class="space-y-6 p-6">
     <div>
       <h1 class="text-2xl font-bold">Gestão de Serviços</h1>
-      <p class="text-muted-foreground text-sm">Veja e acompanhe os serviços cadastrados no sistema</p>
+      <p class="text-muted-foreground text-sm">
+        Veja e acompanhe os serviços cadastrados no sistema
+      </p>
     </div>
 
     <Card class="min-w-0">
@@ -69,11 +78,21 @@ const handlePage = async (action: 'previous' | 'next') => {
 
         <div v-else>
           <div class="flex items-center justify-center space-x-2 py-2">
-            <Button variant="outline" class="cursor-pointer" :disabled="data.page <= 1" @click="handlePage('previous')">
+            <Button
+              variant="outline"
+              class="cursor-pointer"
+              :disabled="data.page <= 1"
+              @click="handlePage('previous')"
+            >
               <ChevronLeft />
             </Button>
             <div>Página {{ data.page }}</div>
-            <Button variant="outline" class="cursor-pointer" :disabled="!data.hasNextPage" @click="handlePage('next')">
+            <Button
+              variant="outline"
+              class="cursor-pointer"
+              :disabled="!data.hasNextPage"
+              @click="handlePage('next')"
+            >
               <ChevronRight />
             </Button>
           </div>
@@ -105,24 +124,42 @@ const handlePage = async (action: 'previous' | 'next') => {
                   @click="router.push(`/servicos/${service.id}`)"
                 >
                   <TableCell>{{ service.name }}</TableCell>
-                  <TableCell class="max-w-80 whitespace-normal wrap-break-word">{{ service.category.name }}</TableCell>
+                  <TableCell class="max-w-80 whitespace-normal wrap-break-word">{{
+                    service.category.name
+                  }}</TableCell>
                   <TableCell class="max-w-80 whitespace-normal wrap-break-word">{{
                     service.requirements.join(', ')
                   }}</TableCell>
-                  <TableCell class="max-w-80 whitespace-normal wrap-break-word">{{ service.guidelines }}</TableCell>
-                  <TableCell>{{ dayjs(service.createdAt).format('DD/MM/YYYY HH:mm:ss') }}</TableCell>
-                  <TableCell>{{ dayjs(service.updatedAt).format('DD/MM/YYYY HH:mm:ss') }}</TableCell>
+                  <TableCell class="max-w-80 whitespace-normal wrap-break-word">{{
+                    service.guidelines
+                  }}</TableCell>
+                  <TableCell>{{
+                    dayjs(service.createdAt).format('DD/MM/YYYY HH:mm:ss')
+                  }}</TableCell>
+                  <TableCell>{{
+                    dayjs(service.updatedAt).format('DD/MM/YYYY HH:mm:ss')
+                  }}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
           </div>
 
           <div class="flex items-center justify-center space-x-2 py-2">
-            <Button variant="outline" class="cursor-pointer" :disabled="data.page <= 1" @click="handlePage('previous')">
+            <Button
+              variant="outline"
+              class="cursor-pointer"
+              :disabled="data.page <= 1"
+              @click="handlePage('previous')"
+            >
               <ChevronLeft />
             </Button>
             <div>Página {{ data.page }}</div>
-            <Button variant="outline" class="cursor-pointer" :disabled="!data.hasNextPage" @click="handlePage('next')">
+            <Button
+              variant="outline"
+              class="cursor-pointer"
+              :disabled="!data.hasNextPage"
+              @click="handlePage('next')"
+            >
               <ChevronRight />
             </Button>
           </div>

@@ -5,7 +5,14 @@ import { ChevronLeft, ChevronRight, Plus } from 'lucide-vue-next'
 import Loading from '~/components/loading.vue'
 import { Button } from '~/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '~/components/ui/table'
 import { api } from '~/lib/api'
 
 definePageMeta({
@@ -69,11 +76,21 @@ const handlePage = async (action: 'previous' | 'next') => {
 
         <div v-else>
           <div class="flex items-center justify-center space-x-2 py-2">
-            <Button variant="outline" class="cursor-pointer" :disabled="data.page <= 1" @click="handlePage('previous')">
+            <Button
+              variant="outline"
+              class="cursor-pointer"
+              :disabled="data.page <= 1"
+              @click="handlePage('previous')"
+            >
               <ChevronLeft />
             </Button>
             <div>Página {{ data.page }}</div>
-            <Button variant="outline" class="cursor-pointer" :disabled="!data.hasNextPage" @click="handlePage('next')">
+            <Button
+              variant="outline"
+              class="cursor-pointer"
+              :disabled="!data.hasNextPage"
+              @click="handlePage('next')"
+            >
               <ChevronRight />
             </Button>
           </div>
@@ -106,7 +123,9 @@ const handlePage = async (action: 'previous' | 'next') => {
                   @click="router.push(`/orgaos/${entity.id}`)"
                 >
                   <TableCell>{{ entity.name }}</TableCell>
-                  <TableCell class="max-w-80 whitespace-normal wrap-break-word">{{ entity.description }}</TableCell>
+                  <TableCell class="max-w-80 whitespace-normal wrap-break-word">{{
+                    entity.description
+                  }}</TableCell>
                   <TableCell>{{ entity.phone }}</TableCell>
                   <TableCell>{{ entity.email }}</TableCell>
                   <TableCell>{{ entity.website ?? '-' }}</TableCell>
@@ -118,11 +137,21 @@ const handlePage = async (action: 'previous' | 'next') => {
           </div>
 
           <div class="flex items-center justify-center space-x-2 py-2">
-            <Button variant="outline" class="cursor-pointer" :disabled="data.page <= 1" @click="handlePage('previous')">
+            <Button
+              variant="outline"
+              class="cursor-pointer"
+              :disabled="data.page <= 1"
+              @click="handlePage('previous')"
+            >
               <ChevronLeft />
             </Button>
             <div>Página {{ data.page }}</div>
-            <Button variant="outline" class="cursor-pointer" :disabled="!data.hasNextPage" @click="handlePage('next')">
+            <Button
+              variant="outline"
+              class="cursor-pointer"
+              :disabled="!data.hasNextPage"
+              @click="handlePage('next')"
+            >
               <ChevronRight />
             </Button>
           </div>
