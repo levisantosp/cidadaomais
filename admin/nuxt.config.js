@@ -21,7 +21,9 @@ export default defineNuxtConfig({
         'better-auth/vue',
         '@elysia/eden',
         '@tanstack/vue-query',
-        'dayjs'
+        'dayjs',
+        '@vue/devtools-core',
+        '@vue/devtools-kit'
       ]
     },
     build: {
