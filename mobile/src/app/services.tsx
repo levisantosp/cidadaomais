@@ -2,13 +2,13 @@ import { useQuery } from '@tanstack/react-query'
 import type { Service } from 'db'
 import { useRouter, useSearchParams } from 'expo-router'
 import { ArrowLeft, Search, ShieldCheck, SlidersHorizontal } from 'lucide-react-native'
+import { useState } from 'react'
 import { Pressable, ScrollView, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Input } from '@/components/ui/input'
 import { Text } from '@/components/ui/text'
 import { useTheme } from '@/hooks/use-theme'
 import { api, type PaginatedResponse } from '@/lib/api'
-import { useState } from 'react'
 
 const BRAND_BLUE = '#0186ca'
 
@@ -39,15 +39,11 @@ export default function ServicesScreen() {
         limit: '50',
         ...(searchQuery && { name: searchQuery })
       })
-      const response = await api.get<
-        PaginatedResponse<ServiceWithCategory>
-      >(`/services?${query}`)
-      
+      const response = await api.get<PaginatedResponse<ServiceWithCategory>>(`/services?${query}`)
+
       // Filter by categoryId if provided
       if (categoryId) {
-        return response.data.data.filter(
-          (service) => service.categoryId.toString() === categoryId
-        )
+        return response.data.data.filter((service) => service.categoryId.toString() === categoryId)
       }
       return response.data.data
     }
@@ -159,22 +155,15 @@ export default function ServicesScreen() {
                 >
                   <View className='flex-row items-start justify-between'>
                     <View className='flex-1 gap-2'>
-                      <Text className='text-lg font-semibold text-foreground'>
-                        {service.name}
-                      </Text>
-                      <Text
-                        className='text-sm text-muted-foreground'
-                        numberOfLines={2}
-                      >
+                      <Text className='text-lg font-semibold text-foreground'>{service.name}</Text>
+                      <Text className='text-sm text-muted-foreground' numberOfLines={2}>
                         {service.description}
                       </Text>
                     </View>
 
                     {/* Badge with service type/status */}
                     <View className='ml-3 rounded-full bg-primary/10 px-3 py-1'>
-                      <Text className='text-xs font-semibold text-primary'>
-                        Popular
-                      </Text>
+                      <Text className='text-xs font-semibold text-primary'>Popular</Text>
                     </View>
                   </View>
                 </Pressable>
