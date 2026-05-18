@@ -11,8 +11,9 @@ import {
   ShieldCheck,
   Target
 } from 'lucide-react-native'
-import { Image, Pressable, ScrollView, View } from 'react-native'
+import { Image, ScrollView, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { Button } from '@/components/ui/button'
 import { Text } from '@/components/ui/text'
 import { useTheme } from '@/hooks/use-theme'
 
@@ -62,14 +63,15 @@ export default function AboutScreen() {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View className='gap-3 px-4 pb-7 pt-4'>
           <View className='mb-3 flex-row items-center gap-4'>
-            <Pressable
+            <Button
               accessibilityRole='button'
               accessibilityLabel='Voltar'
               onPress={handleBack}
-              className='h-14 w-14 items-center justify-center rounded-full border border-border bg-card active:opacity-70'
+              className='h-12 w-12'
+              variant='outline'
             >
-              <ArrowLeft size={26} color={theme.textSecondary} strokeWidth={2.4} />
-            </Pressable>
+              <ArrowLeft size={20} color={theme.textSecondary} />
+            </Button>
 
             <View className='flex-1'>
               <Text className='text-3xl font-extrabold text-foreground'>Sobre</Text>

@@ -1,8 +1,10 @@
 import { Tabs } from 'expo-router'
-import { Home, Info, Layers } from 'lucide-react-native'
+import { BookCheck, Home, Info, Layers, Search } from 'lucide-react-native'
 import React from 'react'
 import { useColorScheme } from 'react-native'
 import { Colors } from '@/constants/theme'
+
+const BRAND_BLUE = '#0186ca'
 
 export default function AppTabs() {
   const scheme = useColorScheme()
@@ -12,7 +14,7 @@ export default function AppTabs() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: colors.text,
+        tabBarActiveTintColor: BRAND_BLUE,
         tabBarInactiveTintColor: colors.textSecondary,
         tabBarStyle: {
           backgroundColor: colors.background,
@@ -33,6 +35,22 @@ export default function AppTabs() {
         options={{
           title: 'Categorias',
           tabBarIcon: ({ color, size }) => <Layers color={color} size={size} />
+        }}
+      />
+
+      <Tabs.Screen
+        name='services/index'
+        options={{
+          title: 'Serviços',
+          tabBarIcon: ({ color, size }) => <BookCheck color={color} size={size} />
+        }}
+      />
+
+      <Tabs.Screen
+        name='search'
+        options={{
+          title: 'Busca',
+          tabBarIcon: ({ color, size }) => <Search color={color} size={size} />
         }}
       />
 
