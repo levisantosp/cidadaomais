@@ -7,21 +7,17 @@ import {
   Building2,
   ChevronRight,
   CircleHelp,
-  Clock3,
   FileCheck2,
   FileSearch,
   IdCard,
   Search,
-  ShieldCheck,
-  SlidersHorizontal,
-  Sparkles,
-  X
+  ShieldCheck
 } from 'lucide-react-native'
 import { useEffect, useMemo, useState } from 'react'
 import { Pressable, RefreshControl, ScrollView, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { toast } from 'sonner-native'
-import { Input } from '@/components/ui/input'
+import { Command, CommandInput } from '@/components/ui/command'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Text } from '@/components/ui/text'
 import { useTheme } from '@/hooks/use-theme'
@@ -30,8 +26,6 @@ import { api, type PaginatedResponse } from '@/lib/api'
 const BRAND_BLUE = '#0186ca'
 const BRAND_GREEN = '#3f9731'
 const SEARCH_LIMIT = 20
-
-const suggestedTerms = ['RG', 'CPF', 'Cartão SUS', 'INSS']
 
 type Service = ServiceGetPayload<{
   with: {
@@ -158,7 +152,7 @@ export default function SearchScreen() {
     }
 
     if (!debouncedTerm) {
-      return services.length ? 'Serviços recentes' : 'Busca de serviços'
+      return 'Busca de serviços'
     }
 
     if (data?.hasNextPage) {
@@ -174,7 +168,7 @@ export default function SearchScreen() {
     }
 
     if (!debouncedTerm) {
-      return 'Pesquise por nome ou escolha um atalho abaixo.'
+      return 'Pesquise por nome para encontrar um serviço.'
     }
 
     if (services.length) {
@@ -191,12 +185,6 @@ export default function SearchScreen() {
     }
 
     router.replace('/')
-  }
-
-  const clearSearch = () => {
-    setSearchTerm('')
-    setDebouncedTerm('')
-    setExpandedServiceId(null)
   }
 
   const goToCategories = () => {
@@ -240,100 +228,19 @@ export default function SearchScreen() {
                 </Text>
               </View>
             </View>
-
-            <Pressable
-              accessibilityRole='button'
-              accessibilityLabel='Ver categorias'
-              onPress={goToCategories}
-              className='h-14 w-14 items-center justify-center rounded-full border border-border bg-card active:opacity-70'
-            >
-              <SlidersHorizontal size={24} color={BRAND_BLUE} strokeWidth={2.2} />
-            </Pressable>
           </View>
 
           <View className='mt-6'>
-            <View className='relative'>
-              <Search
-                pointerEvents='none'
-                size={28}
-                color={theme.textSecondary}
-                strokeWidth={2.1}
-                style={{
-                  position: 'absolute',
-                  left: 18,
-                  top: 18,
-                  zIndex: 1
-                }}
-              />
-
-              <Input
+            <Command>
+              <CommandInput
                 value={searchTerm}
                 onChangeText={setSearchTerm}
                 placeholder='Buscar serviço'
                 returnKeyType='search'
                 autoCapitalize='none'
                 autoCorrect={false}
-                className='h-16 rounded-3xl border-border bg-card pl-14 pr-24 text-lg font-semibold'
               />
-
-              {searchTerm.length > 0 ? (
-                <Pressable
-                  accessibilityRole='button'
-                  accessibilityLabel='Limpar busca'
-                  onPress={clearSearch}
-                  className='absolute right-16 top-3 h-10 w-10 items-center justify-center rounded-full bg-muted active:opacity-70'
-                >
-                  <X size={22} color={theme.textSecondary} strokeWidth={2.4} />
-                </Pressable>
-              ) : null}
-
-              <Pressable
-                accessibilityRole='button'
-                accessibilityLabel='Abrir categorias'
-                onPress={goToCategories}
-                className='absolute right-3 top-3 h-10 w-10 items-center justify-center rounded-full active:opacity-70'
-              >
-                <SlidersHorizontal size={22} color={BRAND_BLUE} strokeWidth={2.3} />
-              </Pressable>
-            </View>
-          </View>
-
-          <View className='mt-4 flex-row flex-wrap gap-2'>
-            <Pressable
-              accessibilityRole='button'
-              accessibilityLabel='Mostrar serviços recentes'
-              onPress={clearSearch}
-              className='h-10 flex-row items-center gap-2 rounded-full border border-border bg-card px-4 active:opacity-70'
-            >
-              <Clock3 size={18} color={theme.textSecondary} />
-              <Text className='font-semibold text-muted-foreground'>Recentes</Text>
-            </Pressable>
-
-            {suggestedTerms.map((term) => {
-              const selected = trimmedTerm.toLowerCase() === term.toLowerCase()
-
-              return (
-                <Pressable
-                  key={term}
-                  accessibilityRole='button'
-                  accessibilityLabel={`Buscar ${term}`}
-                  onPress={() => setSearchTerm(term)}
-                  className={[
-                    'h-10 items-center justify-center rounded-full border px-4 active:opacity-70',
-                    selected ? 'border-primary bg-primary' : 'border-border bg-card'
-                  ].join(' ')}
-                >
-                  <Text
-                    className={[
-                      'font-semibold',
-                      selected ? 'text-primary-foreground' : 'text-muted-foreground'
-                    ].join(' ')}
-                  >
-                    {term}
-                  </Text>
-                </Pressable>
-              )
-            })}
+            </Command>
           </View>
 
           <View className='mt-5 rounded-2xl border border-primary/40 bg-primary/10 p-4'>
@@ -492,31 +399,6 @@ export default function SearchScreen() {
                 </Pressable>
               </View>
             )}
-          </View>
-
-          <View className='mt-6 rounded-2xl border border-primary/50 bg-primary/20 p-4'>
-            <View className='flex-row items-center gap-4'>
-              <View className='h-16 w-16 items-center justify-center rounded-full bg-primary/20'>
-                <Sparkles size={32} color={BRAND_GREEN} strokeWidth={2.2} />
-              </View>
-
-              <View className='min-w-0 flex-1'>
-                <Text className='text-lg font-extrabold text-foreground'>Não encontrou?</Text>
-                <Text className='mt-1 text-sm leading-5 text-muted-foreground'>
-                  Busque por categoria para encontrar serviços relacionados.
-                </Text>
-              </View>
-
-              <Pressable
-                accessibilityRole='button'
-                accessibilityLabel='Abrir categorias'
-                onPress={goToCategories}
-                className='h-11 flex-row items-center justify-center gap-1 rounded-full bg-foreground px-4 active:opacity-80'
-              >
-                <Text className='font-bold text-[#044892]'>Categorias</Text>
-                <ChevronRight size={18} color='#044892' strokeWidth={2.4} />
-              </Pressable>
-            </View>
           </View>
         </View>
       </ScrollView>
