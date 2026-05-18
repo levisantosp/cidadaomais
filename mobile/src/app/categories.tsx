@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router'
 import { ArrowLeft, ShieldCheck } from 'lucide-react-native'
 import { Pressable, ScrollView, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { Button } from '@/components/ui/button'
 import { Command, CommandInput } from '@/components/ui/command'
 import { Text } from '@/components/ui/text'
 import { useTheme } from '@/hooks/use-theme'
@@ -37,14 +38,15 @@ export default function CategoriesScreen() {
         <View className='pb-8'>
           <View className='mt-2 flex-row items-start justify-between'>
             <View className='flex-1 flex-row items-start gap-3 pr-3'>
-              <Pressable
+              <Button
                 accessibilityRole='button'
                 accessibilityLabel='Voltar'
                 onPress={handleBack}
-                className='h-12 w-12 items-center justify-center rounded-full border border-border bg-card'
+                className='h-12 w-12'
+                variant='outline'
               >
                 <ArrowLeft size={20} color={theme.textSecondary} />
-              </Pressable>
+              </Button>
 
               <View className='flex-1 pt-1'>
                 <Text className='text-3xl font-extrabold text-foreground'>Categorias</Text>

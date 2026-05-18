@@ -17,6 +17,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Pressable, RefreshControl, ScrollView, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { toast } from 'sonner-native'
+import { Button } from '@/components/ui/button'
 import { Command, CommandInput } from '@/components/ui/command'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Text } from '@/components/ui/text'
@@ -212,14 +213,15 @@ export default function SearchScreen() {
         <View className='px-4 pb-7 pt-4'>
           <View className='flex-row items-start justify-between'>
             <View className='flex-1 flex-row items-start gap-4 pr-3'>
-              <Pressable
+              <Button
                 accessibilityRole='button'
                 accessibilityLabel='Voltar'
                 onPress={handleBack}
-                className='h-14 w-14 items-center justify-center rounded-full border border-border bg-card active:opacity-70'
+                className='h-12 w-12'
+                variant='outline'
               >
-                <ArrowLeft size={26} color={theme.textSecondary} strokeWidth={2.4} />
-              </Pressable>
+                <ArrowLeft size={20} color={theme.textSecondary} />
+              </Button>
 
               <View className='min-w-0 flex-1'>
                 <Text className='text-3xl font-extrabold text-foreground'>Busca</Text>
